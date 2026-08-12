@@ -1,17 +1,23 @@
 # solo_training_001
 
-A new Flutter project.
+# Product Vision
 
-## Getting Started
+Solo Training es una aplicación móvil inspirada en Solo Leveling que transforma el progreso físico en una experiencia RPG mediante el registro rápido de entrenamientos y la evolución del personaje.
 
-This project is a starting point for a Flutter application.
+Inspirada en juegos RPG como Mu Online y Shinning Forces. Y en la serie Solo Leveling.
 
-A few resources to get you started if this is your first Flutter project:
+La mision es lograr la combinacion perfecta entre juego RPG y entrenamiento real y serio.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+La vision es hacerlo a traves de una app con interfaz simple pero llamativa. Que llegue a los corazones de esos niños de los 90s criados con juegos de rol y series animadas que enfatizaban el progress, la motivacion, la disciplina y el entrenamiento, como Dragon Ball, Los Caballeros del Zodiaco, etc.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Stack
+
+- Flutter
+- Dart
+- SQLite
+- Drift
+- Riverpod
+
+## Estado
+
+v0.0.2 Frontend propuesto, sin nada de logica

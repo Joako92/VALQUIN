@@ -1,121 +1,775 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const SoloTrainingApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SoloTrainingApp extends StatelessWidget {
+  const SoloTrainingApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF080B12),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MainScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+// ============================================================
+// MAIN SCREEN
+// ============================================================
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MainScreenState extends State<MainScreen> {
+  int currentIndex = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final List<Widget> screens = const [
+    PlayerScreen(),
+    InventoryScreen(),
+    EquipScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    return Scaffold(
+      body: screens[currentIndex],
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: currentIndex,
+        onDestinationSelected: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
+        backgroundColor: const Color(0xFF0D111A),
+        indicatorColor: Colors.blueAccent.withOpacity(0.2),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'STATUS',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.inventory_2_outlined),
+            selectedIcon: Icon(Icons.inventory_2),
+            label: 'INVENTORY',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.shield_outlined),
+            selectedIcon: Icon(Icons.shield),
+            label: 'EQUIP',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// STATUS
+// ============================================================
+
+class PlayerScreen extends StatelessWidget {
+  const PlayerScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('SOLO TRAINING'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Padding(
+        padding: const EdgeInsets.all(20),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
           children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            // --------------------------------------------------
+            // PLAYER CARD
+            // --------------------------------------------------
+
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color(0xFF111827),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.blueAccent.withOpacity(0.5),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blueAccent.withOpacity(0.15),
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  const Text(
+                    'PLAYER',
+                    style: TextStyle(
+                      fontSize: 14,
+                      letterSpacing: 3,
+                      color: Colors.white54,
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  const Text(
+                    'JOAQUIN',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  const Text(
+                    'NOVICE',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.blueAccent,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 3,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  const Text(
+                    'LEVEL 1',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: const LinearProgressIndicator(
+                      value: 0.7,
+                      minHeight: 12,
+                      backgroundColor: Colors.white12,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.blueAccent,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  const Text(
+                    '70 / 100 XP',
+                    style: TextStyle(
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            // --------------------------------------------------
+            // ATTRIBUTES
+            // --------------------------------------------------
+
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'ATTRIBUTES',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            const Row(
+              children: [
+                Expanded(
+                  child: AttributeCard(
+                    name: 'STRENGTH',
+                    value: 10,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: AttributeCard(
+                    name: 'ENDURANCE',
+                    value: 10,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            const Row(
+              children: [
+                Expanded(
+                  child: AttributeCard(
+                    name: 'ENERGY',
+                    value: 10,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: AttributeCard(
+                    name: 'STAMINA',
+                    value: 10,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    );
+  }
+}
+
+// ============================================================
+// ATTRIBUTE CARD
+// ============================================================
+
+class AttributeCard extends StatelessWidget {
+  final String name;
+  final int value;
+
+  const AttributeCard({
+    super.key,
+    required this.name,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        vertical: 18,
+        horizontal: 10,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111827),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: Colors.white12,
+        ),
+      ),
+      child: Column(
+        children: [
+          Text(
+            name,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.white54,
+              letterSpacing: 1,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            '$value',
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// INVENTORY
+// ============================================================
+
+class InventoryScreen extends StatelessWidget {
+  const InventoryScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('INVENTORY'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+      ),
+
+      body: Column(
+        children: [
+          // --------------------------------------------------
+          // FILTERS
+          // --------------------------------------------------
+
+          SizedBox(
+            height: 55,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              children: const [
+                InventoryFilter(
+                  label: 'ALL',
+                  selected: true,
+                ),
+                InventoryFilter(
+                  label: 'HEAD',
+                ),
+                InventoryFilter(
+                  label: 'CHEST',
+                ),
+                InventoryFilter(
+                  label: 'SHOULDERS',
+                ),
+                InventoryFilter(
+                  label: 'ARMS',
+                ),
+                InventoryFilter(
+                  label: 'LEGS',
+                ),
+                InventoryFilter(
+                  label: 'WINGS',
+                ),
+              ],
+            ),
+          ),
+
+          // --------------------------------------------------
+          // ITEMS
+          // --------------------------------------------------
+
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(
+                20,
+                10,
+                20,
+                20,
+              ),
+              children: const [
+                ExerciseItem(
+                  name: 'PECHERA DEL COLOSO',
+                  exercise: 'Press de banca',
+                  slot: 'CHEST',
+                  rarity: 'RARE',
+                ),
+
+                ExerciseItem(
+                  name: 'ALAS DEL CAZADOR',
+                  exercise: 'Dominadas',
+                  slot: 'WINGS',
+                  rarity: 'EPIC',
+                ),
+
+                ExerciseItem(
+                  name: 'GREBAS DEL TITÁN',
+                  exercise: 'Sentadilla',
+                  slot: 'LEGS',
+                  rarity: 'RARE',
+                ),
+
+                ExerciseItem(
+                  name: 'BRAZALES DEL BERSERKER',
+                  exercise: 'Curl de bíceps',
+                  slot: 'ARMS',
+                  rarity: 'COMMON',
+                ),
+
+                ExerciseItem(
+                  name: 'MANTO DEL GUARDIÁN',
+                  exercise: 'Press militar',
+                  slot: 'SHOULDERS',
+                  rarity: 'EPIC',
+                ),
+
+                ExerciseItem(
+                  name: 'CORONA DEL CORREDOR',
+                  exercise: 'Running',
+                  slot: 'HEAD',
+                  rarity: 'COMMON',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// INVENTORY FILTER
+// ============================================================
+
+class InventoryFilter extends StatelessWidget {
+  final String label;
+  final bool selected;
+
+  const InventoryFilter({
+    super.key,
+    required this.label,
+    this.selected = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(right: 8),
+      child: FilterChip(
+        label: Text(label),
+        selected: selected,
+        onSelected: (_) {},
+        backgroundColor: const Color(0xFF111827),
+        selectedColor: Colors.blueAccent.withOpacity(0.25),
+        side: BorderSide(
+          color: selected
+              ? Colors.blueAccent
+              : Colors.white12,
+        ),
+        labelStyle: TextStyle(
+          fontSize: 11,
+          letterSpacing: 1,
+          color: selected
+              ? Colors.blueAccent
+              : Colors.white54,
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// EXERCISE ITEM
+// ============================================================
+
+class ExerciseItem extends StatelessWidget {
+  final String name;
+  final String exercise;
+  final String slot;
+  final String rarity;
+
+  const ExerciseItem({
+    super.key,
+    required this.name,
+    required this.exercise,
+    required this.slot,
+    required this.rarity,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111827),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: Colors.white12,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 55,
+            height: 55,
+            decoration: BoxDecoration(
+              color: Colors.black26,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Colors.white12,
+              ),
+            ),
+            child: const Icon(
+              Icons.shield_outlined,
+              size: 30,
+              color: Colors.blueAccent,
+            ),
+          ),
+
+          const SizedBox(width: 15),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 5),
+
+                Text(
+                  exercise,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white70,
+                  ),
+                ),
+
+                const SizedBox(height: 5),
+
+                Row(
+                  children: [
+                    Text(
+                      slot,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Colors.white38,
+                        letterSpacing: 1,
+                      ),
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    Text(
+                      rarity,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// EQUIP
+// ============================================================
+
+class EquipScreen extends StatelessWidget {
+  const EquipScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('EQUIP'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+      ),
+
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(
+          20,
+          10,
+          20,
+          20,
+        ),
+        child: Column(
+          children: [
+            const Text(
+              'TRAINING PLAN',
+              style: TextStyle(
+                fontSize: 14,
+                letterSpacing: 4,
+                color: Colors.white54,
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                vertical: 20,
+                horizontal: 10,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0D111A),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.blueAccent.withOpacity(0.25),
+                ),
+              ),
+              child: Column(
+                children: [
+                  // HEAD
+                  const EquipmentSlot(
+                    label: 'HEAD',
+                    icon: Icons.air,
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // WINGS
+                  const EquipmentSlot(
+                    label: 'WINGS',
+                    icon: Icons.flutter_dash,
+                    width: 150,
+                    height: 75,
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // SHOULDERS
+                  const EquipmentSlot(
+                    label: 'SHOULDERS',
+                    icon: Icons.accessibility_new,
+                    width: 150,
+                    height: 75,
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // CHEST
+                  const EquipmentSlot(
+                    label: 'CHEST',
+                    icon: Icons.shield,
+                    width: 150,
+                    height: 85,
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // ARMS
+                  const EquipmentSlot(
+                    label: 'ARMS',
+                    icon: Icons.fitness_center,
+                    width: 150,
+                    height: 75,
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // LEGS
+                  const EquipmentSlot(
+                    label: 'LEGS',
+                    icon: Icons.directions_run,
+                    width: 150,
+                    height: 85,
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            // ------------------------------------------------
+            // EXECUTE
+            // ------------------------------------------------
+
+            SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.flash_on,
+                  size: 26,
+                ),
+                label: const Text(
+                  'EXECUTE',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// EQUIPMENT SLOT
+// ============================================================
+
+class EquipmentSlot extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final double width;
+  final double height;
+
+  const EquipmentSlot({
+    super.key,
+    required this.label,
+    required this.icon,
+    this.width = 100,
+    this.height = 70,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: const Color(0xFF111827),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.white12,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 28,
+            color: Colors.white24,
+          ),
+
+          const SizedBox(height: 5),
+
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 10,
+              color: Colors.white30,
+              letterSpacing: 1,
+            ),
+          ),
+        ],
       ),
     );
   }
