@@ -1,11 +1,14 @@
 import '../models/equipment_item.dart';
 import '../models/equipment_slot.dart';
+import '../models/equipment_requirement.dart';
 import '../models/player.dart';
 
 enum EquipResultType {
   equipped,
   replaced,
   blockedByCooldown,
+  blockedByUnlockRequirement,
+  blockedByEquipRequirement,
 }
 
 class EquipResult {
@@ -35,11 +38,54 @@ class TrainingPlan {
   // COOLDOWNS
   // --------------------------------------------------
 
-  // Guarda cuándo comenzó el cooldown de cada item.
-  //
-  // key   = id del EquipmentItem
-  // value = momento en que fue ejecutado
   final Map<String, DateTime> cooldowns = {};
+
+  // --------------------------------------------------
+  // REQUIREMENTS
+  // --------------------------------------------------
+
+  bool meetsRequirements(
+    EquipmentRequirement requirements,
+    Player player,
+  ) {
+    // LEVEL
+    if (requirements.level != null) {
+      if (player.level < requirements.level!) {
+        return false;
+      }
+    }
+
+    // STATS
+    for (final entry in requirements.stats.entries) {
+      final currentValue = player.getStat(entry.key);
+
+      if (currentValue < entry.value) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  bool isItemUnlocked(
+    EquipmentItem item,
+    Player player,
+  ) {
+    return meetsRequirements(
+      item.unlockRequirements,
+      player,
+    );
+  }
+
+  bool canEquipItem(
+    EquipmentItem item,
+    Player player,
+  ) {
+    return meetsRequirements(
+      item.equipRequirements,
+      player,
+    );
+  }
 
   // --------------------------------------------------
   // EQUIP
@@ -49,9 +95,40 @@ class TrainingPlan {
     return equipment.contains(item);
   }
 
-  EquipResult addItem(EquipmentItem item) {
+  EquipResult addItem(
+    EquipmentItem item,
+    Player player,
+  ) {
+    // --------------------------------------------------
+    // UNLOCK REQUIREMENTS
+    // --------------------------------------------------
+
+    if (!isItemUnlocked(item, player)) {
+      return EquipResult(
+        type: EquipResultType.blockedByUnlockRequirement,
+        item: item,
+      );
+    }
+
+    // --------------------------------------------------
+    // EQUIP REQUIREMENTS
+    // --------------------------------------------------
+
+    if (!canEquipItem(item, player)) {
+      return EquipResult(
+        type: EquipResultType.blockedByEquipRequirement,
+        item: item,
+      );
+    }
+
+    // --------------------------------------------------
+    // SLOT
+    // --------------------------------------------------
+
     for (final equippedItem in equipment) {
       if (equippedItem.slot == item.slot) {
+        // No podemos reemplazar un item
+        // que está en cooldown.
         if (isOnCooldown(equippedItem)) {
           return EquipResult(
             type: EquipResultType.blockedByCooldown,
@@ -68,6 +145,10 @@ class TrainingPlan {
         );
       }
     }
+
+    // --------------------------------------------------
+    // EQUIP
+    // --------------------------------------------------
 
     equipment.add(item);
 
@@ -124,7 +205,9 @@ class TrainingPlan {
         .toList();
   }
 
-  List<EquipmentItem> activeItemsForSlot(EquipmentSlot slot) {
+  List<EquipmentItem> activeItemsForSlot(
+    EquipmentSlot slot,
+  ) {
     if (!isSlotActive(slot)) {
       return [];
     }

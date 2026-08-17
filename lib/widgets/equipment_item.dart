@@ -5,8 +5,12 @@ class EquipmentItemWidget extends StatelessWidget {
   final String rarity;
   final String slot;
   final List<String> exercises;
+  final String equipRequirements;
+
   final VoidCallback? onPressed;
+
   final bool equipped;
+  final bool canEquip;
 
   const EquipmentItemWidget({
     super.key,
@@ -14,26 +18,34 @@ class EquipmentItemWidget extends StatelessWidget {
     required this.rarity,
     required this.slot,
     required this.exercises,
+    required this.equipRequirements,
     this.onPressed,
     this.equipped = false,
+    this.canEquip = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    final bool isLocked = !canEquip && !equipped;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
 
       padding: const EdgeInsets.all(16),
 
       decoration: BoxDecoration(
-        color: const Color(0xFF111827),
+        color: isLocked
+            ? const Color(0xFF0D111A)
+            : const Color(0xFF111827),
 
         borderRadius: BorderRadius.circular(15),
 
         border: Border.all(
           color: equipped
               ? Colors.blueAccent
-              : Colors.white12,
+              : isLocked
+                  ? Colors.white10
+                  : Colors.white12,
         ),
       ),
 
@@ -57,10 +69,14 @@ class EquipmentItemWidget extends StatelessWidget {
               ),
             ),
 
-            child: const Icon(
+            child: Icon(
               Icons.shield_outlined,
+
               size: 30,
-              color: Colors.blueAccent,
+
+              color: isLocked
+                  ? Colors.white24
+                  : Colors.blueAccent,
             ),
           ),
 
@@ -78,9 +94,14 @@ class EquipmentItemWidget extends StatelessWidget {
                 Text(
                   name,
 
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
+
                     fontWeight: FontWeight.bold,
+
+                    color: isLocked
+                        ? Colors.white38
+                        : Colors.white,
                   ),
                 ),
 
@@ -90,14 +111,51 @@ class EquipmentItemWidget extends StatelessWidget {
                   (exercise) => Text(
                     exercise,
 
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: Colors.white70,
+
+                      color: isLocked
+                          ? Colors.white24
+                          : Colors.white70,
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 6),
+                const SizedBox(height: 10),
+
+                // --------------------------------------------------
+                // EQUIP REQUIREMENTS
+                // --------------------------------------------------
+
+                const Text(
+                  'EQUIP REQUIREMENTS',
+
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.white38,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
+                ),
+
+                const SizedBox(height: 3),
+
+                Text(
+                  equipRequirements,
+
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isLocked
+                        ? Colors.white30
+                        : Colors.white54,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                // --------------------------------------------------
+                // SLOT / RARITY
+                // --------------------------------------------------
 
                 Row(
                   children: [
@@ -116,13 +174,33 @@ class EquipmentItemWidget extends StatelessWidget {
                     Text(
                       rarity,
 
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
-                        color: Colors.blueAccent,
+
+                        color: isLocked
+                            ? Colors.white24
+                            : Colors.blueAccent,
+
                         fontWeight: FontWeight.bold,
+
                         letterSpacing: 1,
                       ),
                     ),
+
+                    if (isLocked) ...[
+                      const SizedBox(width: 10),
+
+                      const Text(
+                        'LOCKED',
+
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.white30,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ],
@@ -134,14 +212,21 @@ class EquipmentItemWidget extends StatelessWidget {
           // --------------------------------------------------
 
           IconButton(
-            onPressed: onPressed,
+            onPressed: isLocked ? null : onPressed,
 
             icon: Icon(
               equipped
                   ? Icons.check_circle
-                  : Icons.add_circle_outline,
+                  : canEquip
+                      ? Icons.add_circle_outline
+                      : Icons.lock_outline,
 
-              color: Colors.blueAccent,
+              color: equipped
+                  ? Colors.blueAccent
+                  : canEquip
+                      ? Colors.blueAccent
+                      : Colors.white30,
+
               size: 28,
             ),
           ),

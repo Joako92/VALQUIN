@@ -42,4 +42,17 @@ const List<Exercise> exercises = [
       'strength': 1,
     },
   ),
+
+  Exercise(
+    id: 'carameloraro',
+    name: 'CARAMELORRARO',
+    amount: 1,
+    unit: 'Unidad',
+    stats: {
+      'strength': 30,
+      'endurance': 30,
+      'energy': 30,
+      'stamina': 30,
+    },
+  ),
 ];

@@ -22,9 +22,24 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 ---
 
-# Estado
+# Versión
 
-**v0.1.0 — Lógica del juego: cooldown**
+**v0.1.1 — Lógica del juego: items besbloqueables**
+
+# Casos de uso
+
+| # | Caso                                                 | Resultado                                           |
+| - | ---------------------------------------------------- | --------------------------------------------------- |
+| 1 | Jugador nuevo, nivel 1                               | Tiene acceso a items con `unlockRequirements` vacío |
+| 2 | Alcanza nivel requerido                              | Se desbloquean los items correspondientes           |
+| 3 | Alcanza stat requerido                               | Se desbloquean los items correspondientes           |
+| 4 | Item desbloqueado pero no cumple `equipRequirements` | Puede verlo, pero no equiparlo                      |
+| 5 | Sube de nivel pero todavía no cumple stat            | El item sigue bloqueado para equipar                |
+| 6 | Alcanza finalmente el stat requerido                 | El item pasa a ser equipable                        |
+| 7 | Pierde una condición                                 | **No debería perder el item desbloqueado**          |
+
+
+# Estado
 
 La aplicación cuenta actualmente con:
 

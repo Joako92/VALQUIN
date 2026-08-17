@@ -6,6 +6,13 @@ import '../models/equipment_slot.dart';
 import '../widgets/inventory_filter.dart';
 import '../widgets/equipment_item.dart';
 import '../data/training_plan.dart';
+import '../data/player.dart';
+
+enum InventoryFilterType {
+  all,
+  equipped,
+  slot,
+}
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
@@ -15,7 +22,41 @@ class InventoryScreen extends StatefulWidget {
 }
 
 class _InventoryScreenState extends State<InventoryScreen> {
+  // --------------------------------------------------
+  // FORMAT REQUIREMENT
+  // --------------------------------------------------
+
+  String formatEquipRequirement(EquipmentItem item) {
+    final requirements = item.equipRequirements;
+    final parts = <String>[];
+
+    if (requirements.level != null) {
+      parts.add('LEVEL: ${requirements.level}');
+    }
+
+    requirements.stats.forEach((stat, value) {
+      parts.add('${stat.toUpperCase()}: $value');
+    });
+
+    if (parts.isEmpty) {
+      return 'NONE';
+    }
+
+    return parts.join(' • ');
+  }
+
+  // --------------------------------------------------
+  // FILTER
+  // --------------------------------------------------
+
+  InventoryFilterType selectedFilter =
+      InventoryFilterType.all;
+
   EquipmentSlot? selectedSlot;
+
+  // --------------------------------------------------
+  // FORMAT
+  // --------------------------------------------------
 
   String formatAmount(double amount) {
     if (amount == amount.roundToDouble()) {
@@ -26,17 +67,66 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   // --------------------------------------------------
+  // UNLOCKED ITEMS
+  // --------------------------------------------------
+
+  List<EquipmentItem> get unlockedItems {
+    return equipmentItems
+        .where(
+          (item) =>
+              trainingPlan.isItemUnlocked(item, player),
+        )
+        .toList();
+  }
+
+  // --------------------------------------------------
   // FILTERED ITEMS
   // --------------------------------------------------
 
   List<EquipmentItem> get filteredItems {
-    if (selectedSlot == null) {
-      return equipmentItems;
-    }
+    switch (selectedFilter) {
+      case InventoryFilterType.all:
+        return unlockedItems;
 
-    return equipmentItems
-        .where((item) => item.slot == selectedSlot)
-        .toList();
+      case InventoryFilterType.equipped:
+        return unlockedItems
+            .where(
+              (item) => trainingPlan.containsItem(item),
+            )
+            .toList();
+
+      case InventoryFilterType.slot:
+        return unlockedItems
+            .where(
+              (item) => item.slot == selectedSlot,
+            )
+            .toList();
+    }
+  }
+
+  // --------------------------------------------------
+  // SELECT FILTER
+  // --------------------------------------------------
+
+  void selectAll() {
+    setState(() {
+      selectedFilter = InventoryFilterType.all;
+      selectedSlot = null;
+    });
+  }
+
+  void selectEquipped() {
+    setState(() {
+      selectedFilter = InventoryFilterType.equipped;
+      selectedSlot = null;
+    });
+  }
+
+  void selectSlot(EquipmentSlot slot) {
+    setState(() {
+      selectedFilter = InventoryFilterType.slot;
+      selectedSlot = slot;
+    });
   }
 
   // --------------------------------------------------
@@ -71,91 +161,143 @@ class _InventoryScreenState extends State<InventoryScreen> {
               children: [
                 InventoryFilter(
                   label: 'ALL',
-                  selected: selectedSlot == null,
-                  onSelected: () {
-                    setState(() {
-                      selectedSlot = null;
-                    });
-                  },
+
+                  selected:
+                      selectedFilter ==
+                          InventoryFilterType.all,
+
+                  onSelected: selectAll,
+                ),
+
+                InventoryFilter(
+                  label: 'EQUIPPED',
+
+                  selected:
+                      selectedFilter ==
+                          InventoryFilterType.equipped,
+
+                  onSelected: selectEquipped,
                 ),
 
                 InventoryFilter(
                   label: 'HEAD',
-                  selected: selectedSlot == EquipmentSlot.head,
+
+                  selected:
+                      selectedFilter ==
+                              InventoryFilterType.slot &&
+                          selectedSlot ==
+                              EquipmentSlot.head,
+
                   onSelected: () {
-                    setState(() {
-                      selectedSlot = EquipmentSlot.head;
-                    });
+                    selectSlot(EquipmentSlot.head);
                   },
                 ),
 
                 InventoryFilter(
                   label: 'CHEST',
-                  selected: selectedSlot == EquipmentSlot.chest,
+
+                  selected:
+                      selectedFilter ==
+                              InventoryFilterType.slot &&
+                          selectedSlot ==
+                              EquipmentSlot.chest,
+
                   onSelected: () {
-                    setState(() {
-                      selectedSlot = EquipmentSlot.chest;
-                    });
+                    selectSlot(EquipmentSlot.chest);
                   },
                 ),
 
                 InventoryFilter(
                   label: 'BELT',
-                  selected: selectedSlot == EquipmentSlot.belt,
+
+                  selected:
+                      selectedFilter ==
+                              InventoryFilterType.slot &&
+                          selectedSlot ==
+                              EquipmentSlot.belt,
+
                   onSelected: () {
-                    setState(() {
-                      selectedSlot = EquipmentSlot.belt;
-                    });
+                    selectSlot(EquipmentSlot.belt);
                   },
                 ),
 
                 InventoryFilter(
                   label: 'SHOULDERS',
-                  selected: selectedSlot == EquipmentSlot.shoulders,
+
+                  selected:
+                      selectedFilter ==
+                              InventoryFilterType.slot &&
+                          selectedSlot ==
+                              EquipmentSlot.shoulders,
+
                   onSelected: () {
-                    setState(() {
-                      selectedSlot = EquipmentSlot.shoulders;
-                    });
+                    selectSlot(
+                      EquipmentSlot.shoulders,
+                    );
                   },
                 ),
 
                 InventoryFilter(
                   label: 'BICEPS',
-                  selected: selectedSlot == EquipmentSlot.biceps,
+
+                  selected:
+                      selectedFilter ==
+                              InventoryFilterType.slot &&
+                          selectedSlot ==
+                              EquipmentSlot.biceps,
+
                   onSelected: () {
-                    setState(() {
-                      selectedSlot = EquipmentSlot.biceps;
-                    });
+                    selectSlot(
+                      EquipmentSlot.biceps,
+                    );
                   },
                 ),
 
                 InventoryFilter(
                   label: 'TRICEPS',
-                  selected: selectedSlot == EquipmentSlot.triceps,
+
+                  selected:
+                      selectedFilter ==
+                              InventoryFilterType.slot &&
+                          selectedSlot ==
+                              EquipmentSlot.triceps,
+
                   onSelected: () {
-                    setState(() {
-                      selectedSlot = EquipmentSlot.triceps;
-                    });
+                    selectSlot(
+                      EquipmentSlot.triceps,
+                    );
                   },
                 ),
 
                 InventoryFilter(
                   label: 'LEGS',
-                  selected: selectedSlot == EquipmentSlot.legs,
+
+                  selected:
+                      selectedFilter ==
+                              InventoryFilterType.slot &&
+                          selectedSlot ==
+                              EquipmentSlot.legs,
+
                   onSelected: () {
-                    setState(() {
-                      selectedSlot = EquipmentSlot.legs;
-                    });
+                    selectSlot(
+                      EquipmentSlot.legs,
+                    );
                   },
                 ),
 
                 InventoryFilter(
                   label: 'WINGS',
-                  selected: selectedSlot == EquipmentSlot.wings,
+
+                  selected:
+                      selectedFilter ==
+                              InventoryFilterType.slot &&
+                          selectedSlot ==
+                              EquipmentSlot.wings,
+
                   onSelected: () {
-                    setState(() {
-                      selectedSlot = EquipmentSlot.wings;
-                    });
+                    selectSlot(
+                      EquipmentSlot.wings,
+                    );
                   },
                 ),
               ],
@@ -183,37 +325,56 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 final isEquipped =
                     trainingPlan.containsItem(item);
 
+                final canEquip =
+                    trainingPlan.canEquipItem(item, player);
+
                 return EquipmentItemWidget(
                   name: item.name,
 
-                  rarity: item.rarity.name.toUpperCase(),
+                  rarity:
+                      item.rarity.name.toUpperCase(),
 
-                  slot: item.slot.name.toUpperCase(),
+                  slot:
+                      item.slot.name.toUpperCase(),
 
                   exercises: item.exercises
-                    .map((exercise) {
-                      final amount = formatAmount(exercise.amount);
+                      .map((exercise) {
+                        final amount =
+                            formatAmount(
+                              exercise.amount,
+                            );
 
-                      if (exercise.sets != null) {
+                        if (exercise.sets != null) {
+                          return '${exercise.name} — '
+                              '${exercise.sets} x '
+                              '$amount ${exercise.unit}';
+                        }
+
                         return '${exercise.name} — '
-                            '${exercise.sets} x '
                             '$amount ${exercise.unit}';
-                      }
-
-                      return '${exercise.name} — '
-                          '$amount ${exercise.unit}';
-                    })
-                    .toList(),
+                      })
+                      .toList(),
 
                   equipped: isEquipped,
+                  canEquip: canEquip,
+
+                  equipRequirements: formatEquipRequirement(item),
 
                   onPressed: () {
                     setState(() {
+                      // --------------------------------------------------
+                      // UNEQUIP
+                      // --------------------------------------------------
+
                       if (isEquipped) {
-                        final removed = trainingPlan.removeItem(item);
+                        final removed =
+                            trainingPlan.removeItem(
+                              item,
+                            );
 
                         if (removed) {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
                             SnackBar(
                               content: Text(
                                 'UNEQUIPPED ${item.name}',
@@ -221,7 +382,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             ),
                           );
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
                             SnackBar(
                               content: Text(
                                 '${item.name} IS ON COOLDOWN',
@@ -229,40 +391,72 @@ class _InventoryScreenState extends State<InventoryScreen> {
                             ),
                           );
                         }
-                      } else {
-                        final result = trainingPlan.addItem(item);
 
-                        switch (result.type) {
-                          case EquipResultType.equipped:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'EQUIPPED ${item.name}',
-                                ),
-                              ),
-                            );
-                            break;
+                        return;
+                      }
 
-                          case EquipResultType.replaced:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'REPLACED ${result.item!.name} -> ${item.name}',
-                                ),
-                              ),
-                            );
-                            break;
+                      // --------------------------------------------------
+                      // EQUIP
+                      // --------------------------------------------------
 
-                          case EquipResultType.blockedByCooldown:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  '${result.item!.name} IS ON COOLDOWN',
-                                ),
+                      final result =
+                          trainingPlan.addItem(
+                        item,
+                        player,
+                      );
+
+                      switch (result.type) {
+                        case EquipResultType.equipped:
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'EQUIPPED ${item.name}',
                               ),
-                            );
-                            break;
-                        }
+                            ),
+                          );
+                          break;
+
+                        case EquipResultType.replaced:
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'REPLACED '
+                                '${result.item!.name} -> '
+                                '${item.name}',
+                              ),
+                            ),
+                          );
+                          break;
+
+                        case EquipResultType.blockedByCooldown:
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${result.item!.name} IS ON COOLDOWN',
+                              ),
+                            ),
+                          );
+                          break;
+
+                        case EquipResultType.blockedByUnlockRequirement:
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${item.name}: UNLOCK REQUIREMENTS NOT MET',
+                              ),
+                            ),
+                          );
+                          break;
+
+                        case EquipResultType.blockedByEquipRequirement:
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${item.name}: EQUIP REQUIREMENTS NOT MET',
+                              ),
+                            ),
+                          );
+                          break;
                       }
                     });
                   },

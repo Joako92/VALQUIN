@@ -19,6 +19,25 @@ class PlayerStats {
     this.stamina = 0,
   });
 
+  int getStat(String stat) {
+    switch (stat) {
+      case 'strength':
+        return strength;
+
+      case 'endurance':
+        return endurance;
+
+      case 'energy':
+        return energy;
+
+      case 'stamina':
+        return stamina;
+
+      default:
+        return 0;
+    }
+  }
+
   void addStats(Map<String, int> stats) {
     strength += stats['strength'] ?? 0;
     endurance += stats['endurance'] ?? 0;
@@ -60,6 +79,10 @@ class Player {
 
   int get xpRequiredForLevel {
     return 100;
+  }
+
+  int getStat(String stat) {
+    return stats.getStat(stat);
   }
 
   void addStats(Map<String, int> statsToAdd) {
