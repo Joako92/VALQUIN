@@ -101,7 +101,8 @@ class PlayerScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
 
                     child: LinearProgressIndicator(
-                      value: player.xp / 100,
+                      // value: player.xp / 100,
+                      value: player.xpForCurrentLevel / player.xpRequiredForLevel,
                       minHeight: 12,
                       backgroundColor: Colors.white12,
                       valueColor:
@@ -113,8 +114,10 @@ class PlayerScreen extends StatelessWidget {
 
                   const SizedBox(height: 8),
 
+                  // Text(
+                  //   '${player.xp} / 100 XP',
                   Text(
-                    '${player.xp} / 100 XP',
+                    '${player.xpForCurrentLevel}/${player.xpRequiredForLevel} XP',
 
                     style: const TextStyle(
                       color: Colors.white70,

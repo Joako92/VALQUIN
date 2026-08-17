@@ -7,31 +7,62 @@ enum PlayerClass {
 }
 
 class PlayerStats {
-  final int strength;
-  final int endurance;
-  final int energy;
-  final int stamina;
+  int strength;
+  int endurance;
+  int energy;
+  int stamina;
 
-  const PlayerStats({
-    required this.strength,
-    required this.endurance,
-    required this.energy,
-    required this.stamina,
+  PlayerStats({
+    this.strength = 0,
+    this.endurance = 0,
+    this.energy = 0,
+    this.stamina = 0,
   });
+
+  void addStats(Map<String, int> stats) {
+    strength += stats['strength'] ?? 0;
+    endurance += stats['endurance'] ?? 0;
+    energy += stats['energy'] ?? 0;
+    stamina += stats['stamina'] ?? 0;
+  }
+
+  int get total {
+    return strength +
+        endurance +
+        energy +
+        stamina;
+  }
 }
 
 class Player {
   final String name;
-  final int level;
-  final int xp;
   final PlayerClass playerClass;
+
   final PlayerStats stats;
 
-  const Player({
+  Player({
     required this.name,
-    required this.level,
-    required this.xp,
     required this.playerClass,
     required this.stats,
   });
+
+  int get xp {
+    return stats.total;
+  }
+
+  int get level {
+    return (xp ~/ 100) + 1;
+  }
+
+  int get xpForCurrentLevel {
+    return xp % 100;
+  }
+
+  int get xpRequiredForLevel {
+    return 100;
+  }
+
+  void addStats(Map<String, int> statsToAdd) {
+    stats.addStats(statsToAdd);
+  }
 }

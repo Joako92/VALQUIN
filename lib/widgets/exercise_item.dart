@@ -3,16 +3,12 @@ import 'package:flutter/material.dart';
 class ExerciseItem extends StatelessWidget {
   final String name;
   final String exercise;
-  final String slot;
-  final String rarity;
   final VoidCallback? onPressed;
 
   const ExerciseItem({
     super.key,
     required this.name,
     required this.exercise,
-    required this.slot,
-    required this.rarity,
     this.onPressed,
   });
 
@@ -82,42 +78,9 @@ class ExerciseItem extends StatelessWidget {
                     color: Colors.white70,
                   ),
                 ),
-
-                const SizedBox(height: 5),
-
-                Row(
-                  children: [
-                    Text(
-                      slot,
-
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: Colors.white38,
-                        letterSpacing: 1,
-                      ),
-                    ),
-
-                    const SizedBox(width: 10),
-
-                    Text(
-                      rarity,
-
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: Colors.blueAccent,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
-
-          // ------------------------------------------
-          // EQUIP BUTTON
-          // ------------------------------------------
 
           IconButton(
             onPressed: onPressed,

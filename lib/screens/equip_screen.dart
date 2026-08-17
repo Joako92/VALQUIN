@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../widgets/equipment_slot.dart';
 import '../data/training_plan.dart';
 import '../models/equipment_slot.dart' as model;
+import '../data/player.dart';
 
 class EquipScreen extends StatefulWidget {
   const EquipScreen({super.key});
@@ -12,6 +15,40 @@ class EquipScreen extends StatefulWidget {
 }
 
 class _EquipScreenState extends State<EquipScreen> {
+  Timer? _cooldownTimer;
+
+  // --------------------------------------------------
+  // INIT
+  // --------------------------------------------------
+
+  @override
+  void initState() {
+    super.initState();
+
+    _cooldownTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (_) {
+        if (mounted) {
+          setState(() {});
+        }
+      },
+    );
+  }
+
+  // --------------------------------------------------
+  // DISPOSE
+  // --------------------------------------------------
+
+  @override
+  void dispose() {
+    _cooldownTimer?.cancel();
+    super.dispose();
+  }
+
+  // --------------------------------------------------
+  // EQUIPMENT CARD
+  // --------------------------------------------------
+
   Widget equipmentCard({
     required String label,
     required IconData icon,
@@ -21,12 +58,39 @@ class _EquipScreenState extends State<EquipScreen> {
 
     final isActive = trainingPlan.isSlotActive(slot);
 
-    // Todos los ejercicios pertenecientes
-    // a los items equipados en este slot.
+    // --------------------------------------------------
+    // EQUIPPED ITEM
+    // --------------------------------------------------
+
+    final item = items.isNotEmpty
+        ? items.first
+        : null;
+
+    // --------------------------------------------------
+    // COOLDOWN
+    // --------------------------------------------------
+
+    final isOnCooldown =
+        item != null && trainingPlan.isOnCooldown(item);
+
+    final cooldownRemaining = item != null
+        ? trainingPlan
+            .cooldownUntil(item)
+            ?.difference(DateTime.now())
+        : null;
+
+    // --------------------------------------------------
+    // EXERCISES
+    // --------------------------------------------------
+
     final exercises = items
         .expand((item) => item.exercises)
         .map((exercise) => exercise.name)
         .toList();
+
+    // --------------------------------------------------
+    // SLOT
+    // --------------------------------------------------
 
     return EquipmentSlot(
       label: label,
@@ -35,6 +99,10 @@ class _EquipScreenState extends State<EquipScreen> {
       exercises: exercises,
 
       isActive: isActive,
+
+      isOnCooldown: isOnCooldown,
+
+      cooldownRemaining: cooldownRemaining,
 
       onPressed: () {
         setState(() {
@@ -46,6 +114,10 @@ class _EquipScreenState extends State<EquipScreen> {
       height: 75,
     );
   }
+
+  // --------------------------------------------------
+  // BUILD
+  // --------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +138,10 @@ class _EquipScreenState extends State<EquipScreen> {
 
         child: Column(
           children: [
+            // --------------------------------------------------
+            // TITLE
+            // --------------------------------------------------
+
             const Text(
               'TRAINING PLAN',
 
@@ -77,6 +153,10 @@ class _EquipScreenState extends State<EquipScreen> {
             ),
 
             const SizedBox(height: 5),
+
+            // --------------------------------------------------
+            // EQUIPMENT SLOTS
+            // --------------------------------------------------
 
             GridView.count(
               crossAxisCount: 2,
@@ -143,12 +223,59 @@ class _EquipScreenState extends State<EquipScreen> {
 
             const SizedBox(height: 10),
 
+            // --------------------------------------------------
+            // EXECUTE
+            // --------------------------------------------------
+
             SizedBox(
               width: double.infinity,
               height: 40,
 
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  final gainedStats = trainingPlan.execute(player);
+
+                  setState(() {});
+
+                  if (gainedStats.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'No training selected.',
+                        ),
+                      ),
+                    );
+
+                    return;
+                  }
+
+                  final messages = gainedStats.entries
+                      .map((entry) {
+                        final statName =
+                            entry.key.toUpperCase();
+
+                        final value = entry.value;
+
+                        return '+$value $statName';
+                      })
+                      .join('\n');
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'TRAINING EXECUTED!\n$messages',
+
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      duration: const Duration(
+                        seconds: 2,
+                      ),
+                    ),
+                  );
+                },
 
                 icon: const Icon(
                   Icons.flash_on,

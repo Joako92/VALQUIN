@@ -6,6 +6,9 @@ class EquipmentSlot extends StatelessWidget {
   final List<String> exercises;
 
   final bool isActive;
+  final bool isOnCooldown;
+  final Duration? cooldownRemaining;
+
   final VoidCallback? onPressed;
 
   final double width;
@@ -17,17 +20,29 @@ class EquipmentSlot extends StatelessWidget {
     required this.icon,
     this.exercises = const [],
     this.isActive = false,
+    this.isOnCooldown = false,
+    this.cooldownRemaining,
     this.onPressed,
     this.width = 100,
     this.height = 100,
   });
+
+  String formatCooldown(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+
+    return '${hours.toString().padLeft(2, '0')}:'
+        '${minutes.toString().padLeft(2, '0')}:'
+        '${seconds.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
     final bool isEquipped = exercises.isNotEmpty;
 
     return InkWell(
-      onTap: onPressed,
+      onTap: isOnCooldown ? null : onPressed,
 
       borderRadius: BorderRadius.circular(15),
 
@@ -63,95 +78,157 @@ class EquipmentSlot extends StatelessWidget {
               : [],
         ),
 
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-
+        child: Stack(
           children: [
-            Icon(
-              icon,
+            // --------------------------------------------------
+            // NORMAL SLOT CONTENT
+            // --------------------------------------------------
 
-              size: 50,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
 
-              color: isActive
-                  ? Colors.blueAccent
-                  : Colors.blueAccent.withOpacity(0.7),
-            ),
+              children: [
+                Icon(
+                  icon,
 
-            const SizedBox(height: 8),
-
-            if (!isEquipped)
-
-              Text(
-                label,
-
-                textAlign: TextAlign.center,
-
-                style: TextStyle(
-                  fontSize: 12,
+                  size: 50,
 
                   color: isActive
-                      ? Colors.white
-                      : Colors.white54,
-
-                  fontWeight: FontWeight.bold,
-
-                  letterSpacing: 1,
+                      ? Colors.blueAccent
+                      : Colors.blueAccent.withOpacity(0.7),
                 ),
-              )
 
-            else
+                const SizedBox(height: 8),
 
-              ...exercises.map(
-                (exercise) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 2,
-                      horizontal: 4,
+                if (!isEquipped)
+
+                  Text(
+                    label,
+
+                    textAlign: TextAlign.center,
+
+                    style: TextStyle(
+                      fontSize: 12,
+
+                      color: isActive
+                          ? Colors.white
+                          : Colors.white54,
+
+                      fontWeight: FontWeight.bold,
+
+                      letterSpacing: 1,
                     ),
+                  )
 
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                else
 
-                      children: [
-                        Icon(
-                          isActive
-                              ? Icons.circle
-                              : Icons.circle_outlined,
-
-                          size: 8,
-
-                          color: isActive
-                              ? Colors.blueAccent
-                              : Colors.white30,
+                  ...exercises.map(
+                    (exercise) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 2,
+                          horizontal: 4,
                         ),
 
-                        const SizedBox(width: 5),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
 
-                        Flexible(
-                          child: Text(
-                            exercise,
+                          children: [
+                            Icon(
+                              isActive
+                                  ? Icons.circle
+                                  : Icons.circle_outlined,
 
-                            maxLines: 1,
-
-                            overflow: TextOverflow.ellipsis,
-
-                            style: TextStyle(
-                              fontSize: 11,
+                              size: 8,
 
                               color: isActive
-                                  ? Colors.white
-                                  : Colors.white54,
-
-                              fontWeight: isActive
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
+                                  ? Colors.blueAccent
+                                  : Colors.white30,
                             ),
-                          ),
+
+                            const SizedBox(width: 5),
+
+                            Flexible(
+                              child: Text(
+                                exercise,
+
+                                maxLines: 1,
+
+                                overflow: TextOverflow.ellipsis,
+
+                                style: TextStyle(
+                                  fontSize: 11,
+
+                                  color: isActive
+                                      ? Colors.white
+                                      : Colors.white54,
+
+                                  fontWeight: isActive
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                },
+                      );
+                    },
+                  ),
+              ],
+            ),
+
+            // --------------------------------------------------
+            // COOLDOWN OVERLAY
+            // --------------------------------------------------
+
+            if (isOnCooldown)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.65),
+
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    children: [
+                      const Icon(
+                        Icons.lock,
+                        color: Colors.white70,
+                        size: 28,
+                      ),
+
+                      const SizedBox(height: 5),
+
+                      const Text(
+                        'COOLDOWN',
+
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2,
+                        ),
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      Text(
+                        cooldownRemaining != null
+                            ? formatCooldown(cooldownRemaining!)
+                            : '--:--:--',
+
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
           ],
         ),

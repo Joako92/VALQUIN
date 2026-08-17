@@ -16,4 +16,12 @@ class Exercise {
     required this.unit,
     this.stats = const {},
   });
+
+  String get description {
+    if (sets != null) {
+      return '$sets × ${amount.toInt()} $unit';
+    }
+
+    return '${amount.toInt()} $unit';
+  }
 }

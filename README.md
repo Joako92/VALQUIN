@@ -24,7 +24,7 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Estado
 
-**v0.0.3 — Modelado y modularización**
+**v0.1.0 — Lógica del juego: cooldown**
 
 La aplicación cuenta actualmente con:
 
@@ -75,9 +75,10 @@ lib/
 │
 └── widgets/
     ├── attribute_card.dart
-    ├── inventory_filter.dart
+    ├── equipment_item.dart
+    ├── equipment_slot.dart
     ├── exercise_item.dart
-    └── equipment_slot.dart
+    └── inventory_filter.dart
 
 # Correr devug en el teléfono
 

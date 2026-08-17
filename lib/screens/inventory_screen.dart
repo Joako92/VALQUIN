@@ -17,6 +17,14 @@ class InventoryScreen extends StatefulWidget {
 class _InventoryScreenState extends State<InventoryScreen> {
   EquipmentSlot? selectedSlot;
 
+  String formatAmount(double amount) {
+    if (amount == amount.roundToDouble()) {
+      return amount.toInt().toString();
+    }
+
+    return amount.toString();
+  }
+
   // --------------------------------------------------
   // FILTERED ITEMS
   // --------------------------------------------------
@@ -183,17 +191,78 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   slot: item.slot.name.toUpperCase(),
 
                   exercises: item.exercises
-                      .map((exercise) => exercise.name)
-                      .toList(),
+                    .map((exercise) {
+                      final amount = formatAmount(exercise.amount);
+
+                      if (exercise.sets != null) {
+                        return '${exercise.name} — '
+                            '${exercise.sets} x '
+                            '$amount ${exercise.unit}';
+                      }
+
+                      return '${exercise.name} — '
+                          '$amount ${exercise.unit}';
+                    })
+                    .toList(),
 
                   equipped: isEquipped,
 
                   onPressed: () {
                     setState(() {
                       if (isEquipped) {
-                        trainingPlan.removeItem(item);
+                        final removed = trainingPlan.removeItem(item);
+
+                        if (removed) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'UNEQUIPPED ${item.name}',
+                              ),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${item.name} IS ON COOLDOWN',
+                              ),
+                            ),
+                          );
+                        }
                       } else {
-                        trainingPlan.addItem(item);
+                        final result = trainingPlan.addItem(item);
+
+                        switch (result.type) {
+                          case EquipResultType.equipped:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'EQUIPPED ${item.name}',
+                                ),
+                              ),
+                            );
+                            break;
+
+                          case EquipResultType.replaced:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'REPLACED ${result.item!.name} -> ${item.name}',
+                                ),
+                              ),
+                            );
+                            break;
+
+                          case EquipResultType.blockedByCooldown:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${result.item!.name} IS ON COOLDOWN',
+                                ),
+                              ),
+                            );
+                            break;
+                        }
                       }
                     });
                   },
