@@ -5,8 +5,9 @@ import '../models/equipment_item.dart';
 import '../models/equipment_slot.dart';
 import '../widgets/inventory_filter.dart';
 import '../widgets/equipment_item.dart';
-import '../data/training_plan.dart';
 import '../managers/player_manager.dart';
+import '../managers/training_plan_manager.dart';
+import '../models/training_plan.dart';
 
 enum InventoryFilterType {
   all,
@@ -16,10 +17,12 @@ enum InventoryFilterType {
 
 class InventoryScreen extends StatefulWidget {
   final PlayerManager playerManager;
+  final TrainingPlanManager trainingPlanManager;
 
   const InventoryScreen({
     super.key,
     required this.playerManager,
+    required this.trainingPlanManager,
   });
 
   @override
@@ -28,10 +31,13 @@ class InventoryScreen extends StatefulWidget {
 
 class _InventoryScreenState extends State<InventoryScreen> {
   // --------------------------------------------------
-  // PLAYER
+  // MANAGERS
   // --------------------------------------------------
 
   PlayerManager get playerManager => widget.playerManager;
+
+  TrainingPlanManager get trainingPlanManager =>
+      widget.trainingPlanManager;
 
   // --------------------------------------------------
   // FORMAT REQUIREMENT
@@ -90,8 +96,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
     return equipmentItems
         .where(
-          (item) =>
-              trainingPlan.isItemUnlocked(item, player),
+          (item) => trainingPlanManager.trainingPlan
+              .isItemUnlocked(item, player),
         )
         .toList();
   }
@@ -101,6 +107,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
   // --------------------------------------------------
 
   List<EquipmentItem> get filteredItems {
+    final trainingPlan =
+        trainingPlanManager.trainingPlan;
+
     switch (selectedFilter) {
       case InventoryFilterType.all:
         return unlockedItems;
@@ -161,6 +170,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
         ),
       );
     }
+
+    final trainingPlan =
+        trainingPlanManager.trainingPlan;
 
     return Scaffold(
       appBar: AppBar(
@@ -391,114 +403,125 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   equipRequirements:
                       formatEquipRequirement(item),
 
-                  onPressed: () {
-                    setState(() {
-                      // --------------------------------------------------
-                      // UNEQUIP
-                      // --------------------------------------------------
+                  onPressed: () async {
+                    // --------------------------------------------------
+                    // UNEQUIP
+                    // --------------------------------------------------
 
-                      if (isEquipped) {
-                        final removed =
-                            trainingPlan.removeItem(
-                              item,
-                            );
+                    if (isEquipped) {
+                      final removed =
+                          trainingPlan.removeItem(item);
 
-                        if (removed) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'UNEQUIPPED ${item.name}',
-                              ),
+                      if (removed) {
+                        await trainingPlanManager
+                            .saveTrainingPlan();
+
+                        setState(() {});
+
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'UNEQUIPPED ${item.name}',
                             ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${item.name} IS ON COOLDOWN',
-                              ),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${item.name} IS ON COOLDOWN',
                             ),
-                          );
-                        }
-
-                        return;
+                          ),
+                        );
                       }
 
-                      // --------------------------------------------------
-                      // EQUIP
-                      // --------------------------------------------------
+                      return;
+                    }
 
-                      final result =
-                          trainingPlan.addItem(
-                        item,
-                        player,
-                      );
+                    // --------------------------------------------------
+                    // EQUIP
+                    // --------------------------------------------------
 
-                      switch (result.type) {
-                        case EquipResultType.equipped:
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'EQUIPPED ${item.name}',
-                              ),
+                    final result =
+                        trainingPlan.addItem(
+                      item,
+                      player,
+                    );
+
+                    switch (result.type) {
+                      case EquipResultType.equipped:
+                        await trainingPlanManager
+                            .saveTrainingPlan();
+
+                        setState(() {});
+
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'EQUIPPED ${item.name}',
                             ),
-                          );
-                          break;
+                          ),
+                        );
+                        break;
 
-                        case EquipResultType.replaced:
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'REPLACED '
-                                '${result.item!.name} -> '
-                                '${item.name}',
-                              ),
-                            ),
-                          );
-                          break;
+                      case EquipResultType.replaced:
+                        await trainingPlanManager
+                            .saveTrainingPlan();
 
-                        case EquipResultType.blockedByCooldown:
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${result.item!.name} IS ON COOLDOWN',
-                              ),
-                            ),
-                          );
-                          break;
+                        setState(() {});
 
-                        case EquipResultType
-                              .blockedByUnlockRequirement:
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${item.name}: '
-                                'UNLOCK REQUIREMENTS NOT MET',
-                              ),
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'REPLACED '
+                              '${result.item!.name} -> '
+                              '${item.name}',
                             ),
-                          );
-                          break;
+                          ),
+                        );
+                        break;
 
-                        case EquipResultType
-                              .blockedByEquipRequirement:
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${item.name}: '
-                                'EQUIP REQUIREMENTS NOT MET',
-                              ),
+                      case EquipResultType.blockedByCooldown:
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${result.item!.name} IS ON COOLDOWN',
                             ),
-                          );
-                          break;
-                      }
-                    });
+                          ),
+                        );
+                        break;
+
+                      case EquipResultType
+                          .blockedByUnlockRequirement:
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${item.name}: '
+                              'UNLOCK REQUIREMENTS NOT MET',
+                            ),
+                          ),
+                        );
+                        break;
+
+                      case EquipResultType
+                          .blockedByEquipRequirement:
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${item.name}: '
+                              'EQUIP REQUIREMENTS NOT MET',
+                            ),
+                          ),
+                        );
+                        break;
+                    }
                   },
                 );
               },

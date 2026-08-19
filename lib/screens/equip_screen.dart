@@ -3,16 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../widgets/equipment_slot.dart';
-import '../data/training_plan.dart';
 import '../models/equipment_slot.dart' as model;
 import '../managers/player_manager.dart';
+import '../managers/training_plan_manager.dart';
 
 class EquipScreen extends StatefulWidget {
   final PlayerManager playerManager;
+  final TrainingPlanManager trainingPlanManager;
 
   const EquipScreen({
     super.key,
     required this.playerManager,
+    required this.trainingPlanManager,
   });
 
   @override
@@ -23,10 +25,13 @@ class _EquipScreenState extends State<EquipScreen> {
   Timer? _cooldownTimer;
 
   // --------------------------------------------------
-  // PLAYER MANAGER
+  // MANAGERS
   // --------------------------------------------------
 
   PlayerManager get playerManager => widget.playerManager;
+
+  TrainingPlanManager get trainingPlanManager =>
+      widget.trainingPlanManager;
 
   // --------------------------------------------------
   // INIT
@@ -65,9 +70,13 @@ class _EquipScreenState extends State<EquipScreen> {
     required IconData icon,
     required model.EquipmentSlot slot,
   }) {
+    final trainingPlan =
+        trainingPlanManager.trainingPlan;
+
     final items = trainingPlan.itemsForSlot(slot);
 
-    final isActive = trainingPlan.isSlotActive(slot);
+    final isActive =
+        trainingPlan.isSlotActive(slot);
 
     // --------------------------------------------------
     // EQUIPPED ITEM
@@ -82,7 +91,8 @@ class _EquipScreenState extends State<EquipScreen> {
     // --------------------------------------------------
 
     final isOnCooldown =
-        item != null && trainingPlan.isOnCooldown(item);
+        item != null &&
+        trainingPlan.isOnCooldown(item);
 
     final cooldownRemaining = item != null
         ? trainingPlan
@@ -115,10 +125,16 @@ class _EquipScreenState extends State<EquipScreen> {
 
       cooldownRemaining: cooldownRemaining,
 
-      onPressed: () {
-        setState(() {
-          trainingPlan.toggleSlot(slot);
-        });
+      onPressed: () async {
+        trainingPlan.toggleSlot(slot);
+
+        await trainingPlanManager.saveTrainingPlan();
+
+        if (!mounted) {
+          return;
+        }
+
+        setState(() {});
       },
 
       width: double.infinity,
@@ -141,6 +157,9 @@ class _EquipScreenState extends State<EquipScreen> {
         ),
       );
     }
+
+    final trainingPlan =
+        trainingPlanManager.trainingPlan;
 
     return Scaffold(
       appBar: AppBar(
@@ -187,7 +206,8 @@ class _EquipScreenState extends State<EquipScreen> {
 
               shrinkWrap: true,
 
-              physics: const NeverScrollableScrollPhysics(),
+              physics:
+                  const NeverScrollableScrollPhysics(),
 
               childAspectRatio: 1.30,
 
@@ -270,7 +290,18 @@ class _EquipScreenState extends State<EquipScreen> {
                     return;
                   }
 
+                  // --------------------------------------------------
+                  // SAVE PLAYER
+                  // --------------------------------------------------
+
                   await playerManager.savePlayer();
+
+                  // --------------------------------------------------
+                  // SAVE TRAINING PLAN
+                  // --------------------------------------------------
+
+                  await trainingPlanManager
+                      .saveTrainingPlan();
 
                   if (!mounted) {
                     return;
@@ -278,18 +309,16 @@ class _EquipScreenState extends State<EquipScreen> {
 
                   setState(() {});
 
-                  setState(() {});
+                  final messages =
+                      gainedStats.entries
+                          .map((entry) {
+                    final statName =
+                        entry.key.toUpperCase();
 
-                  final messages = gainedStats.entries
-                      .map((entry) {
-                        final statName =
-                            entry.key.toUpperCase();
+                    final value = entry.value;
 
-                        final value = entry.value;
-
-                        return '+$value $statName';
-                      })
-                      .join('\n');
+                    return '+$value $statName';
+                  }).join('\n');
 
                   ScaffoldMessenger.of(context)
                       .showSnackBar(
@@ -302,9 +331,8 @@ class _EquipScreenState extends State<EquipScreen> {
                         ),
                       ),
 
-                      duration: const Duration(
-                        seconds: 2,
-                      ),
+                      duration:
+                          const Duration(seconds: 2),
                     ),
                   );
                 },
@@ -325,11 +353,15 @@ class _EquipScreenState extends State<EquipScreen> {
                 ),
 
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
+                  backgroundColor:
+                      Colors.blueAccent,
+
                   foregroundColor: Colors.white,
 
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+                  shape:
+                      RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(15),
                   ),
                 ),
               ),

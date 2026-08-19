@@ -24,19 +24,22 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.2.0 — Persistencia local: Player persistente**
+**v0.2.1 — Persistencia local: Equipamiento persistente**
 
 # Casos de uso
 
-| # | Caso                                                | Resultado                                             |
-| - | --------------------------------------------------- | ----------------------------------------------------- |
-| 1 | Inicia la aplicación sin un jugador persistido      | Se carga el jugador inicial (`initialPlayer`)         |
-| 2 | Inicia la aplicación con un jugador persistido      | Se carga el jugador guardado                          |
-| 3 | Modifica las estadísticas mediante un entrenamiento | Las estadísticas del jugador se actualizan            |
-| 4 | Guarda el jugador                                   | Las estadísticas actuales quedan persistidas          |
-| 5 | Cierra y vuelve a abrir la aplicación               | El jugador conserva sus estadísticas                  |
-| 6 | El jugador persistido no existe                     | Se utiliza el jugador inicial como fallback           |
-| 7 | El jugador persistido existe                        | El jugador inicial no sobrescribe los datos guardados |
+| #  | Caso                                                  | Resultado                                              |
+| -- | ----------------------------------------------------- | ------------------------------------------------------ |
+| 1  | Equipa un item                                        | El item queda persistido                               |
+| 2  | Desequipa un item                                     | El item deja de estar persistido                       |
+| 3  | Reemplaza un item                                     | El nuevo item queda persistido                         |
+| 4  | Activa un slot                                        | El slot activo queda persistido                        |
+| 5  | Desactiva un slot                                     | El slot deja de estar activo al volver a abrir         |
+| 6  | Ejecuta un entrenamiento                              | El cooldown queda persistido                           |
+| 7  | Cierra y vuelve a abrir la aplicación                 | Equipment, slots activos y cooldowns se restauran      |
+| 8  | Abre la aplicación mientras un cooldown sigue vigente | El cooldown continúa desde el tiempo restante correcto |
+| 9  | Abre la aplicación después de que un cooldown expiró  | El item vuelve a estar disponible                      |
+| 10 | No existe TrainingPlan persistido                     | Se inicia un TrainingPlan vacío                        |
 
 # Estado
 
