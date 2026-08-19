@@ -1,5 +1,6 @@
 import '../models/player.dart';
 import '../persistence/player_storage.dart';
+
 class PlayerManager {
   final PlayerStorage storage;
 
@@ -24,26 +25,61 @@ class PlayerManager {
 
     if (savedPlayer != null) {
       _player = savedPlayer;
-      return;
     }
   }
 
-  // -------------------------------------------------- 
-  // CREATE 
-  // -------------------------------------------------- 
-  Future<void> createPlayer({ 
-    required String name, 
-    required PlayerClass playerClass, 
-  }) async { 
-    final newPlayer = Player( 
-      name: name, 
-      playerClass: playerClass, 
-      stats: PlayerStats(), 
-    ); 
-      
-    _player = newPlayer; 
-    
-    await savePlayer(); 
+  // --------------------------------------------------
+  // CREATE
+  // --------------------------------------------------
+
+  Future<void> createPlayer({
+    required String name,
+  }) async {
+    final newPlayer = Player(
+      name: name,
+      playerClass: PlayerClass.novice,
+      stats: PlayerStats(),
+    );
+
+    _player = newPlayer;
+
+    await savePlayer();
+  }
+
+  // --------------------------------------------------
+  // CHANGE CLASS
+  // --------------------------------------------------
+
+  Future<void> changeClass(
+    PlayerClass newClass,
+  ) async {
+    if (_player == null) {
+      return;
+    }
+
+    _player!.changeClass(newClass);
+
+    await savePlayer();
+  }
+
+  // --------------------------------------------------
+  // RESET PLAYER
+  // --------------------------------------------------
+
+  Future<void> resetPlayer() async {
+    if (_player == null) {
+      return;
+    }
+
+    final playerName = _player!.name;
+
+    _player = Player(
+      name: playerName,
+      playerClass: PlayerClass.novice,
+      stats: PlayerStats(),
+    );
+
+    await savePlayer();
   }
 
   // --------------------------------------------------

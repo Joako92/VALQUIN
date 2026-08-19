@@ -1,15 +1,36 @@
 import 'package:flutter/material.dart';
 
 import '../managers/player_manager.dart';
+import '../managers/class_manager.dart';
+import '../models/player.dart';
 import '../widgets/attribute_card.dart';
 
-class PlayerScreen extends StatelessWidget {
+class PlayerScreen extends StatefulWidget {
   final PlayerManager playerManager;
+  final ClassManager classManager;
 
   const PlayerScreen({
     super.key,
     required this.playerManager,
+    required this.classManager,
   });
+
+  @override
+  State<PlayerScreen> createState() => _PlayerScreenState();
+}
+
+class _PlayerScreenState extends State<PlayerScreen> {
+  // --------------------------------------------------
+  // MANAGERS
+  // --------------------------------------------------
+
+  PlayerManager get playerManager => widget.playerManager;
+
+  ClassManager get classManager => widget.classManager;
+
+  // --------------------------------------------------
+  // BUILD
+  // --------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +43,9 @@ class PlayerScreen extends StatelessWidget {
         ),
       );
     }
+
+    final availableClasses =
+        classManager.availableClasses(player);
 
     return Scaffold(
       appBar: AppBar(
@@ -143,6 +167,52 @@ class PlayerScreen extends StatelessWidget {
               ),
             ),
 
+            // --------------------------------------------------
+            // CLASS CHANGE AVAILABLE
+            // --------------------------------------------------
+
+            if (availableClasses.isNotEmpty) ...[
+              const SizedBox(height: 15),
+
+              SizedBox(
+                width: double.infinity,
+
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    _showClassChangeDialog(
+                      context,
+                      availableClasses,
+                    );
+                  },
+
+                  icon: const Icon(
+                    Icons.auto_awesome,
+                  ),
+
+                  label: const Text(
+                    'NEW CLASS AVAILABLE',
+                  ),
+
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.amberAccent,
+
+                    side: BorderSide(
+                      color: Colors.amberAccent.withOpacity(0.7),
+                    ),
+
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                    ),
+
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(15),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+
             const SizedBox(height: 25),
 
             // --------------------------------------------------
@@ -206,9 +276,190 @@ class PlayerScreen extends StatelessWidget {
                 ),
               ],
             ),
+
+            const Spacer(),
+
+            // --------------------------------------------------
+            // RESET PLAYER
+            // --------------------------------------------------
+
+            SizedBox(
+              width: double.infinity,
+
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  _showResetPlayerDialog(context);
+                },
+
+                icon: const Icon(
+                  Icons.restart_alt,
+                ),
+
+                label: const Text(
+                  'RESET PLAYER',
+                ),
+
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.redAccent,
+
+                  side: BorderSide(
+                    color: Colors.redAccent.withOpacity(0.7),
+                  ),
+
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                  ),
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(15),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  // --------------------------------------------------
+  // CLASS CHANGE DIALOG
+  // --------------------------------------------------
+
+  void _showClassChangeDialog(
+    BuildContext context,
+    List<PlayerClass> availableClasses,
+  ) {
+    showDialog(
+      context: context,
+
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            'CLASS CHANGE AVAILABLE',
+          ),
+
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+
+            children: [
+              const Text(
+                'Your training has unlocked new class options.',
+              ),
+
+              const SizedBox(height: 20),
+
+              ...availableClasses.map(
+                (playerClass) {
+                  return ListTile(
+                    leading: const Icon(
+                      Icons.shield,
+                    ),
+
+                    title: Text(
+                      playerClass.name.toUpperCase(),
+                    ),
+
+                    onTap: () async {
+                      Navigator.of(context).pop();
+
+                      await playerManager.changeClass(
+                        playerClass,
+                      );
+
+                      if (!mounted) {
+                        return;
+                      }
+
+                      setState(() {});
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+
+              child: const Text(
+                'LATER',
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // --------------------------------------------------
+  // RESET PLAYER DIALOG
+  // --------------------------------------------------
+
+  void _showResetPlayerDialog(
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text(
+            'RESET PLAYER?',
+          ),
+
+          content: const Text(
+            'Your level, class and attributes will be reset. '
+            'Your unlocked training items will be preserved.',
+          ),
+
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+
+              child: const Text(
+                'CANCEL',
+              ),
+            ),
+
+            TextButton(
+              onPressed: () async {
+                Navigator.of(dialogContext).pop();
+
+                await playerManager.resetPlayer();
+
+                if (!mounted) {
+                  return;
+                }
+
+                setState(() {});
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'PLAYER RESET. YOUR TRAINING JOURNEY BEGINS AGAIN.',
+                    ),
+                  ),
+                );
+              },
+
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.redAccent,
+              ),
+
+              child: const Text(
+                'RESET',
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

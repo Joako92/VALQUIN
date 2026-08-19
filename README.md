@@ -24,19 +24,27 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.2.2 — Persistencia local: Creación de nuevo jugador**
+**v0.3.0 — Class Progression**
 
 # Casos de uso
 
-| #  | Caso                                                  | Resultado                                                 |
-| -- | ----------------------------------------------------- | --------------------------------------------------------- |
-| 1 | No existe Player persistido                           | Se muestra la pantalla de creación de jugador             |
-| 2 | Crea un nuevo jugador                                 | Se crea un Player con el nombre ingresado                 |
-| 3 | Crea un nuevo jugador                                 | El jugador comienza con clase `Novice`                    |
-| 4 | Crea un nuevo jugador                                 | El jugador comienza con todas sus estadísticas en `0`     |
-| 5 | Crea un nuevo jugador                                 | El jugador queda persistido inmediatamente                |
-| 6 | Cierra y vuelve a abrir después de crear un jugador   | El jugador creado se carga correctamente                  |
-| 7 | Existe un Player persistido                           | La aplicación inicia directamente en `MainScreen`         |
+| #  | Caso                                                   | Resultado                                                        |
+| -- | ------------------------------------------------------ | ---------------------------------------------------------------- |
+| 1  | Jugador alcanza nivel 5 siendo `Novice`                | Se habilita la evaluación para cambio de clase                   |
+| 2  | `Novice` tiene `Strength >= 100`                       | Se habilita **Power Lifter**                                     |
+| 3  | `Novice` tiene `Endurance >= 100`                      | Se habilita **BodyBuilder**                                      |
+| 4  | `Novice` tiene `Energy >= 100`                         | Se habilita **Gymnast**                                          |
+| 5  | `Novice` tiene `Stamina >= 100`                        | Se habilita **Runner**                                           |
+| 6  | Cumple requisitos de varias clases especializadas      | Todas las clases correspondientes quedan disponibles para elegir |
+| 7  | No cumple ningún requisito de clase especializada      | No se habilita ningún cambio de clase                            |
+| 8  | Jugador elige una clase especializada                  | La clase actual cambia de `Novice` a la clase seleccionada       |
+| 9  | Jugador ya tiene una clase especializada               | No puede volver a elegir otra clase especializada                |
+| 10 | Jugador alcanza `100` en todos los stats               | Se habilita **Athlete**, independientemente de su clase actual   |
+| 11 | Jugador especializado alcanza `100` en todos los stats | Puede realizar el cambio definitivo a **Athlete**                |
+| 12 | Jugador elige `Athlete`                                | La clase pasa a ser `Athlete` y no puede volver a cambiar        |
+| 13 | Jugador no cumple nivel mínimo                         | No se habilita ninguna clase                                     |
+| 14 | Los stats cambian después de desbloquear una clase     | La clase ya disponible no se pierde                              |
+| 15 | Jugador cierra y vuelve a abrir la aplicación          | La clase actual se mantiene persistida                           |
 
 # Estado
 

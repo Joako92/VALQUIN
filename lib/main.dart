@@ -4,6 +4,7 @@ import 'app.dart';
 import 'data/training_plan.dart';
 import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
+import 'managers/class_manager.dart';
 import 'persistence/player_storage.dart';
 import 'persistence/training_plan_storage.dart';
 
@@ -36,6 +37,12 @@ Future<void> main() async {
   await trainingPlanManager.loadTrainingPlan();
 
   // --------------------------------------------------
+  // CLASS
+  // --------------------------------------------------
+
+  final classManager = ClassManager();
+
+  // --------------------------------------------------
   // APP
   // --------------------------------------------------
 
@@ -43,6 +50,7 @@ Future<void> main() async {
     SoloTrainingApp(
       playerManager: playerManager,
       trainingPlanManager: trainingPlanManager,
+      classManager: classManager,
     ),
   );
 }

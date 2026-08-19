@@ -1,10 +1,5 @@
-enum PlayerClass {
-  novice,
-  powerLifter,
-  runner,
-  bodybuilder,
-  athlete,
-}
+import 'player_class.dart';
+export 'player_class.dart';
 
 class PlayerStats {
   int strength;
@@ -55,7 +50,7 @@ class PlayerStats {
 
 class Player {
   final String name;
-  final PlayerClass playerClass;
+  PlayerClass playerClass;
 
   final PlayerStats stats;
 
@@ -64,6 +59,10 @@ class Player {
     required this.playerClass,
     required this.stats,
   });
+
+  // --------------------------------------------------
+  // PROGRESSION
+  // --------------------------------------------------
 
   int get xp {
     return stats.total;
@@ -81,11 +80,23 @@ class Player {
     return 100;
   }
 
+  // --------------------------------------------------
+  // STATS
+  // --------------------------------------------------
+
   int getStat(String stat) {
     return stats.getStat(stat);
   }
 
   void addStats(Map<String, int> statsToAdd) {
     stats.addStats(statsToAdd);
+  }
+
+  // --------------------------------------------------
+  // CLASS
+  // --------------------------------------------------
+
+  void changeClass(PlayerClass newClass) {
+    playerClass = newClass;
   }
 }

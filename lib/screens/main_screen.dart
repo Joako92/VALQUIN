@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
+import '../managers/class_manager.dart';
 import 'player_screen.dart';
 import 'inventory_screen.dart';
 import 'equip_screen.dart';
@@ -9,11 +10,13 @@ import 'equip_screen.dart';
 class MainScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
+  final ClassManager classManager;
 
   const MainScreen({
     super.key,
     required this.playerManager,
     required this.trainingPlanManager,
+    required this.classManager,
   });
 
   @override
@@ -28,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
     final screens = [
       PlayerScreen(
         playerManager: widget.playerManager,
+        classManager: widget.classManager,
       ),
 
       InventoryScreen(

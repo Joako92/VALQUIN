@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
-import '../models/player.dart';
+import '../managers/class_manager.dart';
 import 'main_screen.dart';
 
 class CreatePlayerScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
+  final ClassManager classManager;
 
   const CreatePlayerScreen({
     super.key,
     required this.playerManager,
     required this.trainingPlanManager,
+    required this.classManager,
   });
 
   @override
@@ -36,6 +38,9 @@ class _CreatePlayerScreenState
 
   TrainingPlanManager get trainingPlanManager =>
       widget.trainingPlanManager;
+
+  ClassManager get classManager =>
+      widget.classManager;
 
   // --------------------------------------------------
   // DISPOSE
@@ -72,7 +77,6 @@ class _CreatePlayerScreenState
 
     await playerManager.createPlayer(
       name: name,
-      playerClass: PlayerClass.novice,
     );
 
     if (!mounted) {
@@ -84,6 +88,7 @@ class _CreatePlayerScreenState
         builder: (_) => MainScreen(
           playerManager: playerManager,
           trainingPlanManager: trainingPlanManager,
+          classManager: classManager,
         ),
       ),
     );

@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
+import 'managers/class_manager.dart';
 import 'screens/create_player_screen.dart';
 import 'screens/main_screen.dart';
 
 class SoloTrainingApp extends StatelessWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
+  final ClassManager classManager;
 
   const SoloTrainingApp({
     super.key,
     required this.playerManager,
     required this.trainingPlanManager,
+    required this.classManager,
   });
 
   @override
@@ -31,10 +34,12 @@ class SoloTrainingApp extends StatelessWidget {
           ? MainScreen(
               playerManager: playerManager,
               trainingPlanManager: trainingPlanManager,
+              classManager: classManager,
             )
           : CreatePlayerScreen(
               playerManager: playerManager,
               trainingPlanManager: trainingPlanManager,
+              classManager: classManager,
             ),
     );
   }
