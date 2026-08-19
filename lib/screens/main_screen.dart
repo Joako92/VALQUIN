@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../managers/player_manager.dart';
 import 'player_screen.dart';
 import 'inventory_screen.dart';
 import 'equip_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final PlayerManager playerManager;
+
+  const MainScreen({
+    super.key,
+    required this.playerManager,
+  });
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -14,14 +20,20 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int currentIndex = 0;
 
-  final List<Widget> screens = const [
-    PlayerScreen(),
-    InventoryScreen(),
-    EquipScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final screens = [
+      PlayerScreen(
+        playerManager: widget.playerManager,
+      ),
+      InventoryScreen(
+        playerManager: widget.playerManager,
+      ),
+      EquipScreen(
+        playerManager: widget.playerManager,
+      ),
+    ];
+
     return Scaffold(
       body: screens[currentIndex],
 

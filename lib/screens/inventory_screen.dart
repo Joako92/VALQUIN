@@ -6,7 +6,7 @@ import '../models/equipment_slot.dart';
 import '../widgets/inventory_filter.dart';
 import '../widgets/equipment_item.dart';
 import '../data/training_plan.dart';
-import '../data/player.dart';
+import '../managers/player_manager.dart';
 
 enum InventoryFilterType {
   all,
@@ -15,13 +15,24 @@ enum InventoryFilterType {
 }
 
 class InventoryScreen extends StatefulWidget {
-  const InventoryScreen({super.key});
+  final PlayerManager playerManager;
+
+  const InventoryScreen({
+    super.key,
+    required this.playerManager,
+  });
 
   @override
   State<InventoryScreen> createState() => _InventoryScreenState();
 }
 
 class _InventoryScreenState extends State<InventoryScreen> {
+  // --------------------------------------------------
+  // PLAYER
+  // --------------------------------------------------
+
+  PlayerManager get playerManager => widget.playerManager;
+
   // --------------------------------------------------
   // FORMAT REQUIREMENT
   // --------------------------------------------------
@@ -71,6 +82,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
   // --------------------------------------------------
 
   List<EquipmentItem> get unlockedItems {
+    final player = playerManager.player;
+
+    if (player == null) {
+      return [];
+    }
+
     return equipmentItems
         .where(
           (item) =>
@@ -135,6 +152,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final player = playerManager.player;
+
+    if (player == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('INVENTORY'),
@@ -326,7 +353,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     trainingPlan.containsItem(item);
 
                 final canEquip =
-                    trainingPlan.canEquipItem(item, player);
+                    trainingPlan.canEquipItem(
+                  item,
+                  player,
+                );
 
                 return EquipmentItemWidget(
                   name: item.name,
@@ -358,7 +388,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   equipped: isEquipped,
                   canEquip: canEquip,
 
-                  equipRequirements: formatEquipRequirement(item),
+                  equipRequirements:
+                      formatEquipRequirement(item),
 
                   onPressed: () {
                     setState(() {
@@ -407,7 +438,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
                       switch (result.type) {
                         case EquipResultType.equipped:
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
                             SnackBar(
                               content: Text(
                                 'EQUIPPED ${item.name}',
@@ -417,7 +449,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           break;
 
                         case EquipResultType.replaced:
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
                             SnackBar(
                               content: Text(
                                 'REPLACED '
@@ -429,7 +462,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           break;
 
                         case EquipResultType.blockedByCooldown:
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
                             SnackBar(
                               content: Text(
                                 '${result.item!.name} IS ON COOLDOWN',
@@ -438,21 +472,27 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           );
                           break;
 
-                        case EquipResultType.blockedByUnlockRequirement:
-                          ScaffoldMessenger.of(context).showSnackBar(
+                        case EquipResultType
+                              .blockedByUnlockRequirement:
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
                             SnackBar(
                               content: Text(
-                                '${item.name}: UNLOCK REQUIREMENTS NOT MET',
+                                '${item.name}: '
+                                'UNLOCK REQUIREMENTS NOT MET',
                               ),
                             ),
                           );
                           break;
 
-                        case EquipResultType.blockedByEquipRequirement:
-                          ScaffoldMessenger.of(context).showSnackBar(
+                        case EquipResultType
+                              .blockedByEquipRequirement:
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
                             SnackBar(
                               content: Text(
-                                '${item.name}: EQUIP REQUIREMENTS NOT MET',
+                                '${item.name}: '
+                                'EQUIP REQUIREMENTS NOT MET',
                               ),
                             ),
                           );

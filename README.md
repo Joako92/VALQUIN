@@ -24,20 +24,19 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.1.1 — Lógica del juego: items besbloqueables**
+**v0.2.0 — Persistencia local: Player persistente**
 
 # Casos de uso
 
-| # | Caso                                                 | Resultado                                           |
-| - | ---------------------------------------------------- | --------------------------------------------------- |
-| 1 | Jugador nuevo, nivel 1                               | Tiene acceso a items con `unlockRequirements` vacío |
-| 2 | Alcanza nivel requerido                              | Se desbloquean los items correspondientes           |
-| 3 | Alcanza stat requerido                               | Se desbloquean los items correspondientes           |
-| 4 | Item desbloqueado pero no cumple `equipRequirements` | Puede verlo, pero no equiparlo                      |
-| 5 | Sube de nivel pero todavía no cumple stat            | El item sigue bloqueado para equipar                |
-| 6 | Alcanza finalmente el stat requerido                 | El item pasa a ser equipable                        |
-| 7 | Pierde una condición                                 | **No debería perder el item desbloqueado**          |
-
+| # | Caso                                                | Resultado                                             |
+| - | --------------------------------------------------- | ----------------------------------------------------- |
+| 1 | Inicia la aplicación sin un jugador persistido      | Se carga el jugador inicial (`initialPlayer`)         |
+| 2 | Inicia la aplicación con un jugador persistido      | Se carga el jugador guardado                          |
+| 3 | Modifica las estadísticas mediante un entrenamiento | Las estadísticas del jugador se actualizan            |
+| 4 | Guarda el jugador                                   | Las estadísticas actuales quedan persistidas          |
+| 5 | Cierra y vuelve a abrir la aplicación               | El jugador conserva sus estadísticas                  |
+| 6 | El jugador persistido no existe                     | Se utiliza el jugador inicial como fallback           |
+| 7 | El jugador persistido existe                        | El jugador inicial no sobrescribe los datos guardados |
 
 # Estado
 

@@ -5,10 +5,15 @@ import 'package:flutter/material.dart';
 import '../widgets/equipment_slot.dart';
 import '../data/training_plan.dart';
 import '../models/equipment_slot.dart' as model;
-import '../data/player.dart';
+import '../managers/player_manager.dart';
 
 class EquipScreen extends StatefulWidget {
-  const EquipScreen({super.key});
+  final PlayerManager playerManager;
+
+  const EquipScreen({
+    super.key,
+    required this.playerManager,
+  });
 
   @override
   State<EquipScreen> createState() => _EquipScreenState();
@@ -16,6 +21,12 @@ class EquipScreen extends StatefulWidget {
 
 class _EquipScreenState extends State<EquipScreen> {
   Timer? _cooldownTimer;
+
+  // --------------------------------------------------
+  // PLAYER MANAGER
+  // --------------------------------------------------
+
+  PlayerManager get playerManager => widget.playerManager;
 
   // --------------------------------------------------
   // INIT
@@ -121,6 +132,16 @@ class _EquipScreenState extends State<EquipScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final player = playerManager.player;
+
+    if (player == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('EQUIP'),
@@ -232,13 +253,13 @@ class _EquipScreenState extends State<EquipScreen> {
               height: 40,
 
               child: ElevatedButton.icon(
-                onPressed: () {
-                  final gainedStats = trainingPlan.execute(player);
-
-                  setState(() {});
+                onPressed: () async {
+                  final gainedStats =
+                      trainingPlan.execute(player);
 
                   if (gainedStats.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
                       const SnackBar(
                         content: Text(
                           'No training selected.',
@@ -248,6 +269,16 @@ class _EquipScreenState extends State<EquipScreen> {
 
                     return;
                   }
+
+                  await playerManager.savePlayer();
+
+                  if (!mounted) {
+                    return;
+                  }
+
+                  setState(() {});
+
+                  setState(() {});
 
                   final messages = gainedStats.entries
                       .map((entry) {
@@ -260,7 +291,8 @@ class _EquipScreenState extends State<EquipScreen> {
                       })
                       .join('\n');
 
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
                     SnackBar(
                       content: Text(
                         'TRAINING EXECUTED!\n$messages',

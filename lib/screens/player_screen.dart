@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../data/player.dart';
+import '../managers/player_manager.dart';
 import '../widgets/attribute_card.dart';
 
 class PlayerScreen extends StatelessWidget {
-  const PlayerScreen({super.key});
+  final PlayerManager playerManager;
+
+  const PlayerScreen({
+    super.key,
+    required this.playerManager,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final player = playerManager.player;
+
+    if (player == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('PLAYER NOT LOADED'),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('SOLO TRAINING'),
@@ -101,10 +116,13 @@ class PlayerScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
 
                     child: LinearProgressIndicator(
-                      // value: player.xp / 100,
-                      value: player.xpForCurrentLevel / player.xpRequiredForLevel,
+                      value: player.xpForCurrentLevel /
+                          player.xpRequiredForLevel,
+
                       minHeight: 12,
+
                       backgroundColor: Colors.white12,
+
                       valueColor:
                           const AlwaysStoppedAnimation<Color>(
                         Colors.blueAccent,
@@ -114,8 +132,6 @@ class PlayerScreen extends StatelessWidget {
 
                   const SizedBox(height: 8),
 
-                  // Text(
-                  //   '${player.xp} / 100 XP',
                   Text(
                     '${player.xpForCurrentLevel}/${player.xpRequiredForLevel} XP',
 
