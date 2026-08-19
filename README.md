@@ -24,22 +24,19 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.2.1 — Persistencia local: Equipamiento persistente**
+**v0.2.2 — Persistencia local: Creación de nuevo jugador**
 
 # Casos de uso
 
-| #  | Caso                                                  | Resultado                                              |
-| -- | ----------------------------------------------------- | ------------------------------------------------------ |
-| 1  | Equipa un item                                        | El item queda persistido                               |
-| 2  | Desequipa un item                                     | El item deja de estar persistido                       |
-| 3  | Reemplaza un item                                     | El nuevo item queda persistido                         |
-| 4  | Activa un slot                                        | El slot activo queda persistido                        |
-| 5  | Desactiva un slot                                     | El slot deja de estar activo al volver a abrir         |
-| 6  | Ejecuta un entrenamiento                              | El cooldown queda persistido                           |
-| 7  | Cierra y vuelve a abrir la aplicación                 | Equipment, slots activos y cooldowns se restauran      |
-| 8  | Abre la aplicación mientras un cooldown sigue vigente | El cooldown continúa desde el tiempo restante correcto |
-| 9  | Abre la aplicación después de que un cooldown expiró  | El item vuelve a estar disponible                      |
-| 10 | No existe TrainingPlan persistido                     | Se inicia un TrainingPlan vacío                        |
+| #  | Caso                                                  | Resultado                                                 |
+| -- | ----------------------------------------------------- | --------------------------------------------------------- |
+| 1 | No existe Player persistido                           | Se muestra la pantalla de creación de jugador             |
+| 2 | Crea un nuevo jugador                                 | Se crea un Player con el nombre ingresado                 |
+| 3 | Crea un nuevo jugador                                 | El jugador comienza con clase `Novice`                    |
+| 4 | Crea un nuevo jugador                                 | El jugador comienza con todas sus estadísticas en `0`     |
+| 5 | Crea un nuevo jugador                                 | El jugador queda persistido inmediatamente                |
+| 6 | Cierra y vuelve a abrir después de crear un jugador   | El jugador creado se carga correctamente                  |
+| 7 | Existe un Player persistido                           | La aplicación inicia directamente en `MainScreen`         |
 
 # Estado
 

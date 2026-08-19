@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
+import 'screens/create_player_screen.dart';
 import 'screens/main_screen.dart';
 
 class SoloTrainingApp extends StatelessWidget {
@@ -16,6 +17,8 @@ class SoloTrainingApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasPlayer = playerManager.player != null;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
@@ -24,10 +27,15 @@ class SoloTrainingApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFF080B12),
       ),
 
-      home: MainScreen(
-        playerManager: playerManager,
-        trainingPlanManager: trainingPlanManager,
-      ),
+      home: hasPlayer
+          ? MainScreen(
+              playerManager: playerManager,
+              trainingPlanManager: trainingPlanManager,
+            )
+          : CreatePlayerScreen(
+              playerManager: playerManager,
+              trainingPlanManager: trainingPlanManager,
+            ),
     );
   }
 }

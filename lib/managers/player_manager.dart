@@ -1,7 +1,5 @@
 import '../models/player.dart';
 import '../persistence/player_storage.dart';
-import '../data/player.dart';
-
 class PlayerManager {
   final PlayerStorage storage;
 
@@ -28,8 +26,24 @@ class PlayerManager {
       _player = savedPlayer;
       return;
     }
+  }
 
-    _player = initialPlayer;
+  // -------------------------------------------------- 
+  // CREATE 
+  // -------------------------------------------------- 
+  Future<void> createPlayer({ 
+    required String name, 
+    required PlayerClass playerClass, 
+  }) async { 
+    final newPlayer = Player( 
+      name: name, 
+      playerClass: playerClass, 
+      stats: PlayerStats(), 
+    ); 
+      
+    _player = newPlayer; 
+    
+    await savePlayer(); 
   }
 
   // --------------------------------------------------
