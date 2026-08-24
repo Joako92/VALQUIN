@@ -1,58 +1,109 @@
 import '../models/exercise.dart';
 
 const List<Exercise> exercises = [
+  // --------------------------------------------------
+  // CARDIO
+  // --------------------------------------------------
+
   Exercise(
-    id: 'trote_5km',
+    id: 'trote',
     name: 'TROTE',
-    amount: 5,
-    unit: 'km',
-    stats: {
-      'stamina': 2,
-    },
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        amount: 5,
+        unit: 'km',
+      ),
+      ExerciseVariant(
+        index: 1,
+        amount: 10,
+        unit: 'km',
+      ),
+      ExerciseVariant(
+        index: 2,
+        amount: 15,
+        unit: 'km',
+      ),
+      ExerciseVariant(
+        index: 3,
+        amount: 30,
+        unit: 'min',
+      ),
+      ExerciseVariant(
+        index: 4,
+        amount: 60,
+        unit: 'min',
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // CHEST
+  // --------------------------------------------------
+
+  Exercise(
+    id: 'bench_press',
+    name: 'BENCH PRESS',
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        sets: 3,
+        amount: 5,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 1,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 2,
+        sets: 4,
+        amount: 10,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 3,
+        sets: 4,
+        amount: 15,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 4,
+        sets: 5,
+        amount: 12,
+        unit: 'reps',
+      ),
+    ],
   ),
 
   Exercise(
-    id: 'press_banca_4x10',
-    name: 'PRESS BANCA',
-    sets: 4,
-    amount: 10,
-    unit: 'reps',
-    stats: {
-      'strength': 3,
-    },
-  ),
-
-  Exercise(
-    id: 'trote_30min',
-    name: 'TROTE',
-    amount: 30,
-    unit: 'min',
-    stats: {
-      'stamina': 3,
-    },
-  ),
-
-  Exercise(
-    id: 'apertura_mancuernas_3x12',
+    id: 'apertura_mancuernas',
     name: 'APERTURA CON MANCUERNAS',
-    sets: 3,
-    amount: 12,
-    unit: 'reps',
-    stats: {
-      'strength': 1,
-    },
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        sets: 3,
+        amount: 12,
+        unit: 'reps',
+      ),
+    ],
   ),
+
+  // --------------------------------------------------
+  // TEST
+  // --------------------------------------------------
 
   Exercise(
     id: 'carameloraro',
     name: 'CARAMELORRARO',
-    amount: 1,
-    unit: 'Unidad',
-    stats: {
-      'strength': 30,
-      'endurance': 30,
-      'energy': 30,
-      'stamina': 30,
-    },
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        amount: 1,
+        unit: 'unidad',
+      ),
+    ],
   ),
 ];

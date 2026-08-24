@@ -380,22 +380,26 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       item.slot.name.toUpperCase(),
 
                   exercises: item.exercises
-                      .map((exercise) {
-                        final amount =
-                            formatAmount(
-                              exercise.amount,
-                            );
+                    .map((equipmentExercise) {
+                      final exercise =
+                          equipmentExercise.exercise;
 
-                        if (exercise.sets != null) {
-                          return '${exercise.name} — '
-                              '${exercise.sets} x '
-                              '$amount ${exercise.unit}';
-                        }
+                      final variant =
+                          exercise.variants.first;
 
+                      final amount =
+                          formatAmount(variant.amount);
+
+                      if (variant.sets != null) {
                         return '${exercise.name} — '
-                            '$amount ${exercise.unit}';
-                      })
-                      .toList(),
+                            '${variant.sets} x '
+                            '$amount ${variant.unit}';
+                      }
+
+                      return '${exercise.name} — '
+                          '$amount ${variant.unit}';
+                    })
+                    .toList(),
 
                   equipped: isEquipped,
                   canEquip: canEquip,

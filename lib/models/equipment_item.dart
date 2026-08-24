@@ -3,16 +3,44 @@ import 'equipment_slot.dart';
 import 'rarity.dart';
 import 'equipment_requirement.dart';
 
+class EquipmentExercise {
+  final Exercise exercise;
+
+  final int maxVariant;
+
+  const EquipmentExercise({
+    required this.exercise,
+    this.maxVariant = 0,
+  });
+
+  List<ExerciseVariant> get availableVariants {
+    return exercise.variants
+        .where(
+          (variant) => variant.index <= maxVariant,
+        )
+        .toList();
+  }
+}
+
 class EquipmentItem {
   final String id;
   final String name;
-  final List<Exercise> exercises;
+
+  final List<EquipmentExercise> exercises;
+
   final Rarity rarity;
   final EquipmentSlot slot;
+
   final int cooldownHours;
+
   final EquipmentRequirement unlockRequirements;
   final EquipmentRequirement equipRequirements;
 
+  // --------------------------------------------------
+  // STATS
+  // --------------------------------------------------
+
+  final Map<String, int> stats;
 
   const EquipmentItem({
     required this.id,
@@ -23,5 +51,6 @@ class EquipmentItem {
     required this.cooldownHours,
     required this.unlockRequirements,
     required this.equipRequirements,
+    this.stats = const {},
   });
 }

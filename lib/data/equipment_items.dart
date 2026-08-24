@@ -5,16 +5,30 @@ import '../models/rarity.dart';
 import 'exercises.dart';
 
 final List<EquipmentItem> equipmentItems = [
+  // --------------------------------------------------
+  // HEAD
+  // --------------------------------------------------
+
   EquipmentItem(
     id: 'casco_novato',
     name: 'CASCO DEL NOVATO',
     rarity: Rarity.common,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
+
     unlockRequirements: EquipmentRequirement(),
+
     equipRequirements: EquipmentRequirement(),
+
+    stats: {
+      'stamina': 2,
+    },
+
     exercises: [
-      exercises[0],
+      EquipmentExercise(
+        exercise: exercises[0],
+        maxVariant: 0,
+      ),
     ],
   ),
 
@@ -24,18 +38,32 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
+
     unlockRequirements: EquipmentRequirement(
       level: 2,
     ),
+
     equipRequirements: EquipmentRequirement(
       stats: {
         'stamina': 10,
-      }
+      },
     ),
+
+    stats: {
+      'stamina': 3,
+    },
+
     exercises: [
-      exercises[2],
+      EquipmentExercise(
+        exercise: exercises[0],
+        maxVariant: 1,
+      ),
     ],
   ),
+
+  // --------------------------------------------------
+  // CHEST
+  // --------------------------------------------------
 
   EquipmentItem(
     id: 'pechera_novato',
@@ -43,41 +71,84 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.chest,
     cooldownHours: 24,
+
     unlockRequirements: EquipmentRequirement(),
+
     equipRequirements: EquipmentRequirement(),
+
+    stats: {
+      'strength': 2,
+    },
+
     exercises: [
-      exercises[1],
-      exercises[3],
+      EquipmentExercise(
+        exercise: exercises[1],
+        maxVariant: 0,
+      ),
+
+      EquipmentExercise(
+        exercise: exercises[2],
+        maxVariant: 0,
+      ),
     ],
   ),
+
+  // --------------------------------------------------
+  // TEST / SPECIAL
+  // --------------------------------------------------
 
   EquipmentItem(
     id: 'mejora_nivel',
     name: 'CARAMELORARO',
-    rarity: Rarity.epic,
+    rarity: Rarity.legendary,
     slot: EquipmentSlot.wings,
     cooldownHours: 0,
+
     unlockRequirements: EquipmentRequirement(),
+
     equipRequirements: EquipmentRequirement(),
+
+    stats: {
+      'strength': 30,
+      'endurance': 30,
+      'energy': 30,
+      'stamina': 30,
+    },
+
     exercises: [
-      exercises[4],
+      EquipmentExercise(
+        exercise: exercises[3],
+        maxVariant: 0,
+      ),
     ],
   ),
+
+  // --------------------------------------------------
+  // TEST / UNEQUIPPABLE
+  // --------------------------------------------------
 
   EquipmentItem(
     id: 'item_inequipable',
     name: 'INEQUIPABLE',
-    rarity: Rarity.epic,
+    rarity: Rarity.legendary,
     slot: EquipmentSlot.belt,
     cooldownHours: 0,
+
     unlockRequirements: EquipmentRequirement(),
+
     equipRequirements: EquipmentRequirement(
       stats: {
         'stamina': 100000,
-      }
+      },
     ),
+
+    stats: {},
+
     exercises: [
-      exercises[0],
+      EquipmentExercise(
+        exercise: exercises[0],
+        maxVariant: 0,
+      ),
     ],
   ),
 ];

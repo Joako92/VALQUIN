@@ -106,7 +106,7 @@ class _EquipScreenState extends State<EquipScreen> {
 
     final exercises = items
         .expand((item) => item.exercises)
-        .map((exercise) => exercise.name)
+        .map((equipmentExercise) => equipmentExercise.exercise.name)
         .toList();
 
     // --------------------------------------------------

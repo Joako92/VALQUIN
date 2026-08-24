@@ -199,7 +199,9 @@ class TrainingPlan {
   // SLOT
   // --------------------------------------------------
 
-  List<EquipmentItem> itemsForSlot(EquipmentSlot slot) {
+  List<EquipmentItem> itemsForSlot(
+    EquipmentSlot slot,
+  ) {
     return equipment
         .where((item) => item.slot == slot)
         .toList();
@@ -261,14 +263,20 @@ class TrainingPlan {
         continue;
       }
 
-      for (final exercise in item.exercises) {
-        player.addStats(exercise.stats);
+      // --------------------------------------------------
+      // STATS
+      // --------------------------------------------------
 
-        exercise.stats.forEach((stat, value) {
-          gainedStats[stat] =
-              (gainedStats[stat] ?? 0) + value;
-        });
-      }
+      player.addStats(item.stats);
+
+      item.stats.forEach((stat, value) {
+        gainedStats[stat] =
+            (gainedStats[stat] ?? 0) + value;
+      });
+
+      // --------------------------------------------------
+      // COOLDOWN
+      // --------------------------------------------------
 
       cooldowns[item.id] = DateTime.now();
     }
