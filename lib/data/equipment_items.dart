@@ -15,15 +15,9 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
-
     unlockRequirements: EquipmentRequirement(),
-
     equipRequirements: EquipmentRequirement(),
-
-    stats: {
-      'stamina': 2,
-    },
-
+    stats: {'stamina': 2},
     exercises: [
       EquipmentExercise(
         exercise: exercises[0],
@@ -38,21 +32,11 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
-
-    unlockRequirements: EquipmentRequirement(
-      level: 2,
-    ),
-
+    unlockRequirements: EquipmentRequirement(level: 2),
     equipRequirements: EquipmentRequirement(
-      stats: {
-        'stamina': 10,
-      },
+      stats: {'stamina': 10},
     ),
-
-    stats: {
-      'stamina': 3,
-    },
-
+    stats: {'stamina': 3},
     exercises: [
       EquipmentExercise(
         exercise: exercises[0],
@@ -71,21 +55,14 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.chest,
     cooldownHours: 24,
-
     unlockRequirements: EquipmentRequirement(),
-
     equipRequirements: EquipmentRequirement(),
-
-    stats: {
-      'strength': 2,
-    },
-
+    stats: {'strength': 2},
     exercises: [
       EquipmentExercise(
         exercise: exercises[1],
         maxVariant: 0,
       ),
-
       EquipmentExercise(
         exercise: exercises[2],
         maxVariant: 0,
@@ -94,27 +71,23 @@ final List<EquipmentItem> equipmentItems = [
   ),
 
   // --------------------------------------------------
-  // TEST / SPECIAL
+  // ACCESSORY / TEST
   // --------------------------------------------------
 
   EquipmentItem(
     id: 'mejora_nivel',
     name: 'CARAMELORARO',
     rarity: Rarity.legendary,
-    slot: EquipmentSlot.wings,
+    slot: EquipmentSlot.accessory,
     cooldownHours: 0,
-
     unlockRequirements: EquipmentRequirement(),
-
     equipRequirements: EquipmentRequirement(),
-
     stats: {
       'strength': 30,
       'endurance': 30,
       'energy': 30,
       'stamina': 30,
     },
-
     exercises: [
       EquipmentExercise(
         exercise: exercises[3],
@@ -133,17 +106,11 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.legendary,
     slot: EquipmentSlot.belt,
     cooldownHours: 0,
-
     unlockRequirements: EquipmentRequirement(),
-
     equipRequirements: EquipmentRequirement(
-      stats: {
-        'stamina': 100000,
-      },
+      stats: {'stamina': 100000},
     ),
-
     stats: {},
-
     exercises: [
       EquipmentExercise(
         exercise: exercises[0],
