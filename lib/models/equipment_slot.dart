@@ -1,10 +1,11 @@
 enum EquipmentSlot {
+  shoulders,
   head,
   wings,
-  shoulders,
+  weapon,
   chest,
-  biceps,
-  triceps,
-  belt,
+  shield,
+  accessory,
   legs,
+  belt,
 }
