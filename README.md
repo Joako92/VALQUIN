@@ -24,16 +24,19 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.3.1 — Cambio en el modelo de ejercicio**
+**v0.4.0 — Database & Content Foundation**
 
 # Cambios en esta versión
 
-* Se modificó el modelo de ejercicios para permitir múltiples variantes de un mismo ejercicio.
-* Las variantes permiten definir diferentes cantidades, series y unidades para un mismo ejercicio.
-* Los objetos de equipamiento ahora determinan qué variantes de cada ejercicio están disponibles.
-* Se separó la definición del ejercicio de las variantes de entrenamiento.
-* Se preparó el modelo para reutilizar ejercicios en diferentes objetos sin duplicar sus variantes.
-* Se dejó preparada la estructura para incorporar posteriormente la selección de variantes desde la interfaz.
+* Se consolidó SQLite como sistema de persistencia local de la aplicación.
+* Se incorporó Drift como ORM y capa de acceso a la base de datos.
+* Se incorporó `build_runner` y `drift_dev` para la generación de código de Drift.
+* Se creó la estructura inicial de la base de datos y sus tablas.
+* Se implementó una tabla de prueba para validar la conexión y las operaciones de persistencia.
+* Se implementaron y testearon las operaciones básicas de **CRUD**: crear, leer, actualizar y eliminar registros.
+* Se configuró la base de datos para poder utilizar un `QueryExecutor` alternativo durante los tests.
+* Se estableció una base para comenzar a migrar progresivamente el contenido de la aplicación desde estructuras hardcodeadas hacia SQLite.
+* Se mantuvo la arquitectura actual de la aplicación funcionando mientras se incorpora la nueva capa de persistencia.
 
 # Casos de uso
 
@@ -71,12 +74,18 @@ La aplicación cuenta actualmente con:
 * Reset del jugador.
 * Interfaz RPG básica.
 * Persistencia local.
+* SQLite integrado.
+* Drift integrado.
+* Capa inicial de acceso a datos.
+* CRUD de base de datos validado mediante tests automatizados.
 
 ---
 
 # Arquitectura
 
+```text
 lib/
+
 │
 ├── main.dart
 ├── app.dart
@@ -84,6 +93,12 @@ lib/
 ├── data/
 │   ├── exercises.dart
 │   └── equipment_items.dart
+│
+├── database/
+│   ├── app_database.dart
+│   │
+│   └── tables/
+│       └── test_entries.dart
 │
 ├── models/
 │   ├── exercise.dart
@@ -115,7 +130,25 @@ lib/
     ├── equipment_slot.dart
     ├── exercise_item.dart
     └── inventory_filter.dart
+```
 
 # Correr debug en el teléfono
 
+```bash
 flutter run -d ZY22KXJ833
+```
+
+# Tests
+
+Para ejecutar los tests de la base de datos:
+
+```bash
+flutter test test/database/app_database_test.dart
+```
+
+Actualmente se encuentran validadas las operaciones:
+
+INSERT ✓
+READ   ✓
+UPDATE ✓
+DELETE ✓
