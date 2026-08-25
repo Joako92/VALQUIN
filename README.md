@@ -20,7 +20,7 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.4.3 — Exercise ↔ ExerciseVariant**
+**v0.4.4 — Exercise Reading**
 
 # Cambios en esta versión
 
@@ -57,6 +57,22 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 * Relación Exercise ↔ ExerciseVariant.
 
 * Prevención de relaciones duplicadas.
+
+* getExercise(id) → obtiene un ejercicio desde Drift.
+
+* getExerciseVariants(exerciseId) → obtiene sus variantes mediante la tabla de relación.
+
+* getExerciseWithVariants(id) → reconstruye un domain.Exercise completo.
+
+* getExercisesWithVariants() → reconstruye todos los ejercicios con sus variantes.
+
+* Tests automatizados de las relaciones.
+
+* Tests automatizados de lectura individual.
+
+* Tests automatizados de lectura múltiple.
+
+* Conversión Drift → modelo de dominio validada.
 
 # Casos de uso
 

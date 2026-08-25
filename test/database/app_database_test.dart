@@ -403,4 +403,134 @@ void main() {
       expect(variants[1].unit, 'reps');
     },
   );
+
+  // Full exercise
+
+  test(
+    'reads an exercise with its variants',
+    () async {
+      await database.insertExercise(
+        id: 'push_up',
+        name: 'Push Up',
+      );
+
+      final variant1 =
+          await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      );
+
+      final variant2 =
+          await database.insertExerciseVariant(
+        variantIndex: 1,
+        sets: 4,
+        amount: 12,
+        unit: 'reps',
+      );
+
+      await database.insertExerciseVariantLink(
+        exerciseId: 'push_up',
+        variantId: variant1,
+      );
+
+      await database.insertExerciseVariantLink(
+        exerciseId: 'push_up',
+        variantId: variant2,
+      );
+
+      final exercise =
+          await database.getExerciseWithVariants(
+        'push_up',
+      );
+
+      expect(exercise, isNotNull);
+
+      expect(exercise!.id, 'push_up');
+      expect(exercise.name, 'Push Up');
+
+      expect(exercise.variants.length, 2);
+
+      expect(exercise.variants[0].index, 0);
+      expect(exercise.variants[0].sets, 3);
+      expect(exercise.variants[0].amount, 10);
+      expect(exercise.variants[0].unit, 'reps');
+
+      expect(exercise.variants[1].index, 1);
+      expect(exercise.variants[1].sets, 4);
+      expect(exercise.variants[1].amount, 12);
+      expect(exercise.variants[1].unit, 'reps');
+    },
+  );
+
+  test(
+    'reads all exercises with their variants',
+    () async {
+      await database.insertExercise(
+        id: 'push_up',
+        name: 'Push Up',
+      );
+
+      await database.insertExercise(
+        id: 'squat',
+        name: 'Squat',
+      );
+
+      final pushUpVariant =
+          await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      );
+
+      final squatVariant =
+          await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 15,
+        unit: 'reps',
+      );
+
+      await database.insertExerciseVariantLink(
+        exerciseId: 'push_up',
+        variantId: pushUpVariant,
+      );
+
+      await database.insertExerciseVariantLink(
+        exerciseId: 'squat',
+        variantId: squatVariant,
+      );
+
+      final exercises =
+          await database.getExercisesWithVariants();
+
+      expect(exercises.length, 2);
+
+      final pushUp =
+          exercises.firstWhere(
+        (exercise) => exercise.id == 'push_up',
+      );
+
+      final squat =
+          exercises.firstWhere(
+        (exercise) => exercise.id == 'squat',
+      );
+
+      expect(pushUp.name, 'Push Up');
+      expect(pushUp.variants.length, 1);
+      expect(pushUp.variants.first.index, 0);
+      expect(pushUp.variants.first.sets, 3);
+      expect(pushUp.variants.first.amount, 10);
+      expect(pushUp.variants.first.unit, 'reps');
+
+      expect(squat.name, 'Squat');
+      expect(squat.variants.length, 1);
+      expect(squat.variants.first.index, 0);
+      expect(squat.variants.first.sets, 3);
+      expect(squat.variants.first.amount, 15);
+      expect(squat.variants.first.unit, 'reps');
+    },
+  );
 }

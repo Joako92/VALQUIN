@@ -7,6 +7,9 @@ import 'tables/exercise_variants.dart';
 import 'tables/exercises.dart';
 import 'tables/exercise_variant_links.dart';
 
+// Models import
+import '../models/exercise.dart' as domain;
+
 part 'app_database.g.dart';
 
 @DriftDatabase(
@@ -207,5 +210,53 @@ class AppDatabase extends _$AppDatabase {
     return query.map((row) {
       return row.readTable(exerciseVariants);
     }).get();
+  }
+
+  // Final exercise
+
+  Future<domain.Exercise?> getExerciseWithVariants(
+    String exerciseId,
+  ) async {
+    final exercise =
+        await getExercise(exerciseId);
+
+    if (exercise == null) {
+      return null;
+    }
+
+    final variants =
+        await getExerciseVariants(exerciseId);
+
+    return domain.Exercise(
+      id: exercise.id,
+      name: exercise.name,
+      variants: variants
+          .map(
+            (variant) => domain.ExerciseVariant(
+              index: variant.variantIndex,
+              sets: variant.sets,
+              amount: variant.amount,
+              unit: variant.unit,
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Future<List<domain.Exercise>> getExercisesWithVariants() async {
+    final exercises = await select(this.exercises).get();
+
+    final result = <domain.Exercise>[];
+
+    for (final exercise in exercises) {
+      final exerciseWithVariants =
+          await getExerciseWithVariants(exercise.id);
+
+      if (exerciseWithVariants != null) {
+        result.add(exerciseWithVariants);
+      }
+    }
+
+    return result;
   }
 }
