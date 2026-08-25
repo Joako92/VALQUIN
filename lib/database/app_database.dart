@@ -5,6 +5,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'tables/test_entries.dart';
 import 'tables/exercise_variants.dart';
 import 'tables/exercises.dart';
+import 'tables/exercise_variant_links.dart';
 
 part 'app_database.g.dart';
 
@@ -13,6 +14,7 @@ part 'app_database.g.dart';
     TestEntries,
     ExerciseVariants,
     Exercises,
+    ExerciseVariantLinks,
   ],
 )
 
@@ -157,5 +159,53 @@ class AppDatabase extends _$AppDatabase {
           ..where((table) => table.id.equals(id)))
         .go()
         .then((rows) => rows > 0);
+  }
+
+  // Exercise Variant Links
+
+  Future<int> insertExerciseVariantLink({
+    required String exerciseId,
+    required int variantId,
+  }) {
+    return into(exerciseVariantLinks).insert(
+      ExerciseVariantLinksCompanion.insert(
+        exerciseId: exerciseId,
+        variantId: variantId,
+      ),
+    );
+  }
+
+  Future<ExerciseVariantLink?> getExerciseVariantLink(int id) {
+    return (select(exerciseVariantLinks)
+          ..where((table) => table.id.equals(id)))
+        .getSingleOrNull();
+  }
+
+  Future<List<ExerciseVariantLink>> getExerciseVariantLinks(
+    String exerciseId,
+  ) {
+    return (select(exerciseVariantLinks)
+          ..where((table) => table.exerciseId.equals(exerciseId)))
+        .get();
+  }
+
+  Future<List<ExerciseVariant>> getExerciseVariants(
+    String exerciseId,
+  ) {
+    final query = select(exerciseVariants).join([
+      innerJoin(
+        exerciseVariantLinks,
+        exerciseVariantLinks.variantId.equalsExp(
+          exerciseVariants.id,
+        ),
+      ),
+    ])
+      ..where(
+        exerciseVariantLinks.exerciseId.equals(exerciseId),
+      );
+
+    return query.map((row) {
+      return row.readTable(exerciseVariants);
+    }).get();
   }
 }

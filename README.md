@@ -20,7 +20,7 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.4.2 — Exercise en database**
+**v0.4.3 — Exercise ↔ ExerciseVariant**
 
 # Cambios en esta versión
 
@@ -53,6 +53,10 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 * Se estableció la base para relacionar posteriormente los ejercicios con sus variantes mediante la base de datos.
 
 * Se mantuvo la arquitectura actual de la aplicación funcionando mientras se incorpora progresivamente la nueva capa de persistencia.
+
+* Relación Exercise ↔ ExerciseVariant.
+
+* Prevención de relaciones duplicadas.
 
 # Casos de uso
 

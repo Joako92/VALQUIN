@@ -217,4 +217,190 @@ void main() {
       expect(exercise, isNull);
     },
   );
+
+  // Exercise variant links
+
+  test(
+    'prevents duplicate exercise variant links',
+    () async {
+      await database.insertExercise(
+        id: 'push_up',
+        name: 'Push Up',
+      );
+
+      final variantId =
+          await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      );
+
+      await database.insertExerciseVariantLink(
+        exerciseId: 'push_up',
+        variantId: variantId,
+      );
+
+      expect(
+        () => database.insertExerciseVariantLink(
+          exerciseId: 'push_up',
+          variantId: variantId,
+        ),
+        throwsA(isA<Exception>()),
+      );
+    },
+  );
+
+  test(
+    'inserts an exercise variant link',
+    () async {
+      await database.insertExercise(
+        id: 'push_up',
+        name: 'Push Up',
+      );
+
+      final variantId =
+          await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      );
+
+      final linkId =
+          await database.insertExerciseVariantLink(
+        exerciseId: 'push_up',
+        variantId: variantId,
+      );
+
+      expect(linkId, isPositive);
+    },
+  );
+
+  test(
+    'reads exercise variant links',
+    () async {
+      await database.insertExercise(
+        id: 'push_up',
+        name: 'Push Up',
+      );
+
+      final variantId =
+          await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      );
+
+      final linkId =
+          await database.insertExerciseVariantLink(
+        exerciseId: 'push_up',
+        variantId: variantId,
+      );
+
+      final link =
+          await database.getExerciseVariantLink(linkId);
+
+      expect(link, isNotNull);
+      expect(link!.exerciseId, 'push_up');
+      expect(link.variantId, variantId);
+    },
+  );
+
+  test(
+    'reads all variant links for an exercise',
+    () async {
+      await database.insertExercise(
+        id: 'push_up',
+        name: 'Push Up',
+      );
+
+      final variant1 =
+          await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      );
+
+      final variant2 =
+          await database.insertExerciseVariant(
+        variantIndex: 1,
+        sets: 4,
+        amount: 12,
+        unit: 'reps',
+      );
+
+      await database.insertExerciseVariantLink(
+        exerciseId: 'push_up',
+        variantId: variant1,
+      );
+
+      await database.insertExerciseVariantLink(
+        exerciseId: 'push_up',
+        variantId: variant2,
+      );
+
+      final links =
+          await database.getExerciseVariantLinks('push_up');
+
+      expect(links.length, 2);
+      expect(links[0].variantId, variant1);
+      expect(links[1].variantId, variant2);
+    },
+  );
+
+  test(
+    'reads exercise variants',
+    () async {
+      await database.insertExercise(
+        id: 'push_up',
+        name: 'Push Up',
+      );
+
+      final variant1 =
+          await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      );
+
+      final variant2 =
+          await database.insertExerciseVariant(
+        variantIndex: 1,
+        sets: 4,
+        amount: 12,
+        unit: 'reps',
+      );
+
+      await database.insertExerciseVariantLink(
+        exerciseId: 'push_up',
+        variantId: variant1,
+      );
+
+      await database.insertExerciseVariantLink(
+        exerciseId: 'push_up',
+        variantId: variant2,
+      );
+
+      final variants =
+          await database.getExerciseVariants('push_up');
+
+      expect(variants.length, 2);
+
+      expect(variants[0].id, variant1);
+      expect(variants[0].variantIndex, 0);
+      expect(variants[0].sets, 3);
+      expect(variants[0].amount, 10);
+      expect(variants[0].unit, 'reps');
+
+      expect(variants[1].id, variant2);
+      expect(variants[1].variantIndex, 1);
+      expect(variants[1].sets, 4);
+      expect(variants[1].amount, 12);
+      expect(variants[1].unit, 'reps');
+    },
+  );
 }

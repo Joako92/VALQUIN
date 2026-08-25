@@ -792,6 +792,265 @@ class ExercisesCompanion extends UpdateCompanion<Exercise> {
   }
 }
 
+class $ExerciseVariantLinksTable extends ExerciseVariantLinks
+    with TableInfo<$ExerciseVariantLinksTable, ExerciseVariantLink> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ExerciseVariantLinksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _exerciseIdMeta = const VerificationMeta(
+    'exerciseId',
+  );
+  @override
+  late final GeneratedColumn<String> exerciseId = GeneratedColumn<String>(
+    'exercise_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _variantIdMeta = const VerificationMeta(
+    'variantId',
+  );
+  @override
+  late final GeneratedColumn<int> variantId = GeneratedColumn<int>(
+    'variant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, exerciseId, variantId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'exercise_variant_links';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ExerciseVariantLink> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('exercise_id')) {
+      context.handle(
+        _exerciseIdMeta,
+        exerciseId.isAcceptableOrUnknown(data['exercise_id']!, _exerciseIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_exerciseIdMeta);
+    }
+    if (data.containsKey('variant_id')) {
+      context.handle(
+        _variantIdMeta,
+        variantId.isAcceptableOrUnknown(data['variant_id']!, _variantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_variantIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {exerciseId, variantId},
+  ];
+  @override
+  ExerciseVariantLink map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ExerciseVariantLink(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      exerciseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}exercise_id'],
+      )!,
+      variantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}variant_id'],
+      )!,
+    );
+  }
+
+  @override
+  $ExerciseVariantLinksTable createAlias(String alias) {
+    return $ExerciseVariantLinksTable(attachedDatabase, alias);
+  }
+}
+
+class ExerciseVariantLink extends DataClass
+    implements Insertable<ExerciseVariantLink> {
+  final int id;
+  final String exerciseId;
+  final int variantId;
+  const ExerciseVariantLink({
+    required this.id,
+    required this.exerciseId,
+    required this.variantId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['exercise_id'] = Variable<String>(exerciseId);
+    map['variant_id'] = Variable<int>(variantId);
+    return map;
+  }
+
+  ExerciseVariantLinksCompanion toCompanion(bool nullToAbsent) {
+    return ExerciseVariantLinksCompanion(
+      id: Value(id),
+      exerciseId: Value(exerciseId),
+      variantId: Value(variantId),
+    );
+  }
+
+  factory ExerciseVariantLink.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ExerciseVariantLink(
+      id: serializer.fromJson<int>(json['id']),
+      exerciseId: serializer.fromJson<String>(json['exerciseId']),
+      variantId: serializer.fromJson<int>(json['variantId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'exerciseId': serializer.toJson<String>(exerciseId),
+      'variantId': serializer.toJson<int>(variantId),
+    };
+  }
+
+  ExerciseVariantLink copyWith({int? id, String? exerciseId, int? variantId}) =>
+      ExerciseVariantLink(
+        id: id ?? this.id,
+        exerciseId: exerciseId ?? this.exerciseId,
+        variantId: variantId ?? this.variantId,
+      );
+  ExerciseVariantLink copyWithCompanion(ExerciseVariantLinksCompanion data) {
+    return ExerciseVariantLink(
+      id: data.id.present ? data.id.value : this.id,
+      exerciseId: data.exerciseId.present
+          ? data.exerciseId.value
+          : this.exerciseId,
+      variantId: data.variantId.present ? data.variantId.value : this.variantId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExerciseVariantLink(')
+          ..write('id: $id, ')
+          ..write('exerciseId: $exerciseId, ')
+          ..write('variantId: $variantId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, exerciseId, variantId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ExerciseVariantLink &&
+          other.id == this.id &&
+          other.exerciseId == this.exerciseId &&
+          other.variantId == this.variantId);
+}
+
+class ExerciseVariantLinksCompanion
+    extends UpdateCompanion<ExerciseVariantLink> {
+  final Value<int> id;
+  final Value<String> exerciseId;
+  final Value<int> variantId;
+  const ExerciseVariantLinksCompanion({
+    this.id = const Value.absent(),
+    this.exerciseId = const Value.absent(),
+    this.variantId = const Value.absent(),
+  });
+  ExerciseVariantLinksCompanion.insert({
+    this.id = const Value.absent(),
+    required String exerciseId,
+    required int variantId,
+  }) : exerciseId = Value(exerciseId),
+       variantId = Value(variantId);
+  static Insertable<ExerciseVariantLink> custom({
+    Expression<int>? id,
+    Expression<String>? exerciseId,
+    Expression<int>? variantId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (exerciseId != null) 'exercise_id': exerciseId,
+      if (variantId != null) 'variant_id': variantId,
+    });
+  }
+
+  ExerciseVariantLinksCompanion copyWith({
+    Value<int>? id,
+    Value<String>? exerciseId,
+    Value<int>? variantId,
+  }) {
+    return ExerciseVariantLinksCompanion(
+      id: id ?? this.id,
+      exerciseId: exerciseId ?? this.exerciseId,
+      variantId: variantId ?? this.variantId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (exerciseId.present) {
+      map['exercise_id'] = Variable<String>(exerciseId.value);
+    }
+    if (variantId.present) {
+      map['variant_id'] = Variable<int>(variantId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExerciseVariantLinksCompanion(')
+          ..write('id: $id, ')
+          ..write('exerciseId: $exerciseId, ')
+          ..write('variantId: $variantId')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -800,6 +1059,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $ExercisesTable exercises = $ExercisesTable(this);
+  late final $ExerciseVariantLinksTable exerciseVariantLinks =
+      $ExerciseVariantLinksTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -808,6 +1069,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     testEntries,
     exerciseVariants,
     exercises,
+    exerciseVariantLinks,
   ];
 }
 
@@ -1288,6 +1550,180 @@ typedef $$ExercisesTableProcessedTableManager =
       Exercise,
       PrefetchHooks Function()
     >;
+typedef $$ExerciseVariantLinksTableCreateCompanionBuilder =
+    ExerciseVariantLinksCompanion Function({
+      Value<int> id,
+      required String exerciseId,
+      required int variantId,
+    });
+typedef $$ExerciseVariantLinksTableUpdateCompanionBuilder =
+    ExerciseVariantLinksCompanion Function({
+      Value<int> id,
+      Value<String> exerciseId,
+      Value<int> variantId,
+    });
+
+class $$ExerciseVariantLinksTableFilterComposer
+    extends Composer<_$AppDatabase, $ExerciseVariantLinksTable> {
+  $$ExerciseVariantLinksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get exerciseId => $composableBuilder(
+    column: $table.exerciseId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get variantId => $composableBuilder(
+    column: $table.variantId,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ExerciseVariantLinksTableOrderingComposer
+    extends Composer<_$AppDatabase, $ExerciseVariantLinksTable> {
+  $$ExerciseVariantLinksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get exerciseId => $composableBuilder(
+    column: $table.exerciseId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get variantId => $composableBuilder(
+    column: $table.variantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ExerciseVariantLinksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ExerciseVariantLinksTable> {
+  $$ExerciseVariantLinksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get exerciseId => $composableBuilder(
+    column: $table.exerciseId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get variantId =>
+      $composableBuilder(column: $table.variantId, builder: (column) => column);
+}
+
+class $$ExerciseVariantLinksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ExerciseVariantLinksTable,
+          ExerciseVariantLink,
+          $$ExerciseVariantLinksTableFilterComposer,
+          $$ExerciseVariantLinksTableOrderingComposer,
+          $$ExerciseVariantLinksTableAnnotationComposer,
+          $$ExerciseVariantLinksTableCreateCompanionBuilder,
+          $$ExerciseVariantLinksTableUpdateCompanionBuilder,
+          (
+            ExerciseVariantLink,
+            BaseReferences<
+              _$AppDatabase,
+              $ExerciseVariantLinksTable,
+              ExerciseVariantLink
+            >,
+          ),
+          ExerciseVariantLink,
+          PrefetchHooks Function()
+        > {
+  $$ExerciseVariantLinksTableTableManager(
+    _$AppDatabase db,
+    $ExerciseVariantLinksTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ExerciseVariantLinksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ExerciseVariantLinksTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ExerciseVariantLinksTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> exerciseId = const Value.absent(),
+                Value<int> variantId = const Value.absent(),
+              }) => ExerciseVariantLinksCompanion(
+                id: id,
+                exerciseId: exerciseId,
+                variantId: variantId,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String exerciseId,
+                required int variantId,
+              }) => ExerciseVariantLinksCompanion.insert(
+                id: id,
+                exerciseId: exerciseId,
+                variantId: variantId,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ExerciseVariantLinksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ExerciseVariantLinksTable,
+      ExerciseVariantLink,
+      $$ExerciseVariantLinksTableFilterComposer,
+      $$ExerciseVariantLinksTableOrderingComposer,
+      $$ExerciseVariantLinksTableAnnotationComposer,
+      $$ExerciseVariantLinksTableCreateCompanionBuilder,
+      $$ExerciseVariantLinksTableUpdateCompanionBuilder,
+      (
+        ExerciseVariantLink,
+        BaseReferences<
+          _$AppDatabase,
+          $ExerciseVariantLinksTable,
+          ExerciseVariantLink
+        >,
+      ),
+      ExerciseVariantLink,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1298,4 +1734,6 @@ class $AppDatabaseManager {
       $$ExerciseVariantsTableTableManager(_db, _db.exerciseVariants);
   $$ExercisesTableTableManager get exercises =>
       $$ExercisesTableTableManager(_db, _db.exercises);
+  $$ExerciseVariantLinksTableTableManager get exerciseVariantLinks =>
+      $$ExerciseVariantLinksTableTableManager(_db, _db.exerciseVariantLinks);
 }
