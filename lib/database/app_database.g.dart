@@ -245,15 +245,365 @@ class TestEntriesCompanion extends UpdateCompanion<TestEntry> {
   }
 }
 
+class $ExerciseVariantsTable extends ExerciseVariants
+    with TableInfo<$ExerciseVariantsTable, ExerciseVariant> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ExerciseVariantsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _variantIndexMeta = const VerificationMeta(
+    'variantIndex',
+  );
+  @override
+  late final GeneratedColumn<int> variantIndex = GeneratedColumn<int>(
+    'variant_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _setsMeta = const VerificationMeta('sets');
+  @override
+  late final GeneratedColumn<int> sets = GeneratedColumn<int>(
+    'sets',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _unitMeta = const VerificationMeta('unit');
+  @override
+  late final GeneratedColumn<String> unit = GeneratedColumn<String>(
+    'unit',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, variantIndex, sets, amount, unit];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'exercise_variants';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ExerciseVariant> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('variant_index')) {
+      context.handle(
+        _variantIndexMeta,
+        variantIndex.isAcceptableOrUnknown(
+          data['variant_index']!,
+          _variantIndexMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_variantIndexMeta);
+    }
+    if (data.containsKey('sets')) {
+      context.handle(
+        _setsMeta,
+        sets.isAcceptableOrUnknown(data['sets']!, _setsMeta),
+      );
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('unit')) {
+      context.handle(
+        _unitMeta,
+        unit.isAcceptableOrUnknown(data['unit']!, _unitMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_unitMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ExerciseVariant map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ExerciseVariant(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      variantIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}variant_index'],
+      )!,
+      sets: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sets'],
+      ),
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+      unit: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}unit'],
+      )!,
+    );
+  }
+
+  @override
+  $ExerciseVariantsTable createAlias(String alias) {
+    return $ExerciseVariantsTable(attachedDatabase, alias);
+  }
+}
+
+class ExerciseVariant extends DataClass implements Insertable<ExerciseVariant> {
+  final int id;
+  final int variantIndex;
+  final int? sets;
+  final double amount;
+  final String unit;
+  const ExerciseVariant({
+    required this.id,
+    required this.variantIndex,
+    this.sets,
+    required this.amount,
+    required this.unit,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['variant_index'] = Variable<int>(variantIndex);
+    if (!nullToAbsent || sets != null) {
+      map['sets'] = Variable<int>(sets);
+    }
+    map['amount'] = Variable<double>(amount);
+    map['unit'] = Variable<String>(unit);
+    return map;
+  }
+
+  ExerciseVariantsCompanion toCompanion(bool nullToAbsent) {
+    return ExerciseVariantsCompanion(
+      id: Value(id),
+      variantIndex: Value(variantIndex),
+      sets: sets == null && nullToAbsent ? const Value.absent() : Value(sets),
+      amount: Value(amount),
+      unit: Value(unit),
+    );
+  }
+
+  factory ExerciseVariant.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ExerciseVariant(
+      id: serializer.fromJson<int>(json['id']),
+      variantIndex: serializer.fromJson<int>(json['variantIndex']),
+      sets: serializer.fromJson<int?>(json['sets']),
+      amount: serializer.fromJson<double>(json['amount']),
+      unit: serializer.fromJson<String>(json['unit']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'variantIndex': serializer.toJson<int>(variantIndex),
+      'sets': serializer.toJson<int?>(sets),
+      'amount': serializer.toJson<double>(amount),
+      'unit': serializer.toJson<String>(unit),
+    };
+  }
+
+  ExerciseVariant copyWith({
+    int? id,
+    int? variantIndex,
+    Value<int?> sets = const Value.absent(),
+    double? amount,
+    String? unit,
+  }) => ExerciseVariant(
+    id: id ?? this.id,
+    variantIndex: variantIndex ?? this.variantIndex,
+    sets: sets.present ? sets.value : this.sets,
+    amount: amount ?? this.amount,
+    unit: unit ?? this.unit,
+  );
+  ExerciseVariant copyWithCompanion(ExerciseVariantsCompanion data) {
+    return ExerciseVariant(
+      id: data.id.present ? data.id.value : this.id,
+      variantIndex: data.variantIndex.present
+          ? data.variantIndex.value
+          : this.variantIndex,
+      sets: data.sets.present ? data.sets.value : this.sets,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      unit: data.unit.present ? data.unit.value : this.unit,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExerciseVariant(')
+          ..write('id: $id, ')
+          ..write('variantIndex: $variantIndex, ')
+          ..write('sets: $sets, ')
+          ..write('amount: $amount, ')
+          ..write('unit: $unit')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, variantIndex, sets, amount, unit);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ExerciseVariant &&
+          other.id == this.id &&
+          other.variantIndex == this.variantIndex &&
+          other.sets == this.sets &&
+          other.amount == this.amount &&
+          other.unit == this.unit);
+}
+
+class ExerciseVariantsCompanion extends UpdateCompanion<ExerciseVariant> {
+  final Value<int> id;
+  final Value<int> variantIndex;
+  final Value<int?> sets;
+  final Value<double> amount;
+  final Value<String> unit;
+  const ExerciseVariantsCompanion({
+    this.id = const Value.absent(),
+    this.variantIndex = const Value.absent(),
+    this.sets = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.unit = const Value.absent(),
+  });
+  ExerciseVariantsCompanion.insert({
+    this.id = const Value.absent(),
+    required int variantIndex,
+    this.sets = const Value.absent(),
+    required double amount,
+    required String unit,
+  }) : variantIndex = Value(variantIndex),
+       amount = Value(amount),
+       unit = Value(unit);
+  static Insertable<ExerciseVariant> custom({
+    Expression<int>? id,
+    Expression<int>? variantIndex,
+    Expression<int>? sets,
+    Expression<double>? amount,
+    Expression<String>? unit,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (variantIndex != null) 'variant_index': variantIndex,
+      if (sets != null) 'sets': sets,
+      if (amount != null) 'amount': amount,
+      if (unit != null) 'unit': unit,
+    });
+  }
+
+  ExerciseVariantsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? variantIndex,
+    Value<int?>? sets,
+    Value<double>? amount,
+    Value<String>? unit,
+  }) {
+    return ExerciseVariantsCompanion(
+      id: id ?? this.id,
+      variantIndex: variantIndex ?? this.variantIndex,
+      sets: sets ?? this.sets,
+      amount: amount ?? this.amount,
+      unit: unit ?? this.unit,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (variantIndex.present) {
+      map['variant_index'] = Variable<int>(variantIndex.value);
+    }
+    if (sets.present) {
+      map['sets'] = Variable<int>(sets.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (unit.present) {
+      map['unit'] = Variable<String>(unit.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExerciseVariantsCompanion(')
+          ..write('id: $id, ')
+          ..write('variantIndex: $variantIndex, ')
+          ..write('sets: $sets, ')
+          ..write('amount: $amount, ')
+          ..write('unit: $unit')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $TestEntriesTable testEntries = $TestEntriesTable(this);
+  late final $ExerciseVariantsTable exerciseVariants = $ExerciseVariantsTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [testEntries];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    testEntries,
+    exerciseVariants,
+  ];
 }
 
 typedef $$TestEntriesTableCreateCompanionBuilder =
@@ -402,10 +752,214 @@ typedef $$TestEntriesTableProcessedTableManager =
       TestEntry,
       PrefetchHooks Function()
     >;
+typedef $$ExerciseVariantsTableCreateCompanionBuilder =
+    ExerciseVariantsCompanion Function({
+      Value<int> id,
+      required int variantIndex,
+      Value<int?> sets,
+      required double amount,
+      required String unit,
+    });
+typedef $$ExerciseVariantsTableUpdateCompanionBuilder =
+    ExerciseVariantsCompanion Function({
+      Value<int> id,
+      Value<int> variantIndex,
+      Value<int?> sets,
+      Value<double> amount,
+      Value<String> unit,
+    });
+
+class $$ExerciseVariantsTableFilterComposer
+    extends Composer<_$AppDatabase, $ExerciseVariantsTable> {
+  $$ExerciseVariantsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get variantIndex => $composableBuilder(
+    column: $table.variantIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sets => $composableBuilder(
+    column: $table.sets,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get unit => $composableBuilder(
+    column: $table.unit,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ExerciseVariantsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ExerciseVariantsTable> {
+  $$ExerciseVariantsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get variantIndex => $composableBuilder(
+    column: $table.variantIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sets => $composableBuilder(
+    column: $table.sets,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get unit => $composableBuilder(
+    column: $table.unit,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ExerciseVariantsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ExerciseVariantsTable> {
+  $$ExerciseVariantsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get variantIndex => $composableBuilder(
+    column: $table.variantIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get sets =>
+      $composableBuilder(column: $table.sets, builder: (column) => column);
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get unit =>
+      $composableBuilder(column: $table.unit, builder: (column) => column);
+}
+
+class $$ExerciseVariantsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ExerciseVariantsTable,
+          ExerciseVariant,
+          $$ExerciseVariantsTableFilterComposer,
+          $$ExerciseVariantsTableOrderingComposer,
+          $$ExerciseVariantsTableAnnotationComposer,
+          $$ExerciseVariantsTableCreateCompanionBuilder,
+          $$ExerciseVariantsTableUpdateCompanionBuilder,
+          (
+            ExerciseVariant,
+            BaseReferences<
+              _$AppDatabase,
+              $ExerciseVariantsTable,
+              ExerciseVariant
+            >,
+          ),
+          ExerciseVariant,
+          PrefetchHooks Function()
+        > {
+  $$ExerciseVariantsTableTableManager(
+    _$AppDatabase db,
+    $ExerciseVariantsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ExerciseVariantsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ExerciseVariantsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ExerciseVariantsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> variantIndex = const Value.absent(),
+                Value<int?> sets = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<String> unit = const Value.absent(),
+              }) => ExerciseVariantsCompanion(
+                id: id,
+                variantIndex: variantIndex,
+                sets: sets,
+                amount: amount,
+                unit: unit,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int variantIndex,
+                Value<int?> sets = const Value.absent(),
+                required double amount,
+                required String unit,
+              }) => ExerciseVariantsCompanion.insert(
+                id: id,
+                variantIndex: variantIndex,
+                sets: sets,
+                amount: amount,
+                unit: unit,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ExerciseVariantsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ExerciseVariantsTable,
+      ExerciseVariant,
+      $$ExerciseVariantsTableFilterComposer,
+      $$ExerciseVariantsTableOrderingComposer,
+      $$ExerciseVariantsTableAnnotationComposer,
+      $$ExerciseVariantsTableCreateCompanionBuilder,
+      $$ExerciseVariantsTableUpdateCompanionBuilder,
+      (
+        ExerciseVariant,
+        BaseReferences<_$AppDatabase, $ExerciseVariantsTable, ExerciseVariant>,
+      ),
+      ExerciseVariant,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
   $$TestEntriesTableTableManager get testEntries =>
       $$TestEntriesTableTableManager(_db, _db.testEntries);
+  $$ExerciseVariantsTableTableManager get exerciseVariants =>
+      $$ExerciseVariantsTableTableManager(_db, _db.exerciseVariants);
 }

@@ -1,13 +1,16 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
+// Tables import
 import 'tables/test_entries.dart';
+import 'tables/exercise_variants.dart';
 
 part 'app_database.g.dart';
 
 @DriftDatabase(
   tables: [
     TestEntries,
+    ExerciseVariants,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -63,5 +66,53 @@ class AppDatabase extends _$AppDatabase {
         .go();
 
     return deletedRows > 0;
+  }
+
+  Future<int> insertExerciseVariant({
+    required int variantIndex,
+    int? sets,
+    required double amount,
+    required String unit,
+  }) {
+    return into(exerciseVariants).insert(
+      ExerciseVariantsCompanion.insert(
+        variantIndex: variantIndex,
+        sets: Value(sets),
+        amount: amount,
+        unit: unit,
+      ),
+    );
+  }
+
+  Future<ExerciseVariant?> getExerciseVariant(int id) {
+    return (select(exerciseVariants)
+          ..where((table) => table.id.equals(id)))
+        .getSingleOrNull();
+  }
+
+  Future<bool> updateExerciseVariant({
+    required int id,
+    required int variantIndex,
+    int? sets,
+    required double amount,
+    required String unit,
+  }) {
+    return (update(exerciseVariants)
+          ..where((table) => table.id.equals(id)))
+        .write(
+      ExerciseVariantsCompanion(
+        variantIndex: Value(variantIndex),
+        sets: Value(sets),
+        amount: Value(amount),
+        unit: Value(unit),
+      ),
+    ).then((rows) => rows > 0);
+  }
+
+  Future<bool> deleteExerciseVariant(int id) {
+    return (delete(exerciseVariants)
+          ..where((table) => table.id.equals(id)))
+        .go()
+        .then((rows) => rows > 0);
   }
 }

@@ -79,4 +79,79 @@ void main() {
       expect(entry, isNull);
     },
   );
+
+  test(
+    'inserts and reads an exercise variant',
+    () async {
+      final id = await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      );
+
+      final variant =
+          await database.getExerciseVariant(id);
+
+      expect(variant, isNotNull);
+      expect(variant!.variantIndex, 0);
+      expect(variant.sets, 3);
+      expect(variant.amount, 10);
+      expect(variant.unit, 'reps');
+    },
+  );
+
+  test(
+    'updates an exercise variant',
+    () async {
+      final id = await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      );
+
+      final updated =
+          await database.updateExerciseVariant(
+        id: id,
+        variantIndex: 1,
+        sets: 4,
+        amount: 12,
+        unit: 'reps',
+      );
+
+      expect(updated, isTrue);
+
+      final variant =
+          await database.getExerciseVariant(id);
+
+      expect(variant, isNotNull);
+      expect(variant!.variantIndex, 1);
+      expect(variant.sets, 4);
+      expect(variant.amount, 12);
+      expect(variant.unit, 'reps');
+    },
+  );
+
+  test(
+    'deletes an exercise variant',
+    () async {
+      final id = await database.insertExerciseVariant(
+        variantIndex: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      );
+
+      final deleted =
+          await database.deleteExerciseVariant(id);
+
+      expect(deleted, isTrue);
+
+      final variant =
+          await database.getExerciseVariant(id);
+
+      expect(variant, isNull);
+    },
+  );
 }

@@ -10,8 +10,6 @@ La misión es lograr la combinación perfecta entre juego RPG y entrenamiento re
 
 La visión es hacerlo a través de una app con interfaz simple pero llamativa. Que llegue a los corazones de esos niños de los 90s criados con juegos de rol y series animadas que enfatizaban el progreso, la motivación, la disciplina y el entrenamiento, como Dragon Ball, Los Caballeros del Zodiaco, etc.
 
----
-
 # Stack
 
 * Flutter
@@ -20,36 +18,24 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 * Drift
 * Riverpod
 
----
-
 # Versión
 
-**v0.4.0 — Database & Content Foundation**
+**v0.4.1 — ExerciseVariant en database** 
 
 # Cambios en esta versión
 
 * Se consolidó SQLite como sistema de persistencia local de la aplicación.
 * Se incorporó Drift como ORM y capa de acceso a la base de datos.
-* Se incorporó `build_runner` y `drift_dev` para la generación de código de Drift.
+* Se incorporó build_runner y drift_dev para la generación de código de Drift.
 * Se creó la estructura inicial de la base de datos y sus tablas.
-* Se implementó una tabla de prueba para validar la conexión y las operaciones de persistencia.
-* Se implementaron y testearon las operaciones básicas de **CRUD**: crear, leer, actualizar y eliminar registros.
-* Se configuró la base de datos para poder utilizar un `QueryExecutor` alternativo durante los tests.
-* Se estableció una base para comenzar a migrar progresivamente el contenido de la aplicación desde estructuras hardcodeadas hacia SQLite.
-* Se mantuvo la arquitectura actual de la aplicación funcionando mientras se incorpora la nueva capa de persistencia.
-
-# Casos de uso
-
-| # | Caso                                                   | Resultado                                                        |
-| - | ------------------------------------------------------ | ---------------------------------------------------------------- |
-| 1 | Jugador alcanza nivel 5 siendo `Novice`                | Se habilita el cambio de clase                                   |
-| 2 | `Novice` alcanza `100` en un stat                      | Se habilita la clase especializada correspondiente               |
-| 3 | Cumple requisitos de varias clases especializadas      | Todas las clases correspondientes quedan disponibles para elegir |
-| 4 | Jugador elige una clase especializada                  | La clase actual cambia de `Novice` a la clase seleccionada       |
-| 5 | Jugador especializado alcanza `100` en todos los stats | Se habilita **Athlete**                                          |
-| 6 | Jugador elige `Athlete`                                | La clase pasa a ser `Athlete` y no puede volver a cambiar        |
-| 7 | Jugador cierra y vuelve a abrir la aplicación          | El progreso y la clase actual se mantienen                       |
-| 8 | Jugador decide comenzar nuevamente                     | Puede resetear su progreso manteniendo sus objetos desbloqueados |
+* Se creó la tabla TestEntries para validar la conexión y las operaciones básicas de persistencia.
+* Se implementaron y testearon las operaciones básicas de CRUD: crear, leer, actualizar y eliminar registros.
+* Se configuró la base de datos para utilizar un QueryExecutor alternativo durante los tests.
+* Se creó la tabla ExerciseVariants.
+* Se implementó el CRUD completo de ExerciseVariant.
+* Se validaron mediante tests automatizados las operaciones INSERT, READ, UPDATE y DELETE de ExerciseVariant.
+* Se estableció la base para comenzar a migrar progresivamente el contenido de la aplicación desde estructuras hardcodeadas hacia SQLite.
+* Se mantuvo la arquitectura actual de la aplicación funcionando mientras se incorpora progresivamente la nueva capa de persistencia.
 
 # Estado
 
@@ -77,15 +63,13 @@ La aplicación cuenta actualmente con:
 * SQLite integrado.
 * Drift integrado.
 * Capa inicial de acceso a datos.
+* Tabla de variantes de ejercicio.
+* CRUD de ExerciseVariant.
 * CRUD de base de datos validado mediante tests automatizados.
-
----
 
 # Arquitectura
 
-```text
 lib/
-
 │
 ├── main.dart
 ├── app.dart
@@ -98,7 +82,8 @@ lib/
 │   ├── app_database.dart
 │   │
 │   └── tables/
-│       └── test_entries.dart
+│       ├── test_entries.dart
+│       └── exercise_variants.dart
 │
 ├── models/
 │   ├── exercise.dart
@@ -130,23 +115,18 @@ lib/
     ├── equipment_slot.dart
     ├── exercise_item.dart
     └── inventory_filter.dart
-```
 
 # Correr debug en el teléfono
-
 ```bash
 flutter run -d ZY22KXJ833
 ```
-
 # Tests
 
 Para ejecutar los tests de la base de datos:
-
 ```bash
 flutter test test/database/app_database_test.dart
 ```
-
-Actualmente se encuentran validadas las operaciones:
+# Actualmente se encuentran validadas las operaciones:
 
 INSERT ✓
 READ   ✓
