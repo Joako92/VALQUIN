@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+@DataClassName('ExerciseVariantRow')
 class ExerciseVariants extends Table {
   IntColumn get id => integer().autoIncrement()();
 

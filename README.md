@@ -20,59 +20,54 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.4.4 — Exercise Reading**
+**v0.4.5 — Exercise Content Migration**
 
 # Cambios en esta versión
 
 * Se consolidó SQLite como sistema de persistencia local de la aplicación.
-
 * Se incorporó Drift como ORM y capa de acceso a la base de datos.
-
 * Se incorporó `build_runner` y `drift_dev` para la generación de código de Drift.
-
 * Se creó la estructura inicial de la base de datos y sus tablas.
-
 * Se creó la tabla `TestEntries` para validar la conexión y las operaciones básicas de persistencia.
-
 * Se implementaron y testearon las operaciones básicas de CRUD: crear, leer, actualizar y eliminar registros.
-
 * Se configuró la base de datos para utilizar un `QueryExecutor` alternativo durante los tests.
-
 * Se creó la tabla `ExerciseVariants`.
-
 * Se implementó el CRUD completo de `ExerciseVariant`.
-
 * Se validaron mediante tests automatizados las operaciones INSERT, READ, UPDATE y DELETE de `ExerciseVariant`.
-
 * Se creó la tabla `Exercises`.
-
 * Se implementó el CRUD completo de `Exercise`.
-
 * Se validaron mediante tests automatizados las operaciones INSERT, READ, UPDATE y DELETE de `Exercise`.
-
-* Se estableció la base para relacionar posteriormente los ejercicios con sus variantes mediante la base de datos.
-
+* Se creó la tabla `ExerciseVariantLinks` para relacionar ejercicios con sus variantes.
+* Se implementó la relación `Exercise ↔ ExerciseVariant`.
+* Se implementó la prevención de relaciones duplicadas entre ejercicios y variantes.
+* Se implementó `getExercise(id)` para obtener un ejercicio desde Drift.
+* Se implementó `getExerciseVariants(exerciseId)` para obtener las variantes relacionadas mediante la tabla de relación.
+* Se implementó `getExerciseWithVariants(id)` para reconstruir un `domain.Exercise` completo.
+* Se implementó `getExercisesWithVariants()` para reconstruir todos los ejercicios con sus variantes.
+* Se separaron los modelos de dominio de los Data Classes generados por Drift.
+* Se implementó la conversión `Drift Row → Domain Model`.
+* Se creó `data/exercises.dart` como fuente declarativa del contenido inicial de ejercicios.
+* Se creó `ExerciseSeeder` para cargar los ejercicios, variantes y relaciones iniciales en SQLite.
+* Se validó mediante tests automatizados el proceso completo de seeding.
+* Se validó la reconstrucción de ejercicios desde la base de datos hacia los modelos de dominio.
 * Se mantuvo la arquitectura actual de la aplicación funcionando mientras se incorpora progresivamente la nueva capa de persistencia.
 
-* Relación Exercise ↔ ExerciseVariant.
+# Tests de esta versión
 
+Se agregaron tests automatizados para validar:
+
+* CRUD de `TestEntry`.
+* CRUD de `ExerciseVariant`.
+* CRUD de `Exercise`.
+* Creación de relaciones `Exercise ↔ ExerciseVariant`.
 * Prevención de relaciones duplicadas.
-
-* getExercise(id) → obtiene un ejercicio desde Drift.
-
-* getExerciseVariants(exerciseId) → obtiene sus variantes mediante la tabla de relación.
-
-* getExerciseWithVariants(id) → reconstruye un domain.Exercise completo.
-
-* getExercisesWithVariants() → reconstruye todos los ejercicios con sus variantes.
-
-* Tests automatizados de las relaciones.
-
-* Tests automatizados de lectura individual.
-
-* Tests automatizados de lectura múltiple.
-
-* Conversión Drift → modelo de dominio validada.
+* Lectura de variantes asociadas a un ejercicio.
+* Reconstrucción de un ejercicio junto con sus variantes.
+* Reconstrucción de múltiples ejercicios.
+* Seeding de todos los ejercicios definidos en `data/exercises.dart`.
+* Seeding de todas las variantes.
+* Creación de todos los vínculos entre ejercicios y variantes.
+* Equivalencia entre los datos originales y los datos recuperados desde SQLite.
 
 # Casos de uso
 
@@ -117,7 +112,13 @@ La aplicación cuenta actualmente con:
 * CRUD de `ExerciseVariant`.
 * Tabla de ejercicios.
 * CRUD de `Exercise`.
+* Tabla de relaciones `ExerciseVariantLinks`.
+* Relación entre ejercicios y variantes.
+* Seeder inicial de ejercicios.
+* Reconstrucción de ejercicios desde SQLite.
+* Conversión de datos de persistencia a modelos de dominio.
 * CRUD de base de datos validado mediante tests automatizados.
+* Seeder validado mediante tests automatizados.
 
 # Arquitectura
 
@@ -135,10 +136,14 @@ lib/
 ├── database/
 │   ├── app_database.dart
 │   │
+│   ├── seed/
+│   │   └── exercise_seeder.dart
+│   │
 │   └── tables/
 │       ├── test_entries.dart
 │       ├── exercise_variants.dart
-│       └── exercises.dart
+│       ├── exercises.dart
+│       └── exercise_variant_links.dart
 │
 ├── models/
 │   ├── exercise.dart
@@ -186,12 +191,30 @@ Para ejecutar los tests de la base de datos:
 flutter test test/database/app_database_test.dart
 ```
 
-# Actualmente se encuentran validadas las operaciones:
+Para ejecutar los tests del seeder:
 
-INSERT ✓
+```bash
+flutter test test/database/exercise_seeder_test.dart
+```
 
-READ ✓
+Para ejecutar todos los tests:
 
-UPDATE ✓
+```bash
+flutter test
+```
 
-DELETE ✓
+# Actualmente se encuentran validadas las operaciones
+
+**INSERT ✓**
+
+**READ ✓**
+
+**UPDATE ✓**
+
+**DELETE ✓**
+
+**RELATIONS ✓**
+
+**SEEDING ✓**
+
+**DOMAIN RECONSTRUCTION ✓**

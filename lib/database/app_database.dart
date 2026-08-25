@@ -1,13 +1,13 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
-// Tables import
+// Tables
 import 'tables/test_entries.dart';
 import 'tables/exercise_variants.dart';
 import 'tables/exercises.dart';
 import 'tables/exercise_variant_links.dart';
 
-// Models import
+// Domain models
 import '../models/exercise.dart' as domain;
 
 part 'app_database.g.dart';
@@ -20,7 +20,6 @@ part 'app_database.g.dart';
     ExerciseVariantLinks,
   ],
 )
-
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
       : super(
@@ -32,6 +31,10 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  // --------------------------------------------------
+  // TEST METHODS
+  // --------------------------------------------------
 
   Future<int> insertTestEntry({
     required String name,
@@ -76,6 +79,10 @@ class AppDatabase extends _$AppDatabase {
     return deletedRows > 0;
   }
 
+  // --------------------------------------------------
+  // EXERCISE VARIANT CRUD
+  // --------------------------------------------------
+
   Future<int> insertExerciseVariant({
     required int variantIndex,
     int? sets,
@@ -92,7 +99,7 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<ExerciseVariant?> getExerciseVariant(int id) {
+  Future<ExerciseVariantRow?> getExerciseVariant(int id) {
     return (select(exerciseVariants)
           ..where((table) => table.id.equals(id)))
         .getSingleOrNull();
@@ -124,7 +131,9 @@ class AppDatabase extends _$AppDatabase {
         .then((rows) => rows > 0);
   }
 
-  // Exercise CRUD methods
+  // --------------------------------------------------
+  // EXERCISE CRUD
+  // --------------------------------------------------
 
   Future<void> insertExercise({
     required String id,
@@ -138,7 +147,7 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<Exercise?> getExercise(String id) {
+  Future<ExerciseRow?> getExercise(String id) {
     return (select(exercises)
           ..where((table) => table.id.equals(id)))
         .getSingleOrNull();
@@ -164,7 +173,9 @@ class AppDatabase extends _$AppDatabase {
         .then((rows) => rows > 0);
   }
 
-  // Exercise Variant Links
+  // --------------------------------------------------
+  // EXERCISE VARIANT LINKS
+  // --------------------------------------------------
 
   Future<int> insertExerciseVariantLink({
     required String exerciseId,
@@ -192,7 +203,7 @@ class AppDatabase extends _$AppDatabase {
         .get();
   }
 
-  Future<List<ExerciseVariant>> getExerciseVariants(
+  Future<List<ExerciseVariantRow>> getExerciseVariants(
     String exerciseId,
   ) {
     final query = select(exerciseVariants).join([
@@ -212,7 +223,9 @@ class AppDatabase extends _$AppDatabase {
     }).get();
   }
 
-  // Final exercise
+  // --------------------------------------------------
+  // DOMAIN EXERCISE
+  // --------------------------------------------------
 
   Future<domain.Exercise?> getExerciseWithVariants(
     String exerciseId,
@@ -244,7 +257,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<List<domain.Exercise>> getExercisesWithVariants() async {
-    final exercises = await select(this.exercises).get();
+    final exercises =
+        await select(this.exercises).get();
 
     final result = <domain.Exercise>[];
 

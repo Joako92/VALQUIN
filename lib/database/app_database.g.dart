@@ -246,7 +246,7 @@ class TestEntriesCompanion extends UpdateCompanion<TestEntry> {
 }
 
 class $ExerciseVariantsTable extends ExerciseVariants
-    with TableInfo<$ExerciseVariantsTable, ExerciseVariant> {
+    with TableInfo<$ExerciseVariantsTable, ExerciseVariantRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -311,7 +311,7 @@ class $ExerciseVariantsTable extends ExerciseVariants
   static const String $name = 'exercise_variants';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ExerciseVariant> instance, {
+    Insertable<ExerciseVariantRow> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -358,9 +358,9 @@ class $ExerciseVariantsTable extends ExerciseVariants
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ExerciseVariant map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ExerciseVariantRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ExerciseVariant(
+    return ExerciseVariantRow(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -390,13 +390,14 @@ class $ExerciseVariantsTable extends ExerciseVariants
   }
 }
 
-class ExerciseVariant extends DataClass implements Insertable<ExerciseVariant> {
+class ExerciseVariantRow extends DataClass
+    implements Insertable<ExerciseVariantRow> {
   final int id;
   final int variantIndex;
   final int? sets;
   final double amount;
   final String unit;
-  const ExerciseVariant({
+  const ExerciseVariantRow({
     required this.id,
     required this.variantIndex,
     this.sets,
@@ -426,12 +427,12 @@ class ExerciseVariant extends DataClass implements Insertable<ExerciseVariant> {
     );
   }
 
-  factory ExerciseVariant.fromJson(
+  factory ExerciseVariantRow.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ExerciseVariant(
+    return ExerciseVariantRow(
       id: serializer.fromJson<int>(json['id']),
       variantIndex: serializer.fromJson<int>(json['variantIndex']),
       sets: serializer.fromJson<int?>(json['sets']),
@@ -451,21 +452,21 @@ class ExerciseVariant extends DataClass implements Insertable<ExerciseVariant> {
     };
   }
 
-  ExerciseVariant copyWith({
+  ExerciseVariantRow copyWith({
     int? id,
     int? variantIndex,
     Value<int?> sets = const Value.absent(),
     double? amount,
     String? unit,
-  }) => ExerciseVariant(
+  }) => ExerciseVariantRow(
     id: id ?? this.id,
     variantIndex: variantIndex ?? this.variantIndex,
     sets: sets.present ? sets.value : this.sets,
     amount: amount ?? this.amount,
     unit: unit ?? this.unit,
   );
-  ExerciseVariant copyWithCompanion(ExerciseVariantsCompanion data) {
-    return ExerciseVariant(
+  ExerciseVariantRow copyWithCompanion(ExerciseVariantsCompanion data) {
+    return ExerciseVariantRow(
       id: data.id.present ? data.id.value : this.id,
       variantIndex: data.variantIndex.present
           ? data.variantIndex.value
@@ -478,7 +479,7 @@ class ExerciseVariant extends DataClass implements Insertable<ExerciseVariant> {
 
   @override
   String toString() {
-    return (StringBuffer('ExerciseVariant(')
+    return (StringBuffer('ExerciseVariantRow(')
           ..write('id: $id, ')
           ..write('variantIndex: $variantIndex, ')
           ..write('sets: $sets, ')
@@ -493,7 +494,7 @@ class ExerciseVariant extends DataClass implements Insertable<ExerciseVariant> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ExerciseVariant &&
+      (other is ExerciseVariantRow &&
           other.id == this.id &&
           other.variantIndex == this.variantIndex &&
           other.sets == this.sets &&
@@ -501,7 +502,7 @@ class ExerciseVariant extends DataClass implements Insertable<ExerciseVariant> {
           other.unit == this.unit);
 }
 
-class ExerciseVariantsCompanion extends UpdateCompanion<ExerciseVariant> {
+class ExerciseVariantsCompanion extends UpdateCompanion<ExerciseVariantRow> {
   final Value<int> id;
   final Value<int> variantIndex;
   final Value<int?> sets;
@@ -523,7 +524,7 @@ class ExerciseVariantsCompanion extends UpdateCompanion<ExerciseVariant> {
   }) : variantIndex = Value(variantIndex),
        amount = Value(amount),
        unit = Value(unit);
-  static Insertable<ExerciseVariant> custom({
+  static Insertable<ExerciseVariantRow> custom({
     Expression<int>? id,
     Expression<int>? variantIndex,
     Expression<int>? sets,
@@ -590,7 +591,7 @@ class ExerciseVariantsCompanion extends UpdateCompanion<ExerciseVariant> {
 }
 
 class $ExercisesTable extends Exercises
-    with TableInfo<$ExercisesTable, Exercise> {
+    with TableInfo<$ExercisesTable, ExerciseRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -622,7 +623,7 @@ class $ExercisesTable extends Exercises
   static const String $name = 'exercises';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Exercise> instance, {
+    Insertable<ExerciseRow> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -646,9 +647,9 @@ class $ExercisesTable extends Exercises
   @override
   Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  Exercise map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ExerciseRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Exercise(
+    return ExerciseRow(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -666,10 +667,10 @@ class $ExercisesTable extends Exercises
   }
 }
 
-class Exercise extends DataClass implements Insertable<Exercise> {
+class ExerciseRow extends DataClass implements Insertable<ExerciseRow> {
   final String id;
   final String name;
-  const Exercise({required this.id, required this.name});
+  const ExerciseRow({required this.id, required this.name});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -682,12 +683,12 @@ class Exercise extends DataClass implements Insertable<Exercise> {
     return ExercisesCompanion(id: Value(id), name: Value(name));
   }
 
-  factory Exercise.fromJson(
+  factory ExerciseRow.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Exercise(
+    return ExerciseRow(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
     );
@@ -701,10 +702,10 @@ class Exercise extends DataClass implements Insertable<Exercise> {
     };
   }
 
-  Exercise copyWith({String? id, String? name}) =>
-      Exercise(id: id ?? this.id, name: name ?? this.name);
-  Exercise copyWithCompanion(ExercisesCompanion data) {
-    return Exercise(
+  ExerciseRow copyWith({String? id, String? name}) =>
+      ExerciseRow(id: id ?? this.id, name: name ?? this.name);
+  ExerciseRow copyWithCompanion(ExercisesCompanion data) {
+    return ExerciseRow(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
     );
@@ -712,7 +713,7 @@ class Exercise extends DataClass implements Insertable<Exercise> {
 
   @override
   String toString() {
-    return (StringBuffer('Exercise(')
+    return (StringBuffer('ExerciseRow(')
           ..write('id: $id, ')
           ..write('name: $name')
           ..write(')'))
@@ -724,10 +725,10 @@ class Exercise extends DataClass implements Insertable<Exercise> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Exercise && other.id == this.id && other.name == this.name);
+      (other is ExerciseRow && other.id == this.id && other.name == this.name);
 }
 
-class ExercisesCompanion extends UpdateCompanion<Exercise> {
+class ExercisesCompanion extends UpdateCompanion<ExerciseRow> {
   final Value<String> id;
   final Value<String> name;
   final Value<int> rowid;
@@ -742,7 +743,7 @@ class ExercisesCompanion extends UpdateCompanion<Exercise> {
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name);
-  static Insertable<Exercise> custom({
+  static Insertable<ExerciseRow> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<int>? rowid,
@@ -1338,21 +1339,21 @@ class $$ExerciseVariantsTableTableManager
         RootTableManager<
           _$AppDatabase,
           $ExerciseVariantsTable,
-          ExerciseVariant,
+          ExerciseVariantRow,
           $$ExerciseVariantsTableFilterComposer,
           $$ExerciseVariantsTableOrderingComposer,
           $$ExerciseVariantsTableAnnotationComposer,
           $$ExerciseVariantsTableCreateCompanionBuilder,
           $$ExerciseVariantsTableUpdateCompanionBuilder,
           (
-            ExerciseVariant,
+            ExerciseVariantRow,
             BaseReferences<
               _$AppDatabase,
               $ExerciseVariantsTable,
-              ExerciseVariant
+              ExerciseVariantRow
             >,
           ),
-          ExerciseVariant,
+          ExerciseVariantRow,
           PrefetchHooks Function()
         > {
   $$ExerciseVariantsTableTableManager(
@@ -1408,17 +1409,21 @@ typedef $$ExerciseVariantsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $ExerciseVariantsTable,
-      ExerciseVariant,
+      ExerciseVariantRow,
       $$ExerciseVariantsTableFilterComposer,
       $$ExerciseVariantsTableOrderingComposer,
       $$ExerciseVariantsTableAnnotationComposer,
       $$ExerciseVariantsTableCreateCompanionBuilder,
       $$ExerciseVariantsTableUpdateCompanionBuilder,
       (
-        ExerciseVariant,
-        BaseReferences<_$AppDatabase, $ExerciseVariantsTable, ExerciseVariant>,
+        ExerciseVariantRow,
+        BaseReferences<
+          _$AppDatabase,
+          $ExerciseVariantsTable,
+          ExerciseVariantRow
+        >,
       ),
-      ExerciseVariant,
+      ExerciseVariantRow,
       PrefetchHooks Function()
     >;
 typedef $$ExercisesTableCreateCompanionBuilder =
@@ -1495,14 +1500,17 @@ class $$ExercisesTableTableManager
         RootTableManager<
           _$AppDatabase,
           $ExercisesTable,
-          Exercise,
+          ExerciseRow,
           $$ExercisesTableFilterComposer,
           $$ExercisesTableOrderingComposer,
           $$ExercisesTableAnnotationComposer,
           $$ExercisesTableCreateCompanionBuilder,
           $$ExercisesTableUpdateCompanionBuilder,
-          (Exercise, BaseReferences<_$AppDatabase, $ExercisesTable, Exercise>),
-          Exercise,
+          (
+            ExerciseRow,
+            BaseReferences<_$AppDatabase, $ExercisesTable, ExerciseRow>,
+          ),
+          ExerciseRow,
           PrefetchHooks Function()
         > {
   $$ExercisesTableTableManager(_$AppDatabase db, $ExercisesTable table)
@@ -1540,14 +1548,17 @@ typedef $$ExercisesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $ExercisesTable,
-      Exercise,
+      ExerciseRow,
       $$ExercisesTableFilterComposer,
       $$ExercisesTableOrderingComposer,
       $$ExercisesTableAnnotationComposer,
       $$ExercisesTableCreateCompanionBuilder,
       $$ExercisesTableUpdateCompanionBuilder,
-      (Exercise, BaseReferences<_$AppDatabase, $ExercisesTable, Exercise>),
-      Exercise,
+      (
+        ExerciseRow,
+        BaseReferences<_$AppDatabase, $ExercisesTable, ExerciseRow>,
+      ),
+      ExerciseRow,
       PrefetchHooks Function()
     >;
 typedef $$ExerciseVariantLinksTableCreateCompanionBuilder =
