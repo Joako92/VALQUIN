@@ -4,6 +4,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 // Tables import
 import 'tables/test_entries.dart';
 import 'tables/exercise_variants.dart';
+import 'tables/exercises.dart';
 
 part 'app_database.g.dart';
 
@@ -11,8 +12,10 @@ part 'app_database.g.dart';
   tables: [
     TestEntries,
     ExerciseVariants,
+    Exercises,
   ],
 )
+
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
       : super(
@@ -111,6 +114,46 @@ class AppDatabase extends _$AppDatabase {
 
   Future<bool> deleteExerciseVariant(int id) {
     return (delete(exerciseVariants)
+          ..where((table) => table.id.equals(id)))
+        .go()
+        .then((rows) => rows > 0);
+  }
+
+  // Exercise CRUD methods
+
+  Future<void> insertExercise({
+    required String id,
+    required String name,
+  }) {
+    return into(exercises).insert(
+      ExercisesCompanion.insert(
+        id: id,
+        name: name,
+      ),
+    );
+  }
+
+  Future<Exercise?> getExercise(String id) {
+    return (select(exercises)
+          ..where((table) => table.id.equals(id)))
+        .getSingleOrNull();
+  }
+
+  Future<bool> updateExercise({
+    required String id,
+    required String name,
+  }) {
+    return (update(exercises)
+          ..where((table) => table.id.equals(id)))
+        .write(
+      ExercisesCompanion(
+        name: Value(name),
+      ),
+    ).then((rows) => rows > 0);
+  }
+
+  Future<bool> deleteExercise(String id) {
+    return (delete(exercises)
           ..where((table) => table.id.equals(id)))
         .go()
         .then((rows) => rows > 0);

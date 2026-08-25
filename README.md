@@ -20,22 +20,52 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.4.1 — ExerciseVariant en database** 
+**v0.4.2 — Exercise en database**
 
 # Cambios en esta versión
 
 * Se consolidó SQLite como sistema de persistencia local de la aplicación.
+
 * Se incorporó Drift como ORM y capa de acceso a la base de datos.
-* Se incorporó build_runner y drift_dev para la generación de código de Drift.
+
+* Se incorporó `build_runner` y `drift_dev` para la generación de código de Drift.
+
 * Se creó la estructura inicial de la base de datos y sus tablas.
-* Se creó la tabla TestEntries para validar la conexión y las operaciones básicas de persistencia.
+
+* Se creó la tabla `TestEntries` para validar la conexión y las operaciones básicas de persistencia.
+
 * Se implementaron y testearon las operaciones básicas de CRUD: crear, leer, actualizar y eliminar registros.
-* Se configuró la base de datos para utilizar un QueryExecutor alternativo durante los tests.
-* Se creó la tabla ExerciseVariants.
-* Se implementó el CRUD completo de ExerciseVariant.
-* Se validaron mediante tests automatizados las operaciones INSERT, READ, UPDATE y DELETE de ExerciseVariant.
-* Se estableció la base para comenzar a migrar progresivamente el contenido de la aplicación desde estructuras hardcodeadas hacia SQLite.
+
+* Se configuró la base de datos para utilizar un `QueryExecutor` alternativo durante los tests.
+
+* Se creó la tabla `ExerciseVariants`.
+
+* Se implementó el CRUD completo de `ExerciseVariant`.
+
+* Se validaron mediante tests automatizados las operaciones INSERT, READ, UPDATE y DELETE de `ExerciseVariant`.
+
+* Se creó la tabla `Exercises`.
+
+* Se implementó el CRUD completo de `Exercise`.
+
+* Se validaron mediante tests automatizados las operaciones INSERT, READ, UPDATE y DELETE de `Exercise`.
+
+* Se estableció la base para relacionar posteriormente los ejercicios con sus variantes mediante la base de datos.
+
 * Se mantuvo la arquitectura actual de la aplicación funcionando mientras se incorpora progresivamente la nueva capa de persistencia.
+
+# Casos de uso
+
+| # | Caso                                                   | Resultado                                                        |
+| - | ------------------------------------------------------ | ---------------------------------------------------------------- |
+| 1 | Jugador alcanza nivel 5 siendo `Novice`                | Se habilita el cambio de clase                                   |
+| 2 | `Novice` alcanza `100` en un stat                      | Se habilita la clase especializada correspondiente               |
+| 3 | Cumple requisitos de varias clases especializadas      | Todas las clases correspondientes quedan disponibles para elegir |
+| 4 | Jugador elige una clase especializada                  | La clase actual cambia de `Novice` a la clase seleccionada       |
+| 5 | Jugador especializado alcanza `100` en todos los stats | Se habilita **Athlete**                                          |
+| 6 | Jugador elige `Athlete`                                | La clase pasa a ser `Athlete` y no puede volver a cambiar        |
+| 7 | Jugador cierra y vuelve a abrir la aplicación          | El progreso y la clase actual se mantienen                       |
+| 8 | Jugador decide comenzar nuevamente                     | Puede resetear su progreso manteniendo sus objetos desbloqueados |
 
 # Estado
 
@@ -64,12 +94,16 @@ La aplicación cuenta actualmente con:
 * Drift integrado.
 * Capa inicial de acceso a datos.
 * Tabla de variantes de ejercicio.
-* CRUD de ExerciseVariant.
+* CRUD de `ExerciseVariant`.
+* Tabla de ejercicios.
+* CRUD de `Exercise`.
 * CRUD de base de datos validado mediante tests automatizados.
 
 # Arquitectura
 
+```text
 lib/
+
 │
 ├── main.dart
 ├── app.dart
@@ -83,7 +117,8 @@ lib/
 │   │
 │   └── tables/
 │       ├── test_entries.dart
-│       └── exercise_variants.dart
+│       ├── exercise_variants.dart
+│       └── exercises.dart
 │
 ├── models/
 │   ├── exercise.dart
@@ -115,20 +150,28 @@ lib/
     ├── equipment_slot.dart
     ├── exercise_item.dart
     └── inventory_filter.dart
+```
 
 # Correr debug en el teléfono
+
 ```bash
 flutter run -d ZY22KXJ833
 ```
+
 # Tests
 
 Para ejecutar los tests de la base de datos:
+
 ```bash
 flutter test test/database/app_database_test.dart
 ```
+
 # Actualmente se encuentran validadas las operaciones:
 
 INSERT ✓
-READ   ✓
+
+READ ✓
+
 UPDATE ✓
+
 DELETE ✓

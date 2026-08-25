@@ -154,4 +154,67 @@ void main() {
       expect(variant, isNull);
     },
   );
+
+  // Exercise CRUD tests
+
+  test(
+    'inserts and reads an exercise',
+    () async {
+      await database.insertExercise(
+        id: 'push_up',
+        name: 'Push Up',
+      );
+
+      final exercise =
+          await database.getExercise('push_up');
+
+      expect(exercise, isNotNull);
+      expect(exercise!.id, 'push_up');
+      expect(exercise.name, 'Push Up');
+    },
+  );
+
+  test(
+    'updates an exercise',
+    () async {
+      await database.insertExercise(
+        id: 'push_up',
+        name: 'Push Up',
+      );
+
+      final updated =
+          await database.updateExercise(
+        id: 'push_up',
+        name: 'Push Up Advanced',
+      );
+
+      expect(updated, isTrue);
+
+      final exercise =
+          await database.getExercise('push_up');
+
+      expect(exercise, isNotNull);
+      expect(exercise!.name, 'Push Up Advanced');
+    },
+  );
+
+  test(
+    'deletes an exercise',
+    () async {
+      await database.insertExercise(
+        id: 'push_up',
+        name: 'Push Up',
+      );
+
+      final deleted =
+          await database.deleteExercise('push_up');
+
+      expect(deleted, isTrue);
+
+      final exercise =
+          await database.getExercise('push_up');
+
+      expect(exercise, isNull);
+    },
+  );
 }
