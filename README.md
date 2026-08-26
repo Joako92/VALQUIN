@@ -22,59 +22,76 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 **v0.4.6 — Equipment Item Migration**
 
+> Nota: el commit anterior fue etiquetado como `0.4.5`, pero corresponde funcionalmente a la versión `0.4.6`.
+
 # Cambios en esta versión
 
 * Se continuó la migración del contenido de dominio hacia SQLite mediante Drift.
-
 * Se creó la tabla `EquipmentItems`.
-
 * Se implementó el modelo de persistencia `EquipmentItemRow` generado por Drift.
-
 * Se implementó el CRUD completo de `EquipmentItem`.
-
 * Se implementó `insertEquipmentItem()` para crear objetos de equipamiento en SQLite.
-
 * Se implementó `getEquipmentItem(id)` para obtener un objeto de equipamiento desde SQLite.
-
 * Se implementó `updateEquipmentItem()` para modificar objetos de equipamiento.
-
 * Se implementó `deleteEquipmentItem()` para eliminar objetos de equipamiento.
 
-* Se creó la tabla `EquipmentItemExercises` para representar la relación entre objetos de equipamiento y ejercicios.
+## Relación EquipmentItem ↔ Exercise
 
+* Se creó la tabla `EquipmentItemExercises`.
 * Se implementó la relación `EquipmentItem ↔ Exercise`.
-
 * Se incorporó `maxVariant` a la relación `EquipmentItemExercises` para determinar hasta qué variante de un ejercicio puede utilizar el objeto.
-
 * Se implementó la prevención de relaciones duplicadas entre un objeto de equipamiento y un ejercicio.
-
 * Se implementó `insertEquipmentItemExercise()`.
-
 * Se implementó `getEquipmentItemExercise()`.
-
 * Se implementó `getEquipmentItemExercises(equipmentItemId)`.
-
 * Se implementó `updateEquipmentItemExercise()` para modificar el `maxVariant` de una relación.
-
 * Se implementó `deleteEquipmentItemExercise()`.
 
-* Se implementó la reconstrucción de un `domain.EquipmentItem` desde SQLite.
+## Stats
 
-* Se implementó `getEquipmentItemWithExercises(id)` para reconstruir un objeto de equipamiento junto con sus ejercicios.
+* Se creó la tabla `EquipmentItemStats`.
+* Se implementó la relación `EquipmentItem ↔ Stats`.
+* Se implementó `insertEquipmentItemStat()`.
+* Se implementó `getEquipmentItemStat()`.
+* Se implementó `getEquipmentItemStatRows()`.
+* Se implementó `getEquipmentItemStats()` para reconstruir los stats como `Map<String, int>`.
+* Se implementó `updateEquipmentItemStat()`.
+* Se implementó `deleteEquipmentItemStat()`.
 
+## Unlock Requirements
+
+* Se creó la tabla `EquipmentItemUnlockRequirements`.
+* Se implementó la persistencia de los requisitos necesarios para desbloquear un objeto.
+* Se implementó `insertEquipmentItemUnlockRequirement()`.
+* Se implementó `getEquipmentItemUnlockRequirement()`.
+* Se implementó `getEquipmentItemUnlockRequirements()`.
+* Se implementó `updateEquipmentItemUnlockRequirement()`.
+* Se implementó `deleteEquipmentItemUnlockRequirement()`.
+
+## Equip Requirements
+
+* Se creó la tabla `EquipmentItemEquipRequirements`.
+* Se implementó la persistencia de los requisitos necesarios para equipar un objeto.
+* Se implementó `insertEquipmentItemEquipRequirement()`.
+* Se implementó `getEquipmentItemEquipRequirement()`.
+* Se implementó `getEquipmentItemEquipRequirements()`.
+* Se implementó `updateEquipmentItemEquipRequirement()`.
+* Se implementó `deleteEquipmentItemEquipRequirement()`.
+
+## Reconstrucción del modelo de dominio
+
+* Se implementó la reconstrucción completa de un `domain.EquipmentItem` desde SQLite.
+* Se implementó `getEquipmentItemWithExercises()`.
+* Se implementó `getEquipmentItemsWithExercises()`.
+* Se implementó `getEquipmentItemWithAllData()`.
+* Se implementó `getEquipmentItemsWithAllData()`.
 * Se implementó la conversión de `EquipmentItemRow` hacia el modelo de dominio `EquipmentItem`.
-
 * Se implementó la conversión de las relaciones persistidas hacia `EquipmentExercise`.
-
-* Se mantuvieron `Exercise`, `ExerciseVariant` y `ExerciseVariantLinks` como entidades independientes, permitiendo reutilizar ejercicios entre diferentes objetos de equipamiento.
-
-* Se mantuvo `maxVariant` exclusivamente en la relación `EquipmentItem ↔ Exercise`, ya que determina qué variantes de cada ejercicio están disponibles para cada objeto.
-
-* Se separaron los modelos de dominio de los Data Classes generados por Drift.
-
-* Se validó mediante tests automatizados la persistencia y reconstrucción de objetos de equipamiento.
-
-* Los seeders existentes se mantienen como herramientas de desarrollo y testing para generar rápidamente datos de prueba. No forman parte de la lógica permanente de la aplicación.
+* Se implementó la reconstrucción de stats.
+* Se implementó la reconstrucción de `unlockRequirements`.
+* Se implementó la reconstrucción de `equipRequirements`.
+* Se creó una función interna `_buildEquipmentRequirement()` para convertir las filas persistidas en `EquipmentRequirement`.
+* Se mantuvieron separados los modelos de dominio de los Data Classes generados por Drift.
 
 # Modelo de persistencia actual
 
@@ -82,19 +99,33 @@ La estructura de datos relacionada con ejercicios y equipamiento queda organizad
 
 ```text
 EquipmentItem
-    │
-    ├── EquipmentItemExercises
-    │       │
-    │       ├── exerciseId
-    │       └── maxVariant
-    │
-    └── EquipmentItem data
+│
+├── EquipmentItemExercises
+│       │
+│       ├── exerciseId
+│       └── maxVariant
+│
+├── EquipmentItemStats
+│       │
+│       ├── stat
+│       └── value
+│
+├── EquipmentItemUnlockRequirements
+│       │
+│       ├── condition
+│       └── value
+│
+└── EquipmentItemEquipRequirements
+        │
+        ├── condition
+        └── value
+
 
 Exercise
-    │
-    └── ExerciseVariantLinks
-            │
-            └── ExerciseVariant
+│
+└── ExerciseVariantLinks
+        │
+        └── ExerciseVariant
 ```
 
 Esto permite que:
@@ -104,24 +135,46 @@ Esto permite que:
 * Cada relación `EquipmentItem ↔ Exercise` pueda definir su propio `maxVariant`.
 * Un `Exercise` pueda tener múltiples variantes.
 * Las variantes sean reutilizables y estén desacopladas del equipamiento.
-
-Los `stats`, `unlockRequirements` y `equipRequirements` todavía pertenecen al modelo de dominio y serán migrados posteriormente mediante tablas específicas.
+* Un `EquipmentItem` tenga múltiples stats.
+* Un `EquipmentItem` tenga múltiples requisitos de desbloqueo.
+* Un `EquipmentItem` tenga múltiples requisitos para ser equipado.
+* Los requisitos puedan representar nivel o stats mediante `condition` + `value`.
+* Los datos persistidos puedan reconstruirse nuevamente como modelos de dominio.
 
 # Tests de esta versión
 
 Se agregaron tests automatizados para validar:
 
 * CRUD de `EquipmentItem`.
+* CRUD de `EquipmentItemExercises`.
+* CRUD de `EquipmentItemStats`.
+* CRUD de `EquipmentItemUnlockRequirements`.
+* CRUD de `EquipmentItemEquipRequirements`.
 * Creación de relaciones `EquipmentItem ↔ Exercise`.
 * Lectura individual de relaciones.
 * Lectura múltiple de ejercicios asociados a un objeto.
 * Prevención de relaciones duplicadas.
 * Actualización de `maxVariant`.
 * Eliminación de relaciones.
-* Reconstrucción de un `EquipmentItem` completo desde SQLite.
+* Lectura de múltiples stats.
+* Actualización de stats.
+* Eliminación de stats.
+* Persistencia de requisitos de desbloqueo.
+* Persistencia de requisitos de equipamiento.
+* Reconstrucción de un `EquipmentItem` desde SQLite.
 * Reconstrucción de los ejercicios asociados.
+* Reconstrucción de los stats.
+* Reconstrucción de los requisitos de desbloqueo.
+* Reconstrucción de los requisitos de equipamiento.
 * Conversión correcta de los datos persistidos hacia los modelos de dominio.
 * Uso de `maxVariant` durante la reconstrucción del equipamiento.
+
+**Resultado final:**
+
+```text
+87 tests passed
+0 tests failed
+```
 
 # Casos de uso
 
@@ -174,7 +227,10 @@ La aplicación cuenta actualmente con:
 * Tabla de relaciones `EquipmentItemExercises`.
 * Relación entre objetos de equipamiento y ejercicios.
 * `maxVariant` por relación entre objeto y ejercicio.
-* Reconstrucción de objetos de equipamiento desde SQLite.
+* Tabla de stats de equipamiento.
+* Tabla de requisitos de desbloqueo.
+* Tabla de requisitos de equipamiento.
+* Reconstrucción completa de objetos de equipamiento desde SQLite.
 * Conversión de datos de persistencia a modelos de dominio.
 * CRUD de base de datos validado mediante tests automatizados.
 * Relaciones de base de datos validadas mediante tests automatizados.
@@ -206,7 +262,10 @@ lib/
 │       ├── exercises.dart
 │       ├── exercise_variant_links.dart
 │       ├── equipment_items.dart
-│       └── equipment_item_exercises.dart
+│       ├── equipment_item_exercises.dart
+│       ├── equipment_item_stats.dart
+│       ├── equipment_item_unlock_requirements.dart
+│       └── equipment_item_equip_requirements.dart
 │
 ├── models/
 │   ├── exercise.dart
@@ -262,6 +321,24 @@ Para ejecutar los tests de relaciones entre objetos de equipamiento y ejercicios
 flutter test test/database/equipment_item_exercises_test.dart
 ```
 
+Para ejecutar los tests de stats:
+
+```bash
+flutter test test/database/equipment_item_stats_test.dart
+```
+
+Para ejecutar los tests de requisitos de desbloqueo:
+
+```bash
+flutter test test/database/equipment_item_unlock_requirements_test.dart
+```
+
+Para ejecutar los tests de requisitos de equipamiento:
+
+```bash
+flutter test test/database/equipment_item_equip_requirements_test.dart
+```
+
 Para ejecutar los tests del seeder:
 
 ```bash
@@ -274,7 +351,7 @@ Para ejecutar todos los tests:
 flutter test
 ```
 
-# Actualmente se encuentran validadas las operaciones
+# Operaciones validadas
 
 **INSERT ✓**
 
@@ -289,3 +366,21 @@ flutter test
 **SEEDING ✓**
 
 **DOMAIN RECONSTRUCTION ✓**
+
+**EQUIPMENT STATS ✓**
+
+**UNLOCK REQUIREMENTS ✓**
+
+**EQUIP REQUIREMENTS ✓**
+
+**FULL TEST SUITE — 87 TESTS PASSING ✓**
+
+# Cierre de versión
+
+La versión `v0.4.6` deja completada la migración inicial del `EquipmentItem` hacia SQLite.
+
+El objeto de equipamiento ya no depende exclusivamente de datos hardcodeados para reconstruirse. Su información principal, ejercicios asociados, stats, requisitos de desbloqueo y requisitos de equipamiento pueden persistirse en SQLite y reconstruirse nuevamente como objetos de dominio.
+
+La separación entre **persistencia** y **dominio** queda establecida como base arquitectónica para continuar migrando el resto de la aplicación.
+
+**v0.4.6 — CLOSED ✓**
