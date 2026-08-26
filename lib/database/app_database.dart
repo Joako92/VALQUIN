@@ -6,9 +6,15 @@ import 'tables/test_entries.dart';
 import 'tables/exercise_variants.dart';
 import 'tables/exercises.dart';
 import 'tables/exercise_variant_links.dart';
+import 'tables/equipment_items.dart';
+import 'tables/equipment_item_exercises.dart';
 
 // Domain models
 import '../models/exercise.dart' as domain;
+import '../models/equipment_item.dart' as domain;
+import '../models/equipment_slot.dart';
+import '../models/rarity.dart';
+import '../models/equipment_requirement.dart';
 
 part 'app_database.g.dart';
 
@@ -18,8 +24,11 @@ part 'app_database.g.dart';
     ExerciseVariants,
     Exercises,
     ExerciseVariantLinks,
+    EquipmentItems,
+    EquipmentItemExercises,
   ],
 )
+
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
       : super(
@@ -268,6 +277,186 @@ class AppDatabase extends _$AppDatabase {
 
       if (exerciseWithVariants != null) {
         result.add(exerciseWithVariants);
+      }
+    }
+
+    return result;
+  }
+
+  // --------------------------------------------------
+  // EQUIPMENT ITEM CRUD
+  // --------------------------------------------------
+
+  Future<int> insertEquipmentItem({
+    required String id,
+    required String name,
+    required String rarity,
+    required String slot,
+    required int cooldownHours,
+  }) {
+    return into(equipmentItems).insert(
+      EquipmentItemsCompanion.insert(
+        id: id,
+        name: name,
+        rarity: rarity,
+        slot: slot,
+        cooldownHours: cooldownHours,
+      ),
+    );
+  }
+
+  Future<EquipmentItemRow?> getEquipmentItem(String id) {
+    return (select(equipmentItems)
+          ..where((table) => table.id.equals(id)))
+        .getSingleOrNull();
+  }
+
+  Future<bool> updateEquipmentItem({
+    required String id,
+    required String name,
+    required String rarity,
+    required String slot,
+    required int cooldownHours,
+  }) {
+    return (update(equipmentItems)
+          ..where((table) => table.id.equals(id)))
+        .write(
+      EquipmentItemsCompanion(
+        name: Value(name),
+        rarity: Value(rarity),
+        slot: Value(slot),
+        cooldownHours: Value(cooldownHours),
+      ),
+    ).then((rows) => rows > 0);
+  }
+
+  Future<bool> deleteEquipmentItem(String id) {
+    return (delete(equipmentItems)
+          ..where((table) => table.id.equals(id)))
+        .go()
+        .then((rows) => rows > 0);
+  }
+
+    // --------------------------------------------------
+  // EQUIPMENT ITEM EXERCISES
+  // --------------------------------------------------
+
+  Future<int> insertEquipmentItemExercise({
+    required String equipmentItemId,
+    required String exerciseId,
+    required int maxVariant,
+  }) {
+    return into(equipmentItemExercises).insert(
+      EquipmentItemExercisesCompanion.insert(
+        equipmentItemId: equipmentItemId,
+        exerciseId: exerciseId,
+        maxVariant: Value(maxVariant),
+      ),
+    );
+  }
+
+  Future<EquipmentItemExerciseRow?> getEquipmentItemExercise(
+    int id,
+  ) {
+    return (select(equipmentItemExercises)
+          ..where((table) => table.id.equals(id)))
+        .getSingleOrNull();
+  }
+
+  Future<List<EquipmentItemExerciseRow>> getEquipmentItemExercises(
+    String equipmentItemId,
+  ) {
+    return (select(equipmentItemExercises)
+          ..where(
+            (table) => table.equipmentItemId.equals(equipmentItemId),
+          ))
+        .get();
+  }
+
+  Future<bool> updateEquipmentItemExercise({
+    required int id,
+    required int maxVariant,
+  }) {
+    return (update(equipmentItemExercises)
+          ..where((table) => table.id.equals(id)))
+        .write(
+      EquipmentItemExercisesCompanion(
+        maxVariant: Value(maxVariant),
+      ),
+    ).then((rows) => rows > 0);
+  }
+
+  Future<bool> deleteEquipmentItemExercise(int id) {
+    return (delete(equipmentItemExercises)
+          ..where((table) => table.id.equals(id)))
+        .go()
+        .then((rows) => rows > 0);
+  }
+
+  Future<domain.EquipmentItem?> getEquipmentItemWithExercises(
+    String equipmentItemId,
+  ) async {
+    final equipmentItem =
+        await getEquipmentItem(equipmentItemId);
+
+    if (equipmentItem == null) {
+      return null;
+    }
+
+    final relations =
+        await getEquipmentItemExercises(equipmentItemId);
+
+    final equipmentExercises =
+        <domain.EquipmentExercise>[];
+
+    for (final relation in relations) {
+      final exercise =
+          await getExerciseWithVariants(
+        relation.exerciseId,
+      );
+
+      if (exercise == null) {
+        continue;
+      }
+
+      equipmentExercises.add(
+        domain.EquipmentExercise(
+          exercise: exercise,
+          maxVariant: relation.maxVariant,
+        ),
+      );
+    }
+
+    return domain.EquipmentItem(
+      id: equipmentItem.id,
+      name: equipmentItem.name,
+      exercises: equipmentExercises,
+      rarity: Rarity.values.firstWhere(
+        (rarity) => rarity.name == equipmentItem.rarity,
+      ),
+      slot: EquipmentSlot.values.firstWhere(
+        (slot) => slot.name == equipmentItem.slot,
+      ),
+      cooldownHours: equipmentItem.cooldownHours,
+      unlockRequirements: const EquipmentRequirement(),
+      equipRequirements: const EquipmentRequirement(),
+    );
+  }
+
+  Future<List<domain.EquipmentItem>> getEquipmentItemsWithExercises() async {
+    final equipmentItems =
+        await select(this.equipmentItems).get();
+
+    final result = <domain.EquipmentItem>[];
+
+    for (final equipmentItem in equipmentItems) {
+      final equipmentItemWithExercises =
+          await getEquipmentItemWithExercises(
+        equipmentItem.id,
+      );
+
+      if (equipmentItemWithExercises != null) {
+        result.add(equipmentItemWithExercises);
       }
     }
 

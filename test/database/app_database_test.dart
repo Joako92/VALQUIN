@@ -533,4 +533,116 @@ void main() {
       expect(squat.variants.first.unit, 'reps');
     },
   );
+
+  group('EquipmentItem CRUD', () {
+    test(
+      'inserts an equipment item',
+      () async {
+        final id = await database.insertEquipmentItem(
+          id: 'casco_novato',
+          name: 'CASCO DEL NOVATO',
+          rarity: 'common',
+          slot: 'head',
+          cooldownHours: 24,
+        );
+
+        expect(id, 1);
+
+        final equipmentItem =
+            await database.getEquipmentItem('casco_novato');
+
+        expect(equipmentItem, isNotNull);
+        expect(equipmentItem!.id, 'casco_novato');
+        expect(equipmentItem.name, 'CASCO DEL NOVATO');
+        expect(equipmentItem.rarity, 'common');
+        expect(equipmentItem.slot, 'head');
+        expect(equipmentItem.cooldownHours, 24);
+      },
+    );
+
+    test(
+      'updates an equipment item',
+      () async {
+        await database.insertEquipmentItem(
+          id: 'casco_novato',
+          name: 'CASCO DEL NOVATO',
+          rarity: 'common',
+          slot: 'head',
+          cooldownHours: 24,
+        );
+
+        final updated =
+            await database.updateEquipmentItem(
+          id: 'casco_novato',
+          name: 'CORONA DE LAURELES DE NIKÉ',
+          rarity: 'rare',
+          slot: 'head',
+          cooldownHours: 48,
+        );
+
+        expect(updated, isTrue);
+
+        final equipmentItem =
+            await database.getEquipmentItem(
+          'casco_novato',
+        );
+
+        expect(equipmentItem, isNotNull);
+        expect(
+          equipmentItem!.id,
+          'casco_novato',
+        );
+        expect(
+          equipmentItem.name,
+          'CORONA DE LAURELES DE NIKÉ',
+        );
+        expect(
+          equipmentItem.rarity,
+          'rare',
+        );
+        expect(
+          equipmentItem.slot,
+          'head',
+        );
+        expect(
+          equipmentItem.cooldownHours,
+          48,
+        );
+      },
+    );
+
+    test(
+      'deletes an equipment item',
+      () async {
+        await database.insertEquipmentItem(
+          id: 'casco_novato',
+          name: 'CASCO DEL NOVATO',
+          rarity: 'common',
+          slot: 'head',
+          cooldownHours: 24,
+        );
+
+        final beforeDelete =
+            await database.getEquipmentItem(
+          'casco_novato',
+        );
+
+        expect(beforeDelete, isNotNull);
+
+        final deleted =
+            await database.deleteEquipmentItem(
+          'casco_novato',
+        );
+
+        expect(deleted, isTrue);
+
+        final afterDelete =
+            await database.getEquipmentItem(
+          'casco_novato',
+        );
+
+        expect(afterDelete, isNull);
+      },
+    );
+  });
 }

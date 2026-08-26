@@ -27,13 +27,10 @@ class Exercise {
 
   final List<ExerciseVariant> variants;
 
-  final Map<String, int> stats;
-
   const Exercise({
     required this.id,
     required this.name,
     required this.variants,
-    this.stats = const {},
   });
 
   ExerciseVariant getVariant(int index) {

@@ -20,54 +20,108 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.4.5 — Exercise Content Migration**
+**v0.4.6 — Equipment Item Migration**
 
 # Cambios en esta versión
 
-* Se consolidó SQLite como sistema de persistencia local de la aplicación.
-* Se incorporó Drift como ORM y capa de acceso a la base de datos.
-* Se incorporó `build_runner` y `drift_dev` para la generación de código de Drift.
-* Se creó la estructura inicial de la base de datos y sus tablas.
-* Se creó la tabla `TestEntries` para validar la conexión y las operaciones básicas de persistencia.
-* Se implementaron y testearon las operaciones básicas de CRUD: crear, leer, actualizar y eliminar registros.
-* Se configuró la base de datos para utilizar un `QueryExecutor` alternativo durante los tests.
-* Se creó la tabla `ExerciseVariants`.
-* Se implementó el CRUD completo de `ExerciseVariant`.
-* Se validaron mediante tests automatizados las operaciones INSERT, READ, UPDATE y DELETE de `ExerciseVariant`.
-* Se creó la tabla `Exercises`.
-* Se implementó el CRUD completo de `Exercise`.
-* Se validaron mediante tests automatizados las operaciones INSERT, READ, UPDATE y DELETE de `Exercise`.
-* Se creó la tabla `ExerciseVariantLinks` para relacionar ejercicios con sus variantes.
-* Se implementó la relación `Exercise ↔ ExerciseVariant`.
-* Se implementó la prevención de relaciones duplicadas entre ejercicios y variantes.
-* Se implementó `getExercise(id)` para obtener un ejercicio desde Drift.
-* Se implementó `getExerciseVariants(exerciseId)` para obtener las variantes relacionadas mediante la tabla de relación.
-* Se implementó `getExerciseWithVariants(id)` para reconstruir un `domain.Exercise` completo.
-* Se implementó `getExercisesWithVariants()` para reconstruir todos los ejercicios con sus variantes.
+* Se continuó la migración del contenido de dominio hacia SQLite mediante Drift.
+
+* Se creó la tabla `EquipmentItems`.
+
+* Se implementó el modelo de persistencia `EquipmentItemRow` generado por Drift.
+
+* Se implementó el CRUD completo de `EquipmentItem`.
+
+* Se implementó `insertEquipmentItem()` para crear objetos de equipamiento en SQLite.
+
+* Se implementó `getEquipmentItem(id)` para obtener un objeto de equipamiento desde SQLite.
+
+* Se implementó `updateEquipmentItem()` para modificar objetos de equipamiento.
+
+* Se implementó `deleteEquipmentItem()` para eliminar objetos de equipamiento.
+
+* Se creó la tabla `EquipmentItemExercises` para representar la relación entre objetos de equipamiento y ejercicios.
+
+* Se implementó la relación `EquipmentItem ↔ Exercise`.
+
+* Se incorporó `maxVariant` a la relación `EquipmentItemExercises` para determinar hasta qué variante de un ejercicio puede utilizar el objeto.
+
+* Se implementó la prevención de relaciones duplicadas entre un objeto de equipamiento y un ejercicio.
+
+* Se implementó `insertEquipmentItemExercise()`.
+
+* Se implementó `getEquipmentItemExercise()`.
+
+* Se implementó `getEquipmentItemExercises(equipmentItemId)`.
+
+* Se implementó `updateEquipmentItemExercise()` para modificar el `maxVariant` de una relación.
+
+* Se implementó `deleteEquipmentItemExercise()`.
+
+* Se implementó la reconstrucción de un `domain.EquipmentItem` desde SQLite.
+
+* Se implementó `getEquipmentItemWithExercises(id)` para reconstruir un objeto de equipamiento junto con sus ejercicios.
+
+* Se implementó la conversión de `EquipmentItemRow` hacia el modelo de dominio `EquipmentItem`.
+
+* Se implementó la conversión de las relaciones persistidas hacia `EquipmentExercise`.
+
+* Se mantuvieron `Exercise`, `ExerciseVariant` y `ExerciseVariantLinks` como entidades independientes, permitiendo reutilizar ejercicios entre diferentes objetos de equipamiento.
+
+* Se mantuvo `maxVariant` exclusivamente en la relación `EquipmentItem ↔ Exercise`, ya que determina qué variantes de cada ejercicio están disponibles para cada objeto.
+
 * Se separaron los modelos de dominio de los Data Classes generados por Drift.
-* Se implementó la conversión `Drift Row → Domain Model`.
-* Se creó `data/exercises.dart` como fuente declarativa del contenido inicial de ejercicios.
-* Se creó `ExerciseSeeder` para cargar los ejercicios, variantes y relaciones iniciales en SQLite.
-* Se validó mediante tests automatizados el proceso completo de seeding.
-* Se validó la reconstrucción de ejercicios desde la base de datos hacia los modelos de dominio.
-* Se mantuvo la arquitectura actual de la aplicación funcionando mientras se incorpora progresivamente la nueva capa de persistencia.
+
+* Se validó mediante tests automatizados la persistencia y reconstrucción de objetos de equipamiento.
+
+* Los seeders existentes se mantienen como herramientas de desarrollo y testing para generar rápidamente datos de prueba. No forman parte de la lógica permanente de la aplicación.
+
+# Modelo de persistencia actual
+
+La estructura de datos relacionada con ejercicios y equipamiento queda organizada de la siguiente manera:
+
+```text
+EquipmentItem
+    │
+    ├── EquipmentItemExercises
+    │       │
+    │       ├── exerciseId
+    │       └── maxVariant
+    │
+    └── EquipmentItem data
+
+Exercise
+    │
+    └── ExerciseVariantLinks
+            │
+            └── ExerciseVariant
+```
+
+Esto permite que:
+
+* Un `EquipmentItem` tenga múltiples ejercicios.
+* Un mismo `Exercise` pueda pertenecer a múltiples `EquipmentItem`.
+* Cada relación `EquipmentItem ↔ Exercise` pueda definir su propio `maxVariant`.
+* Un `Exercise` pueda tener múltiples variantes.
+* Las variantes sean reutilizables y estén desacopladas del equipamiento.
+
+Los `stats`, `unlockRequirements` y `equipRequirements` todavía pertenecen al modelo de dominio y serán migrados posteriormente mediante tablas específicas.
 
 # Tests de esta versión
 
 Se agregaron tests automatizados para validar:
 
-* CRUD de `TestEntry`.
-* CRUD de `ExerciseVariant`.
-* CRUD de `Exercise`.
-* Creación de relaciones `Exercise ↔ ExerciseVariant`.
+* CRUD de `EquipmentItem`.
+* Creación de relaciones `EquipmentItem ↔ Exercise`.
+* Lectura individual de relaciones.
+* Lectura múltiple de ejercicios asociados a un objeto.
 * Prevención de relaciones duplicadas.
-* Lectura de variantes asociadas a un ejercicio.
-* Reconstrucción de un ejercicio junto con sus variantes.
-* Reconstrucción de múltiples ejercicios.
-* Seeding de todos los ejercicios definidos en `data/exercises.dart`.
-* Seeding de todas las variantes.
-* Creación de todos los vínculos entre ejercicios y variantes.
-* Equivalencia entre los datos originales y los datos recuperados desde SQLite.
+* Actualización de `maxVariant`.
+* Eliminación de relaciones.
+* Reconstrucción de un `EquipmentItem` completo desde SQLite.
+* Reconstrucción de los ejercicios asociados.
+* Conversión correcta de los datos persistidos hacia los modelos de dominio.
+* Uso de `maxVariant` durante la reconstrucción del equipamiento.
 
 # Casos de uso
 
@@ -114,11 +168,18 @@ La aplicación cuenta actualmente con:
 * CRUD de `Exercise`.
 * Tabla de relaciones `ExerciseVariantLinks`.
 * Relación entre ejercicios y variantes.
-* Seeder inicial de ejercicios.
 * Reconstrucción de ejercicios desde SQLite.
+* Tabla de objetos de equipamiento.
+* CRUD de `EquipmentItem`.
+* Tabla de relaciones `EquipmentItemExercises`.
+* Relación entre objetos de equipamiento y ejercicios.
+* `maxVariant` por relación entre objeto y ejercicio.
+* Reconstrucción de objetos de equipamiento desde SQLite.
 * Conversión de datos de persistencia a modelos de dominio.
 * CRUD de base de datos validado mediante tests automatizados.
-* Seeder validado mediante tests automatizados.
+* Relaciones de base de datos validadas mediante tests automatizados.
+* Reconstrucción de modelos de dominio validada mediante tests automatizados.
+* Seeders disponibles como herramientas de desarrollo y testing.
 
 # Arquitectura
 
@@ -143,12 +204,16 @@ lib/
 │       ├── test_entries.dart
 │       ├── exercise_variants.dart
 │       ├── exercises.dart
-│       └── exercise_variant_links.dart
+│       ├── exercise_variant_links.dart
+│       ├── equipment_items.dart
+│       └── equipment_item_exercises.dart
 │
 ├── models/
 │   ├── exercise.dart
 │   ├── equipment_item.dart
 │   ├── equipment_slot.dart
+│   ├── rarity.dart
+│   ├── equipment_requirement.dart
 │   ├── player.dart
 │   ├── player_class.dart
 │   └── training_plan.dart
@@ -189,6 +254,12 @@ Para ejecutar los tests de la base de datos:
 
 ```bash
 flutter test test/database/app_database_test.dart
+```
+
+Para ejecutar los tests de relaciones entre objetos de equipamiento y ejercicios:
+
+```bash
+flutter test test/database/equipment_item_exercises_test.dart
 ```
 
 Para ejecutar los tests del seeder:
