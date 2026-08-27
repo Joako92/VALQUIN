@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/native.dart';
 
-import '../../lib/database/app_database.dart';
-import '../../lib/models/rarity.dart';
-import '../../lib/models/equipment_slot.dart';
+import 'package:solo_training_001/database/app_database.dart';
+import 'package:solo_training_001/models/rarity.dart';
+import 'package:solo_training_001/models/equipment_slot.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

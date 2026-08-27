@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/native.dart';
 
-import '../../lib/database/app_database.dart';
-import '../../lib/database/seed/exercise_seeder.dart';
-import '../../lib/data/exercises.dart';
+import 'package:solo_training_001/database/app_database.dart';
+import 'package:solo_training_001/database/seed/exercise_seeder.dart';
+import 'package:solo_training_001/data/exercises.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

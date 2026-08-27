@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../lib/managers/class_manager.dart';
-import '../../lib/models/player.dart';
+import 'package:solo_training_001/managers/class_manager.dart';
+import 'package:solo_training_001/models/player.dart';
 
 void main() {
   late ClassManager classManager;

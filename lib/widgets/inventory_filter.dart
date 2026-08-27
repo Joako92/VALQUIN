@@ -28,7 +28,7 @@ class InventoryFilter extends StatelessWidget {
 
         backgroundColor: const Color(0xFF111827),
 
-        selectedColor: Colors.blueAccent.withOpacity(0.25),
+        selectedColor: Colors.blueAccent.withValues(alpha: 0.25),
 
         side: BorderSide(
           color: selected

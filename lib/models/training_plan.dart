@@ -92,7 +92,9 @@ class TrainingPlan {
   // --------------------------------------------------
 
   bool containsItem(EquipmentItem item) {
-    return equipment.contains(item);
+    return equipment.any(
+      (equippedItem) => equippedItem.id == item.id,
+    );
   }
 
   EquipResult addItem(
@@ -164,7 +166,9 @@ class TrainingPlan {
       return false;
     }
 
-    equipment.remove(item);
+    equipment.removeWhere(
+      (equippedItem) => equippedItem.id == item.id,
+    );
 
     return true;
   }

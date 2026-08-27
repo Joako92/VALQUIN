@@ -62,7 +62,7 @@ class EquipmentSlot extends StatelessWidget {
           border: Border.all(
             color: isActive
                 ? Colors.blueAccent
-                : Colors.blueAccent.withOpacity(0.25),
+                : Colors.blueAccent.withValues(alpha: 0.25),
 
             width: isActive ? 1.5 : 1,
           ),
@@ -70,7 +70,7 @@ class EquipmentSlot extends StatelessWidget {
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: Colors.blueAccent.withOpacity(0.15),
+                    color: Colors.blueAccent.withValues(alpha: 0.15),
                     blurRadius: 10,
                     spreadRadius: 1,
                   ),
@@ -95,7 +95,7 @@ class EquipmentSlot extends StatelessWidget {
 
                   color: isActive
                       ? Colors.blueAccent
-                      : Colors.blueAccent.withOpacity(0.7),
+                      : Colors.blueAccent.withValues(alpha: 0.7),
                 ),
 
                 const SizedBox(height: 8),
@@ -185,7 +185,7 @@ class EquipmentSlot extends StatelessWidget {
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.65),
+                    color: Colors.black.withValues(alpha: 0.65),
 
                     borderRadius: BorderRadius.circular(15),
                   ),

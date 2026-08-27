@@ -203,7 +203,7 @@ class _EquipScreenState extends State<EquipScreen> {
                   await playerManager.savePlayer();
                   await trainingPlanManager.saveTrainingPlan();
 
-                  if (!mounted) {
+                  if (!context.mounted) {
                     return;
                   }
 

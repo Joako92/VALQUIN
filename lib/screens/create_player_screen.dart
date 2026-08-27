@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 
+import '../database/app_database.dart';
+
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../managers/class_manager.dart';
+
 import 'main_screen.dart';
 
 class CreatePlayerScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
   final ClassManager classManager;
+  final AppDatabase database;
 
   const CreatePlayerScreen({
     super.key,
     required this.playerManager,
     required this.trainingPlanManager,
     required this.classManager,
+    required this.database,
   });
 
   @override
@@ -41,6 +46,9 @@ class _CreatePlayerScreenState
 
   ClassManager get classManager =>
       widget.classManager;
+
+  AppDatabase get database =>
+      widget.database;
 
   // --------------------------------------------------
   // DISPOSE
@@ -89,6 +97,7 @@ class _CreatePlayerScreenState
           playerManager: playerManager,
           trainingPlanManager: trainingPlanManager,
           classManager: classManager,
+          database: database,
         ),
       ),
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../database/app_database.dart';
+
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../managers/class_manager.dart';
@@ -11,12 +13,14 @@ class MainScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
   final ClassManager classManager;
+  final AppDatabase database;
 
   const MainScreen({
     super.key,
     required this.playerManager,
     required this.trainingPlanManager,
     required this.classManager,
+    required this.database,
   });
 
   @override
@@ -37,6 +41,7 @@ class _MainScreenState extends State<MainScreen> {
       InventoryScreen(
         playerManager: widget.playerManager,
         trainingPlanManager: widget.trainingPlanManager,
+        database: widget.database,
       ),
 
       EquipScreen(
@@ -59,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
 
         backgroundColor: const Color(0xFF0D111A),
 
-        indicatorColor: Colors.blueAccent.withOpacity(0.2),
+        indicatorColor: Colors.blueAccent.withValues(alpha: 0.2),
 
         destinations: const [
           NavigationDestination(

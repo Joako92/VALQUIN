@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
 
 import 'app.dart';
+
 import 'data/training_plan.dart';
+
+import 'database/app_database.dart';
+// import 'database/seed/database_seeder.dart';<
+
 import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
 import 'managers/class_manager.dart';
+
 import 'persistence/player_storage.dart';
 import 'persistence/training_plan_storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // --------------------------------------------------
+  // DATABASE
+  // --------------------------------------------------
+
+  final database = AppDatabase();
+
+  // Fill database from seeder
+  // await DatabaseSeeder.seedIfNeeded(database);
 
   // --------------------------------------------------
   // PLAYER
@@ -51,6 +66,7 @@ Future<void> main() async {
       playerManager: playerManager,
       trainingPlanManager: trainingPlanManager,
       classManager: classManager,
+      database: database,
     ),
   );
 }

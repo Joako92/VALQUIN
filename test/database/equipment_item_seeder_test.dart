@@ -1,10 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/native.dart';
 
-import '../../lib/database/app_database.dart';
-import '../../lib/database/seed/exercise_seeder.dart';
-import '../../lib/database/seed/equipment_item_seeder.dart';
-import '../../lib/data/equipment_items.dart';
+import 'package:solo_training_001/database/app_database.dart';
+import 'package:solo_training_001/database/seed/exercise_seeder.dart';
+import 'package:solo_training_001/database/seed/equipment_item_seeder.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -22,146 +21,110 @@ void main() {
   });
 
   test(
-    'seeds all equipment items into the database',
+    'seeds equipment items with all related data',
     () async {
       await ExerciseSeeder.seed(database);
       await EquipmentItemSeeder.seed(database);
 
-      for (final equipmentItem in equipmentItems) {
-        final storedEquipmentItem =
-            await database.getEquipmentItem(
-          equipmentItem.id,
-        );
+      final items =
+          await database.getEquipmentItemsWithAllData();
 
-        expect(
-          storedEquipmentItem,
-          isNotNull,
-        );
+      expect(items.length, 5);
 
-        expect(
-          storedEquipmentItem!.id,
-          equipmentItem.id,
-        );
-
-        expect(
-          storedEquipmentItem.name,
-          equipmentItem.name,
-        );
-
-        expect(
-          storedEquipmentItem.rarity,
-          equipmentItem.rarity.name,
-        );
-
-        expect(
-          storedEquipmentItem.slot,
-          equipmentItem.slot.name,
-        );
-
-        expect(
-          storedEquipmentItem.cooldownHours,
-          equipmentItem.cooldownHours,
-        );
-      }
-    },
-  );
-
-  test(
-    'seeds all equipment item exercise relations',
-    () async {
-      await ExerciseSeeder.seed(database);
-      await EquipmentItemSeeder.seed(database);
-
-      for (final equipmentItem in equipmentItems) {
-        final storedRelations =
-            await database.getEquipmentItemExercises(
-          equipmentItem.id,
-        );
-
-        expect(
-          storedRelations.length,
-          equipmentItem.exercises.length,
-        );
-
-        for (final expectedExercise
-            in equipmentItem.exercises) {
-          final matchingRelations =
-              storedRelations.where(
-            (relation) =>
-                relation.exerciseId ==
-                    expectedExercise.exercise.id &&
-                relation.maxVariant ==
-                    expectedExercise.maxVariant,
-          );
-
-          expect(
-            matchingRelations.length,
-            1,
-          );
-        }
-      }
-    },
-  );
-
-  test(
-    'reconstructs equipment items equal to source data',
-    () async {
-      // Seed exercises first because equipment items
-      // reference existing exercises.
-      await ExerciseSeeder.seed(database);
-      await EquipmentItemSeeder.seed(database);
-
-      final storedEquipmentItems =
-          await database.getEquipmentItemsWithExercises();
-
-      expect(
-        storedEquipmentItems.length,
-        equipmentItems.length,
+      final casco =
+          items.firstWhere(
+        (item) => item.id == 'casco_novato',
       );
 
-      for (final expectedItem in equipmentItems) {
-        final actualItem =
-            storedEquipmentItems.firstWhere(
-          (item) => item.id == expectedItem.id,
-        );
+      expect(casco.name, 'CASCO DEL NOVATO');
+      expect(casco.rarity.name, 'common');
+      expect(casco.slot.name, 'head');
+      expect(casco.cooldownHours, 24);
 
-        expect(actualItem.name, expectedItem.name);
+      expect(casco.stats['stamina'], 2);
 
-        expect(
-          actualItem.rarity,
-          expectedItem.rarity,
-        );
+      expect(
+        casco.exercises.length,
+        1,
+      );
 
-        expect(
-          actualItem.slot,
-          expectedItem.slot,
-        );
+      expect(
+        casco.exercises.first.exercise.id,
+        'trote',
+      );
 
-        expect(
-          actualItem.cooldownHours,
-          expectedItem.cooldownHours,
-        );
+      expect(
+        casco.exercises.first.maxVariant,
+        0,
+      );
+    },
+  );
 
-        expect(
-          actualItem.exercises.length,
-          expectedItem.exercises.length,
-        );
+  test(
+    'seeds equipment item requirements',
+    () async {
+      await ExerciseSeeder.seed(database);
+      await EquipmentItemSeeder.seed(database);
 
-        for (final expectedExercise
-            in expectedItem.exercises) {
-          final actualExercise =
-              actualItem.exercises.firstWhere(
-            (equipmentExercise) =>
-                equipmentExercise.exercise.id ==
-                expectedExercise.exercise.id,
-          );
+      final items =
+          await database.getEquipmentItemsWithAllData();
 
-          expect(
-            actualExercise.maxVariant,
-            expectedExercise.maxVariant,
-          );
-        }
-      }
+      final casco =
+          items.firstWhere(
+        (item) => item.id == 'casco_mejorado',
+      );
+
+      expect(
+        casco.unlockRequirements.level,
+        2,
+      );
+
+      expect(
+        casco.equipRequirements.stats['stamina'],
+        10,
+      );
+    },
+  );
+
+  test(
+    'seeds equipment item stats',
+    () async {
+      await ExerciseSeeder.seed(database);
+      await EquipmentItemSeeder.seed(database);
+
+      final items =
+          await database.getEquipmentItemsWithAllData();
+
+      final item =
+          items.firstWhere(
+        (item) => item.id == 'mejora_nivel',
+      );
+
+      expect(item.stats['strength'], 30);
+      expect(item.stats['endurance'], 30);
+      expect(item.stats['energy'], 30);
+      expect(item.stats['stamina'], 30);
+    },
+  );
+
+  test(
+    'seeds unequipable equipment item requirements',
+    () async {
+      await ExerciseSeeder.seed(database);
+      await EquipmentItemSeeder.seed(database);
+
+      final items =
+          await database.getEquipmentItemsWithAllData();
+
+      final item =
+          items.firstWhere(
+        (item) => item.id == 'item_inequipable',
+      );
+
+      expect(
+        item.equipRequirements.stats['stamina'],
+        100000,
+      );
     },
   );
 }

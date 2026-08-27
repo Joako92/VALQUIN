@@ -74,12 +74,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 borderRadius: BorderRadius.circular(20),
 
                 border: Border.all(
-                  color: Colors.blueAccent.withOpacity(0.5),
+                  color: Colors.blueAccent.withValues(alpha: 0.5),
                 ),
 
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blueAccent.withOpacity(0.15),
+                    color: Colors.blueAccent.withValues(alpha: 0.15),
                     blurRadius: 20,
                     spreadRadius: 2,
                   ),
@@ -197,7 +197,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     foregroundColor: Colors.amberAccent,
 
                     side: BorderSide(
-                      color: Colors.amberAccent.withOpacity(0.7),
+                      color: Colors.amberAccent.withValues(alpha: 0.7),
                     ),
 
                     padding: const EdgeInsets.symmetric(
@@ -303,7 +303,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   foregroundColor: Colors.redAccent,
 
                   side: BorderSide(
-                    color: Colors.redAccent.withOpacity(0.7),
+                    color: Colors.redAccent.withValues(alpha: 0.7),
                   ),
 
                   padding: const EdgeInsets.symmetric(

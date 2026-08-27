@@ -20,7 +20,7 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.4.6 — Equipment Item Migration**
+**v0.5.0 — Equipment SQL Integration**
 
 > Nota: el commit anterior fue etiquetado como `0.4.5`, pero corresponde funcionalmente a la versión `0.4.6`.
 
@@ -373,14 +373,18 @@ flutter test
 
 **EQUIP REQUIREMENTS ✓**
 
-**FULL TEST SUITE — 87 TESTS PASSING ✓**
+**FULL TEST SUITE — 88 TESTS PASSING ✓**
 
 # Cierre de versión
 
-La versión `v0.4.6` deja completada la migración inicial del `EquipmentItem` hacia SQLite.
+La versión v0.5.0 deja completada la primera integración funcional entre la aplicación y la base de datos SQLite para el sistema de equipamiento.
 
-El objeto de equipamiento ya no depende exclusivamente de datos hardcodeados para reconstruirse. Su información principal, ejercicios asociados, stats, requisitos de desbloqueo y requisitos de equipamiento pueden persistirse en SQLite y reconstruirse nuevamente como objetos de dominio.
+EquipmentItem, sus ejercicios, variantes disponibles, stats, requisitos de desbloqueo y requisitos de equipamiento pueden persistirse en SQLite y reconstruirse como modelos de dominio.
 
-La separación entre **persistencia** y **dominio** queda establecida como base arquitectónica para continuar migrando el resto de la aplicación.
+InventoryScreen consume actualmente los objetos de equipamiento directamente desde SQLite, eliminando la dependencia de data/equipment_items.dart para la lectura del inventario.
 
-**v0.4.6 — CLOSED ✓**
+Se validó además que los objetos reconstruidos desde SQLite mantengan correctamente su identidad lógica mediante su id, permitiendo conservar el estado de equipamiento entre InventoryScreen y EquipScreen.
+
+Los seeders quedan exclusivamente como herramientas de desarrollo para poblar bases de datos de prueba.
+
+**v0.5.0 — CLOSED ✓**
