@@ -6,33 +6,25 @@ const List<Exercise> exercises = [
   // --------------------------------------------------
 
   Exercise(
+    id: 'caminata',
+    name: 'CAMINATA',
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        amount: 30,
+        unit: 'min',
+      ),
+    ],
+  ),
+
+  Exercise(
     id: 'trote',
     name: 'TROTE',
     variants: [
       ExerciseVariant(
         index: 0,
-        amount: 5,
+        amount: 1,
         unit: 'km',
-      ),
-      ExerciseVariant(
-        index: 1,
-        amount: 10,
-        unit: 'km',
-      ),
-      ExerciseVariant(
-        index: 2,
-        amount: 15,
-        unit: 'km',
-      ),
-      ExerciseVariant(
-        index: 3,
-        amount: 30,
-        unit: 'min',
-      ),
-      ExerciseVariant(
-        index: 4,
-        amount: 60,
-        unit: 'min',
       ),
     ],
   ),
@@ -42,67 +34,95 @@ const List<Exercise> exercises = [
   // --------------------------------------------------
 
   Exercise(
-    id: 'bench_press',
-    name: 'BENCH PRESS',
+    id: 'flexiones_brazos',
+    name: 'FLEXIONES',
     variants: [
       ExerciseVariant(
         index: 0,
         sets: 3,
-        amount: 5,
-        unit: 'reps',
-      ),
-      ExerciseVariant(
-        index: 1,
-        sets: 3,
         amount: 10,
-        unit: 'reps',
-      ),
-      ExerciseVariant(
-        index: 2,
-        sets: 4,
-        amount: 10,
-        unit: 'reps',
-      ),
-      ExerciseVariant(
-        index: 3,
-        sets: 4,
-        amount: 15,
-        unit: 'reps',
-      ),
-      ExerciseVariant(
-        index: 4,
-        sets: 5,
-        amount: 12,
-        unit: 'reps',
-      ),
-    ],
-  ),
-
-  Exercise(
-    id: 'apertura_mancuernas',
-    name: 'APERTURA CON MANCUERNAS',
-    variants: [
-      ExerciseVariant(
-        index: 0,
-        sets: 3,
-        amount: 12,
         unit: 'reps',
       ),
     ],
   ),
 
   // --------------------------------------------------
-  // TEST
+  // SHOULDERS
   // --------------------------------------------------
 
   Exercise(
-    id: 'carameloraro',
-    name: 'CARAMELORRARO',
+    id: 'press_militar',
+    name: 'PRESS MILITAR',
     variants: [
       ExerciseVariant(
         index: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // ARMS
+  // --------------------------------------------------
+
+  Exercise(
+    id: 'curl_biceps',
+    name: 'CURL DE BÍCEPS',
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      ),
+    ],
+  ),
+
+  Exercise(
+    id: 'fondos_banco',
+    name: 'FONDOS EN BANCO',
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // LEGS
+  // --------------------------------------------------
+
+  Exercise(
+    id: 'sentadilla_libre',
+    name: 'SENTADILLA',
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // CORE
+  // --------------------------------------------------
+
+  Exercise(
+    id: 'plancha_frontal',
+    name: 'PLANCHA',
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        sets: 3,
         amount: 1,
-        unit: 'unidad',
+        unit: 'min',
       ),
     ],
   ),

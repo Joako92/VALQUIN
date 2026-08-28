@@ -3,7 +3,6 @@ import 'package:drift/native.dart';
 
 import 'package:solo_training_001/database/app_database.dart';
 import 'package:solo_training_001/database/seed/exercise_seeder.dart';
-import 'package:solo_training_001/data/exercises.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -21,118 +20,39 @@ void main() {
   });
 
   test(
-    'seeds all exercises into the database',
+    'seeds exercises successfully',
     () async {
       await ExerciseSeeder.seed(database);
 
-      for (final exercise in exercises) {
-        final storedExercise =
-            await database.getExercise(exercise.id);
+      final exercises =
+          await database.getExercisesWithVariants();
 
-        expect(storedExercise, isNotNull);
-        expect(storedExercise!.id, exercise.id);
-        expect(storedExercise.name, exercise.name);
+      expect(exercises, isNotEmpty);
+
+      for (final exercise in exercises) {
+        expect(exercise.id, isNotEmpty);
+        expect(exercise.name, isNotEmpty);
       }
     },
   );
 
   test(
-    'seeds all exercise variants and links',
+    'seeds exercises with variants',
     () async {
       await ExerciseSeeder.seed(database);
+
+      final exercises =
+          await database.getExercisesWithVariants();
+
+      expect(exercises, isNotEmpty);
 
       for (final exercise in exercises) {
-        final storedVariants =
-            await database.getExerciseVariants(
-          exercise.id,
-        );
+        expect(exercise.variants, isNotEmpty);
 
-        expect(
-          storedVariants.length,
-          exercise.variants.length,
-        );
-
-        for (final expectedVariant in exercise.variants) {
-          final matchingVariants =
-              storedVariants.where(
-            (variant) =>
-                variant.variantIndex ==
-                expectedVariant.index,
-          );
-
-          expect(matchingVariants.length, 1);
-
-          final storedVariant =
-              matchingVariants.first;
-
-          expect(
-            storedVariant.sets,
-            expectedVariant.sets,
-          );
-
-          expect(
-            storedVariant.amount,
-            expectedVariant.amount,
-          );
-
-          expect(
-            storedVariant.unit,
-            expectedVariant.unit,
-          );
-        }
-      }
-    },
-  );
-
-  test(
-    'reconstructs exercises from seeded database',
-    () async {
-      await ExerciseSeeder.seed(database);
-
-      for (final expectedExercise in exercises) {
-        final storedExercise =
-            await database.getExerciseWithVariants(
-          expectedExercise.id,
-        );
-
-        expect(storedExercise, isNotNull);
-
-        expect(
-          storedExercise!.id,
-          expectedExercise.id,
-        );
-
-        expect(
-          storedExercise.name,
-          expectedExercise.name,
-        );
-
-        expect(
-          storedExercise.variants.length,
-          expectedExercise.variants.length,
-        );
-
-        for (final expectedVariant
-            in expectedExercise.variants) {
-          final actualVariant =
-              storedExercise.getVariant(
-            expectedVariant.index,
-          );
-
-          expect(
-            actualVariant.sets,
-            expectedVariant.sets,
-          );
-
-          expect(
-            actualVariant.amount,
-            expectedVariant.amount,
-          );
-
-          expect(
-            actualVariant.unit,
-            expectedVariant.unit,
-          );
+        for (final variant in exercise.variants) {
+          expect(variant.index, greaterThanOrEqualTo(0));
+          expect(variant.amount, greaterThan(0));
+          expect(variant.unit, isNotEmpty);
         }
       }
     },

@@ -1,25 +1,16 @@
-import 'exercise.dart';
+// import 'exercise.dart';
 import 'equipment_slot.dart';
 import 'rarity.dart';
 import 'equipment_requirement.dart';
 
 class EquipmentExercise {
-  final Exercise exercise;
-
+  final String exerciseId;
   final int maxVariant;
 
   const EquipmentExercise({
-    required this.exercise,
+    required this.exerciseId,
     this.maxVariant = 0,
   });
-
-  List<ExerciseVariant> get availableVariants {
-    return exercise.variants
-        .where(
-          (variant) => variant.index <= maxVariant,
-        )
-        .toList();
-  }
 }
 
 class EquipmentItem {

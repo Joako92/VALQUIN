@@ -47,6 +47,7 @@ class _MainScreenState extends State<MainScreen> {
       EquipScreen(
         playerManager: widget.playerManager,
         trainingPlanManager: widget.trainingPlanManager,
+        database: widget.database,
       ),
     ];
 

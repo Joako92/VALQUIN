@@ -4,10 +4,12 @@ import '../database/app_database.dart';
 import '../models/equipment_item.dart';
 import '../models/equipment_slot.dart';
 import '../models/training_plan.dart';
+import '../models/exercise.dart';
 import '../widgets/inventory_filter.dart';
 import '../widgets/equipment_item.dart';
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
+
 
 enum InventoryFilterType { all, equipped, slot }
 
@@ -42,6 +44,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   List<EquipmentItem> equipmentItems = [];
 
+  Map<String, Exercise> exercisesById = {};
+
   bool isLoading = true;
 
   @override
@@ -54,10 +58,19 @@ class _InventoryScreenState extends State<InventoryScreen> {
     final items =
         await database.getEquipmentItemsWithAllData();
 
+    final exercises =
+        await database.getExercisesWithVariants();
+
     if (!mounted) return;
 
     setState(() {
       equipmentItems = items;
+
+      exercisesById = {
+        for (final exercise in exercises)
+          exercise.id: exercise,
+      };
+
       isLoading = false;
     });
   }
@@ -282,26 +295,24 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       item.slot.name
                           .toUpperCase(),
 
-                  exercises:
-                      item.exercises
-                          .map(
+                  exercises: item.exercises.map(
                     (equipmentExercise) {
                       final exercise =
-                          equipmentExercise
-                              .exercise;
+                          exercisesById[equipmentExercise.exerciseId];
 
-                      final variant =
-                          exercise
-                              .variants
-                              .first;
+                      if (exercise == null) {
+                        return 'UNKNOWN EXERCISE';
+                      }
 
-                      final amount =
-                          formatAmount(
+                      final variant = exercise.getVariant(
+                        equipmentExercise.maxVariant,
+                      );
+
+                      final amount = formatAmount(
                         variant.amount,
                       );
 
-                      if (variant.sets !=
-                          null) {
+                      if (variant.sets != null) {
                         return '${exercise.name} — '
                             '${variant.sets} x '
                             '$amount '

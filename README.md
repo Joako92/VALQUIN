@@ -20,78 +20,269 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.5.0 — Equipment SQL Integration**
-
-> Nota: el commit anterior fue etiquetado como `0.4.5`, pero corresponde funcionalmente a la versión `0.4.6`.
+**v0.5.1 — Full Exercise SQL Integration & Database Admin**
 
 # Cambios en esta versión
 
-* Se continuó la migración del contenido de dominio hacia SQLite mediante Drift.
-* Se creó la tabla `EquipmentItems`.
-* Se implementó el modelo de persistencia `EquipmentItemRow` generado por Drift.
-* Se implementó el CRUD completo de `EquipmentItem`.
-* Se implementó `insertEquipmentItem()` para crear objetos de equipamiento en SQLite.
-* Se implementó `getEquipmentItem(id)` para obtener un objeto de equipamiento desde SQLite.
-* Se implementó `updateEquipmentItem()` para modificar objetos de equipamiento.
-* Se implementó `deleteEquipmentItem()` para eliminar objetos de equipamiento.
+Esta versión continúa la migración del contenido de dominio hacia SQLite mediante Drift.
+
+El objetivo principal de este snapshot es completar la eliminación de las referencias al contenido estático de `data/exercises.dart` en las pantallas que utilizan ejercicios.
+
+Los ejercicios utilizados por Inventory y Equip ahora se obtienen directamente desde la base de datos.
+
+Además, se incorporaron herramientas administrativas de desarrollo para inspeccionar y eliminar datos persistidos durante el desarrollo.
+
+## Ejercicios desde SQLite
+
+* Se eliminó la dependencia de `data/exercises.dart` en `InventoryScreen`.
+
+* Se eliminó la dependencia de `data/exercises.dart` en `EquipScreen`.
+
+* Los ejercicios asociados a un `EquipmentItem` ahora se resuelven directamente desde SQLite.
+
+* Los datos de los ejercicios se obtienen mediante `AppDatabase`.
+
+* Las variantes de los ejercicios se reconstruyen desde SQLite.
+
+* `maxVariant` continúa determinando hasta qué variante de un ejercicio puede utilizar un `EquipmentItem`.
+
+* Se mantiene la separación entre modelos de persistencia generados por Drift y modelos de dominio.
+
+* InventoryScreen ahora consume completamente los `EquipmentItem` reconstruidos desde SQLite.
+
+* EquipScreen utiliza los ejercicios asociados a los objetos equipados provenientes de SQLite.
+
+La aplicación deja de depender de una lista estática de ejercicios para representar el contenido del inventario y del equipamiento.
+
+## EquipmentItem
+
+Se mantiene la integración completa de `EquipmentItem` con SQLite mediante Drift.
+
+* Tabla `EquipmentItems`.
+
+* Modelo de persistencia `EquipmentItemRow` generado por Drift.
+
+* CRUD completo de `EquipmentItem`.
+
+* `insertEquipmentItem()`.
+
+* `getEquipmentItem(id)`.
+
+* `updateEquipmentItem()`.
+
+* `deleteEquipmentItem()`.
 
 ## Relación EquipmentItem ↔ Exercise
 
-* Se creó la tabla `EquipmentItemExercises`.
-* Se implementó la relación `EquipmentItem ↔ Exercise`.
-* Se incorporó `maxVariant` a la relación `EquipmentItemExercises` para determinar hasta qué variante de un ejercicio puede utilizar el objeto.
-* Se implementó la prevención de relaciones duplicadas entre un objeto de equipamiento y un ejercicio.
-* Se implementó `insertEquipmentItemExercise()`.
-* Se implementó `getEquipmentItemExercise()`.
-* Se implementó `getEquipmentItemExercises(equipmentItemId)`.
-* Se implementó `updateEquipmentItemExercise()` para modificar el `maxVariant` de una relación.
-* Se implementó `deleteEquipmentItemExercise()`.
+* Tabla `EquipmentItemExercises`.
+
+* Relación `EquipmentItem ↔ Exercise`.
+
+* `maxVariant` por relación.
+
+* Prevención de relaciones duplicadas.
+
+* `insertEquipmentItemExercise()`.
+
+* `getEquipmentItemExercise()`.
+
+* `getEquipmentItemExercises(equipmentItemId)`.
+
+* `updateEquipmentItemExercise()`.
+
+* `deleteEquipmentItemExercise()`.
 
 ## Stats
 
-* Se creó la tabla `EquipmentItemStats`.
-* Se implementó la relación `EquipmentItem ↔ Stats`.
-* Se implementó `insertEquipmentItemStat()`.
-* Se implementó `getEquipmentItemStat()`.
-* Se implementó `getEquipmentItemStatRows()`.
-* Se implementó `getEquipmentItemStats()` para reconstruir los stats como `Map<String, int>`.
-* Se implementó `updateEquipmentItemStat()`.
-* Se implementó `deleteEquipmentItemStat()`.
+* Tabla `EquipmentItemStats`.
+
+* Relación `EquipmentItem ↔ Stats`.
+
+* `insertEquipmentItemStat()`.
+
+* `getEquipmentItemStat()`.
+
+* `getEquipmentItemStatRows()`.
+
+* `getEquipmentItemStats()`.
+
+* `updateEquipmentItemStat()`.
+
+* `deleteEquipmentItemStat()`.
+
+Los stats persistidos continúan reconstruyéndose como:
+
+```dart
+Map<String, int>
+```
 
 ## Unlock Requirements
 
-* Se creó la tabla `EquipmentItemUnlockRequirements`.
-* Se implementó la persistencia de los requisitos necesarios para desbloquear un objeto.
-* Se implementó `insertEquipmentItemUnlockRequirement()`.
-* Se implementó `getEquipmentItemUnlockRequirement()`.
-* Se implementó `getEquipmentItemUnlockRequirements()`.
-* Se implementó `updateEquipmentItemUnlockRequirement()`.
-* Se implementó `deleteEquipmentItemUnlockRequirement()`.
+* Tabla `EquipmentItemUnlockRequirements`.
+
+* Persistencia de los requisitos necesarios para desbloquear un objeto.
+
+* `insertEquipmentItemUnlockRequirement()`.
+
+* `getEquipmentItemUnlockRequirement()`.
+
+* `getEquipmentItemUnlockRequirements()`.
+
+* `updateEquipmentItemUnlockRequirement()`.
+
+* `deleteEquipmentItemUnlockRequirement()`.
 
 ## Equip Requirements
 
-* Se creó la tabla `EquipmentItemEquipRequirements`.
-* Se implementó la persistencia de los requisitos necesarios para equipar un objeto.
-* Se implementó `insertEquipmentItemEquipRequirement()`.
-* Se implementó `getEquipmentItemEquipRequirement()`.
-* Se implementó `getEquipmentItemEquipRequirements()`.
-* Se implementó `updateEquipmentItemEquipRequirement()`.
-* Se implementó `deleteEquipmentItemEquipRequirement()`.
+* Tabla `EquipmentItemEquipRequirements`.
+
+* Persistencia de los requisitos necesarios para equipar un objeto.
+
+* `insertEquipmentItemEquipRequirement()`.
+
+* `getEquipmentItemEquipRequirement()`.
+
+* `getEquipmentItemEquipRequirements()`.
+
+* `updateEquipmentItemEquipRequirement()`.
+
+* `deleteEquipmentItemEquipRequirement()`.
 
 ## Reconstrucción del modelo de dominio
 
-* Se implementó la reconstrucción completa de un `domain.EquipmentItem` desde SQLite.
-* Se implementó `getEquipmentItemWithExercises()`.
-* Se implementó `getEquipmentItemsWithExercises()`.
-* Se implementó `getEquipmentItemWithAllData()`.
-* Se implementó `getEquipmentItemsWithAllData()`.
-* Se implementó la conversión de `EquipmentItemRow` hacia el modelo de dominio `EquipmentItem`.
-* Se implementó la conversión de las relaciones persistidas hacia `EquipmentExercise`.
-* Se implementó la reconstrucción de stats.
-* Se implementó la reconstrucción de `unlockRequirements`.
-* Se implementó la reconstrucción de `equipRequirements`.
-* Se creó una función interna `_buildEquipmentRequirement()` para convertir las filas persistidas en `EquipmentRequirement`.
-* Se mantuvieron separados los modelos de dominio de los Data Classes generados por Drift.
+Se mantiene la reconstrucción completa de los objetos de equipamiento desde SQLite.
+
+* `getEquipmentItemWithExercises()`.
+
+* `getEquipmentItemsWithExercises()`.
+
+* `getEquipmentItemWithAllData()`.
+
+* `getEquipmentItemsWithAllData()`.
+
+* Conversión de `EquipmentItemRow` hacia el modelo de dominio `EquipmentItem`.
+
+* Conversión de las relaciones persistidas hacia `EquipmentExercise`.
+
+* Reconstrucción de stats.
+
+* Reconstrucción de `unlockRequirements`.
+
+* Reconstrucción de `equipRequirements`.
+
+* Función interna `_buildEquipmentRequirement()`.
+
+* Conversión de `Rarity` y `EquipmentSlot` desde los valores persistidos.
+
+* Los modelos de dominio permanecen separados de los Data Classes generados por Drift.
+
+# Database Admin
+
+Se incorporó una capa de herramientas administrativas para desarrollo y testing:
+
+```text
+database/
+│
+└── database_admin.dart
+```
+
+## Inspección de ejercicios
+
+Se incorporaron métodos para inspeccionar el contenido de la base de datos durante el desarrollo.
+
+### `printExercises()`
+
+Permite imprimir todos los ejercicios almacenados en SQLite:
+
+```text
+EXERCISES IN DATABASE
+TOTAL: X
+
+ID: ...
+NAME: ...
+```
+
+### `debugExerciseDatabase()`
+
+Permite inspeccionar la estructura completa de cada ejercicio:
+
+```text
+Exercise
+├── Variant links
+│   └── ExerciseVariant
+│
+└── Equipment relations
+```
+
+Incluye:
+
+* ID del ejercicio.
+* Nombre.
+* Cantidad de variantes asociadas.
+* ID de cada variante.
+* Índice de variante.
+* Sets.
+* Amount.
+* Unit.
+* Relaciones con `EquipmentItem`.
+* `maxVariant` de cada relación.
+
+## Inspección de equipamiento
+
+### `debugEquipmentDatabase()`
+
+Permite inspeccionar todos los objetos de equipamiento almacenados en SQLite.
+
+Incluye:
+
+* ID.
+* Nombre.
+* Cantidad de ejercicios asociados.
+* ID de cada ejercicio.
+* `maxVariant`.
+
+Esto permite verificar rápidamente el estado real de la base de datos durante el desarrollo.
+
+## Eliminación de ejercicios
+
+### `deleteExercise()`
+
+Se incorporó una operación administrativa para eliminar completamente un ejercicio.
+
+La eliminación se realiza mediante:
+
+```dart
+deleteExerciseCompletely()
+```
+
+La operación elimina:
+
+1. Relaciones `EquipmentItem → Exercise`.
+2. Relaciones `Exercise → ExerciseVariant`.
+3. Variantes asociadas.
+4. El ejercicio.
+
+La operación se ejecuta dentro de una transacción.
+
+## Eliminación de EquipmentItem
+
+Se incorporó una operación administrativa equivalente para eliminar objetos de equipamiento durante el desarrollo.
+
+Esto permite limpiar objetos antiguos, objetos de testing o datos obsoletos directamente desde las herramientas administrativas.
+
+La eliminación debe contemplar las relaciones asociadas al objeto antes de eliminar el registro principal.
+
+Durante este snapshot se utilizaron estas herramientas para limpiar objetos antiguos de la base de datos:
+
+* `Casco del novato`.
+* `Pechera del novato`.
+* `Inequipable`.
+
+Se mantiene:
+
+* `Carameloraro`.
+
+Este último permanece intencionalmente como objeto de prueba.
 
 # Modelo de persistencia actual
 
@@ -99,6 +290,7 @@ La estructura de datos relacionada con ejercicios y equipamiento queda organizad
 
 ```text
 EquipmentItem
+
 │
 ├── EquipmentItemExercises
 │       │
@@ -122,6 +314,7 @@ EquipmentItem
 
 
 Exercise
+
 │
 └── ExerciseVariantLinks
         │
@@ -141,9 +334,43 @@ Esto permite que:
 * Los requisitos puedan representar nivel o stats mediante `condition` + `value`.
 * Los datos persistidos puedan reconstruirse nuevamente como modelos de dominio.
 
+# Flujo actual de datos
+
+El flujo principal de datos queda establecido de la siguiente manera:
+
+```text
+SQLite
+   │
+   ▼
+Drift
+   │
+   ▼
+AppDatabase
+   │
+   ├── Exercise
+   │      └── ExerciseVariants
+   │
+   └── EquipmentItem
+          ├── Exercises
+          ├── Stats
+          ├── Unlock Requirements
+          └── Equip Requirements
+   │
+   ▼
+Domain Models
+   │
+   ▼
+Managers
+   │
+   ├── InventoryScreen
+   └── EquipScreen
+```
+
+De esta manera, las pantallas ya no necesitan importar directamente los datos estáticos desde `data/exercises.dart` para resolver los ejercicios.
+
 # Tests de esta versión
 
-Se agregaron tests automatizados para validar:
+Se mantienen los tests automatizados para validar:
 
 * CRUD de `EquipmentItem`.
 * CRUD de `EquipmentItemExercises`.
@@ -168,12 +395,12 @@ Se agregaron tests automatizados para validar:
 * Reconstrucción de los requisitos de equipamiento.
 * Conversión correcta de los datos persistidos hacia los modelos de dominio.
 * Uso de `maxVariant` durante la reconstrucción del equipamiento.
+* Integridad de las relaciones entre ejercicios y equipamiento.
 
 **Resultado final:**
 
 ```text
-87 tests passed
-0 tests failed
++86: All tests passed!  
 ```
 
 # Casos de uso
@@ -198,6 +425,7 @@ La aplicación cuenta actualmente con:
 * Sistema de nivel y experiencia.
 * Sistema de clases y progresión.
 * Ejercicios con cantidades, unidades y variantes.
+* Ejercicios almacenados en SQLite.
 * Ejercicios agrupados dentro de objetos de equipamiento.
 * Slots de equipamiento.
 * Rarezas de objetos.
@@ -214,7 +442,7 @@ La aplicación cuenta actualmente con:
 * Persistencia local.
 * SQLite integrado.
 * Drift integrado.
-* Capa inicial de acceso a datos.
+* Capa de acceso a datos.
 * Tabla de variantes de ejercicio.
 * CRUD de `ExerciseVariant`.
 * Tabla de ejercicios.
@@ -232,10 +460,18 @@ La aplicación cuenta actualmente con:
 * Tabla de requisitos de equipamiento.
 * Reconstrucción completa de objetos de equipamiento desde SQLite.
 * Conversión de datos de persistencia a modelos de dominio.
+* InventoryScreen consumiendo `EquipmentItem` desde SQLite.
+* EquipScreen consumiendo ejercicios desde SQLite.
+* Eliminación de la dependencia de `data/exercises.dart` en InventoryScreen.
+* Eliminación de la dependencia de `data/exercises.dart` en EquipScreen.
 * CRUD de base de datos validado mediante tests automatizados.
 * Relaciones de base de datos validadas mediante tests automatizados.
 * Reconstrucción de modelos de dominio validada mediante tests automatizados.
 * Seeders disponibles como herramientas de desarrollo y testing.
+* Herramientas administrativas para inspección de ejercicios.
+* Herramientas administrativas para inspección de equipamiento.
+* Eliminación administrativa de ejercicios.
+* Eliminación administrativa de objetos de equipamiento.
 
 # Arquitectura
 
@@ -252,6 +488,7 @@ lib/
 │
 ├── database/
 │   ├── app_database.dart
+│   ├── database_admin.dart
 │   │
 │   ├── seed/
 │   │   └── exercise_seeder.dart
@@ -300,6 +537,8 @@ lib/
     ├── exercise_item.dart
     └── inventory_filter.dart
 ```
+
+> `data/exercises.dart` y `data/equipment_items.dart` pueden permanecer temporalmente como fuentes estáticas utilizadas por seeders, desarrollo o testing. Las pantallas principales ya no dependen directamente de estos archivos para leer los datos.
 
 # Correr debug en el teléfono
 
@@ -367,24 +606,36 @@ flutter test
 
 **DOMAIN RECONSTRUCTION ✓**
 
+**EXERCISE SQL CONSUMPTION ✓**
+
 **EQUIPMENT STATS ✓**
 
 **UNLOCK REQUIREMENTS ✓**
 
 **EQUIP REQUIREMENTS ✓**
 
-**FULL TEST SUITE — 88 TESTS PASSING ✓**
+**DATABASE ADMIN ✓**
+
+**FULL TEST SUITE — 86 TESTS PASSING ✓**
 
 # Cierre de versión
 
-La versión v0.5.0 deja completada la primera integración funcional entre la aplicación y la base de datos SQLite para el sistema de equipamiento.
+La versión **v0.5.1** consolida la integración del sistema de ejercicios y equipamiento con SQLite mediante Drift.
 
-EquipmentItem, sus ejercicios, variantes disponibles, stats, requisitos de desbloqueo y requisitos de equipamiento pueden persistirse en SQLite y reconstruirse como modelos de dominio.
+Los `Exercise`, sus variantes y las relaciones con `EquipmentItem` pueden persistirse y reconstruirse desde la base de datos.
 
-InventoryScreen consume actualmente los objetos de equipamiento directamente desde SQLite, eliminando la dependencia de data/equipment_items.dart para la lectura del inventario.
+`EquipmentItem`, sus ejercicios, variantes disponibles, stats, requisitos de desbloqueo y requisitos de equipamiento pueden persistirse en SQLite y reconstruirse como modelos de dominio.
 
-Se validó además que los objetos reconstruidos desde SQLite mantengan correctamente su identidad lógica mediante su id, permitiendo conservar el estado de equipamiento entre InventoryScreen y EquipScreen.
+`InventoryScreen` consume actualmente los objetos de equipamiento directamente desde SQLite.
+
+`EquipScreen` también resuelve los ejercicios asociados a los objetos equipados directamente desde SQLite.
+
+Se eliminó la dependencia directa de `data/exercises.dart` en ambas pantallas, avanzando hacia una arquitectura en la que SQLite se convierte en la fuente de datos principal de los ejercicios.
+
+Además, se incorporó `DatabaseAdmin` como capa de herramientas de desarrollo para inspeccionar y limpiar el contenido de la base de datos.
+
+Durante este snapshot se eliminaron objetos antiguos o utilizados exclusivamente para testing, manteniendo `Carameloraro` como elemento de prueba.
 
 Los seeders quedan exclusivamente como herramientas de desarrollo para poblar bases de datos de prueba.
 
-**v0.5.0 — CLOSED ✓**
+**v0.5.1 — CLOSED ✓**

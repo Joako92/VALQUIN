@@ -346,7 +346,7 @@ void main() {
       final pushUp =
           equipmentItem.exercises.firstWhere(
         (equipmentExercise) =>
-            equipmentExercise.exercise.id == 'push_up',
+            equipmentExercise.exerciseId == 'push_up',
       );
 
       expect(pushUp.maxVariant, 0);
@@ -354,7 +354,7 @@ void main() {
       final benchPress =
           equipmentItem.exercises.firstWhere(
         (equipmentExercise) =>
-            equipmentExercise.exercise.id == 'bench_press',
+            equipmentExercise.exerciseId == 'bench_press',
       );
 
       expect(benchPress.maxVariant, 1);
@@ -443,7 +443,7 @@ void main() {
       expect(helmet.cooldownHours, 24);
       expect(helmet.exercises.length, 1);
       expect(
-        helmet.exercises.first.exercise.id,
+        helmet.exercises.first.exerciseId,
         'push_up',
       );
       expect(
@@ -462,7 +462,7 @@ void main() {
       expect(chest.cooldownHours, 24);
       expect(chest.exercises.length, 1);
       expect(
-        chest.exercises.first.exercise.id,
+        chest.exercises.first.exerciseId,
         'bench_press',
       );
       expect(

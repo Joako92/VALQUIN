@@ -724,25 +724,15 @@ class AppDatabase extends _$AppDatabase {
     );
 
     final equipmentExercises =
-        <equipment_domain.EquipmentExercise>[];
-
-    for (final relation in exerciseRelations) {
-      final exercise =
-          await getExerciseWithVariants(
-        relation.exerciseId,
-      );
-
-      if (exercise == null) {
-        continue;
-      }
-
-      equipmentExercises.add(
-        equipment_domain.EquipmentExercise(
-          exercise: exercise,
-          maxVariant: relation.maxVariant,
-        ),
-      );
-    }
+        exerciseRelations
+            .map(
+              (relation) =>
+                  equipment_domain.EquipmentExercise(
+                exerciseId: relation.exerciseId,
+                maxVariant: relation.maxVariant,
+              ),
+            )
+            .toList();
 
     // --------------------------------------------------
     // STATS
@@ -847,5 +837,100 @@ class AppDatabase extends _$AppDatabase {
   Future<List<equipment_domain.EquipmentItem>>
       getEquipmentItemsWithExercises() async {
     return getEquipmentItemsWithAllData();
+  }
+
+  // --------------------------------------------------
+  // ADMIN METHODS
+  // --------------------------------------------------
+
+  Future<bool> deleteExerciseCompletely(
+    String exerciseId,
+  ) async {
+    return transaction(() async {
+      // 1. Obtener las variantes asociadas al ejercicio
+      final links = await getExerciseVariantLinks(exerciseId);
+
+      // 2. Eliminar las relaciones EquipmentItem -> Exercise
+      await (delete(equipmentItemExercises)
+            ..where(
+              (table) => table.exerciseId.equals(exerciseId),
+            ))
+          .go();
+
+      // 3. Eliminar los links Exercise -> Variant
+      await (delete(exerciseVariantLinks)
+            ..where(
+              (table) => table.exerciseId.equals(exerciseId),
+            ))
+          .go();
+
+      // 4. Eliminar las variantes que pertenecían al ejercicio
+      for (final link in links) {
+        await (delete(exerciseVariants)
+              ..where(
+                (table) => table.id.equals(link.variantId),
+              ))
+            .go();
+      }
+
+      // 5. Finalmente eliminar el ejercicio
+      final deletedRows =
+          await (delete(exercises)
+                ..where(
+                  (table) => table.id.equals(exerciseId),
+                ))
+              .go();
+
+      return deletedRows > 0;
+    });
+  }
+
+  Future<bool> deleteEquipmentItemCompletely(
+    String equipmentItemId,
+  ) async {
+    return transaction(() async {
+      // 1. Eliminar relaciones EquipmentItem -> Exercise
+      await (delete(equipmentItemExercises)
+            ..where(
+              (table) =>
+                  table.equipmentItemId.equals(equipmentItemId),
+            ))
+          .go();
+
+      // 2. Eliminar stats
+      await (delete(equipmentItemStats)
+            ..where(
+              (table) =>
+                  table.equipmentItemId.equals(equipmentItemId),
+            ))
+          .go();
+
+      // 3. Eliminar unlock requirements
+      await (delete(equipmentItemUnlockRequirements)
+            ..where(
+              (table) =>
+                  table.equipmentItemId.equals(equipmentItemId),
+            ))
+          .go();
+
+      // 4. Eliminar equip requirements
+      await (delete(equipmentItemEquipRequirements)
+            ..where(
+              (table) =>
+                  table.equipmentItemId.equals(equipmentItemId),
+            ))
+          .go();
+
+      // 5. Finalmente eliminar el equipment item
+      final deletedRows =
+          await (delete(equipmentItems)
+                ..where(
+                  (table) =>
+                      table.id.equals(equipmentItemId),
+                ))
+              .go();
+
+      return deletedRows > 0;
+    });
   }
 }

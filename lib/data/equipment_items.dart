@@ -2,7 +2,6 @@ import '../models/equipment_item.dart';
 import '../models/equipment_slot.dart';
 import '../models/equipment_requirement.dart';
 import '../models/rarity.dart';
-import 'exercises.dart';
 
 final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
@@ -10,37 +9,41 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'casco_novato',
-    name: 'CASCO DEL NOVATO',
+    id: 'gorra_cuero',
+    name: 'GORRA DE CUERO',
     rarity: Rarity.common,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
     unlockRequirements: EquipmentRequirement(),
     equipRequirements: EquipmentRequirement(),
-    stats: {'stamina': 2},
+    stats: {
+      'stamina': 5,
+      'energy': 5,
+    },
     exercises: [
       EquipmentExercise(
-        exercise: exercises[0],
+        exerciseId: 'caminata',
         maxVariant: 0,
       ),
     ],
   ),
 
   EquipmentItem(
-    id: 'casco_mejorado',
-    name: 'CORONA DE LAURELES DE NIKÉ',
-    rarity: Rarity.rare,
+    id: 'vincha_cuero',
+    name: 'VINCHA DE CUERO',
+    rarity: Rarity.common,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
-    unlockRequirements: EquipmentRequirement(level: 2),
-    equipRequirements: EquipmentRequirement(
-      stats: {'stamina': 10},
-    ),
-    stats: {'stamina': 3},
+    unlockRequirements: EquipmentRequirement(),
+    equipRequirements: EquipmentRequirement(),
+    stats: {
+      'stamina': 10,
+      'energy': 10,
+    },
     exercises: [
       EquipmentExercise(
-        exercise: exercises[0],
-        maxVariant: 1,
+        exerciseId: 'trote',
+        maxVariant: 0,
       ),
     ],
   ),
@@ -50,70 +53,140 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'pechera_novato',
-    name: 'PECHERA DEL NOVATO',
+    id: 'pechera_cuero',
+    name: 'PECHERA DE CUERO',
     rarity: Rarity.common,
     slot: EquipmentSlot.chest,
     cooldownHours: 24,
     unlockRequirements: EquipmentRequirement(),
     equipRequirements: EquipmentRequirement(),
-    stats: {'strength': 2},
-    exercises: [
-      EquipmentExercise(
-        exercise: exercises[1],
-        maxVariant: 0,
-      ),
-      EquipmentExercise(
-        exercise: exercises[2],
-        maxVariant: 0,
-      ),
-    ],
-  ),
-
-  // --------------------------------------------------
-  // ACCESSORY / TEST
-  // --------------------------------------------------
-
-  EquipmentItem(
-    id: 'mejora_nivel',
-    name: 'CARAMELORARO',
-    rarity: Rarity.legendary,
-    slot: EquipmentSlot.accessory,
-    cooldownHours: 0,
-    unlockRequirements: EquipmentRequirement(),
-    equipRequirements: EquipmentRequirement(),
     stats: {
-      'strength': 30,
-      'endurance': 30,
-      'energy': 30,
-      'stamina': 30,
+      'strength': 10,
+      'endurance': 10,
     },
     exercises: [
       EquipmentExercise(
-        exercise: exercises[3],
+        exerciseId: 'flexiones_brazos',
         maxVariant: 0,
       ),
     ],
   ),
 
   // --------------------------------------------------
-  // TEST / UNEQUIPPABLE
+  // SHOULDERS
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'item_inequipable',
-    name: 'INEQUIPABLE',
-    rarity: Rarity.legendary,
-    slot: EquipmentSlot.belt,
-    cooldownHours: 0,
+    id: 'hombreras_cuero',
+    name: 'HOMBRERAS DE CUERO',
+    rarity: Rarity.common,
+    slot: EquipmentSlot.shoulders,
+    cooldownHours: 24,
     unlockRequirements: EquipmentRequirement(),
-    equipRequirements: EquipmentRequirement(
-      stats: {'stamina': 100000},
-    ),
-    stats: {},
+    equipRequirements: EquipmentRequirement(),
+    stats: {
+      'strength': 10,
+      'endurance': 10,
+    },
     exercises: [
       EquipmentExercise(
-        exercise: exercises[0],
+        exerciseId: 'press_militar',
+        maxVariant: 0,
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // WEAPON
+  // --------------------------------------------------
+
+  EquipmentItem(
+    id: 'baculo_madera',
+    name: 'BÁCULO DE MADERA',
+    rarity: Rarity.common,
+    slot: EquipmentSlot.weapon,
+    cooldownHours: 24,
+    unlockRequirements: EquipmentRequirement(),
+    equipRequirements: EquipmentRequirement(),
+    stats: {
+      'strength': 10,
+      'endurance': 10,
+    },
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'curl_biceps',
+        maxVariant: 0,
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // SHIELD
+  // --------------------------------------------------
+
+  EquipmentItem(
+    id: 'escudo_madera',
+    name: 'ESCUDO DE MADERA',
+    rarity: Rarity.common,
+    slot: EquipmentSlot.shield,
+    cooldownHours: 24,
+    unlockRequirements: EquipmentRequirement(),
+    equipRequirements: EquipmentRequirement(),
+    stats: {
+      'strength': 10,
+      'endurance': 10,
+    },
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'fondos_banco',
+        maxVariant: 0,
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // LEGS
+  // --------------------------------------------------
+
+  EquipmentItem(
+    id: 'pantalones_cuero',
+    name: 'PANTALONES DE CUERO',
+    rarity: Rarity.common,
+    slot: EquipmentSlot.legs,
+    cooldownHours: 24,
+    unlockRequirements: EquipmentRequirement(),
+    equipRequirements: EquipmentRequirement(),
+    stats: {
+      'strength': 10,
+      'endurance': 10,
+    },
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'sentadilla_libre',
+        maxVariant: 0,
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // BELT
+  // --------------------------------------------------
+
+  EquipmentItem(
+    id: 'cinturon_cuero',
+    name: 'CINTURÓN DE CUERO',
+    rarity: Rarity.common,
+    slot: EquipmentSlot.belt,
+    cooldownHours: 24,
+    unlockRequirements: EquipmentRequirement(),
+    equipRequirements: EquipmentRequirement(),
+    stats: {
+      'strength': 10,
+      'endurance': 10,
+    },
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'plancha_frontal',
         maxVariant: 0,
       ),
     ],

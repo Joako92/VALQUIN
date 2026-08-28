@@ -3,15 +3,9 @@ import 'exercise_seeder.dart';
 import 'equipment_item_seeder.dart';
 
 class DatabaseSeeder {
-  static Future<void> seedIfNeeded(
+  static Future<void> seed(
     AppDatabase database,
   ) async {
-    final exercises = await database.getExercisesWithVariants();
-
-    if (exercises.isNotEmpty) {
-      return;
-    }
-
     await ExerciseSeeder.seed(database);
     await EquipmentItemSeeder.seed(database);
   }
