@@ -1,7 +1,7 @@
 // import 'exercise.dart';
 import 'equipment_slot.dart';
 import 'rarity.dart';
-import 'equipment_requirement.dart';
+import 'requirement.dart';
 
 class EquipmentExercise {
   final String exerciseId;
@@ -24,8 +24,8 @@ class EquipmentItem {
 
   final int cooldownHours;
 
-  final EquipmentRequirement unlockRequirements;
-  final EquipmentRequirement equipRequirements;
+  final Requirement unlockRequirements; // aca deberia ser UnlockRequirement 
+  final Requirement equipRequirements;
 
   // --------------------------------------------------
   // STATS

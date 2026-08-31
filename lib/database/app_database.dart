@@ -23,7 +23,7 @@ import '../models/exercise.dart' as exercise_domain;
 import '../models/equipment_item.dart' as equipment_domain;
 import '../models/equipment_slot.dart';
 import '../models/rarity.dart';
-import '../models/equipment_requirement.dart';
+import '../models/requirement.dart';
 
 part 'app_database.g.dart';
 
@@ -193,6 +193,73 @@ class AppDatabase extends _$AppDatabase {
         .then((rows) => rows > 0);
   }
 
+  Future<void> replaceExercise({
+    required String id,
+    required String name,
+    required List<exercise_domain.ExerciseVariant> variants,
+  }) async {
+    await transaction(() async {
+      // --------------------------------------------------
+      // DELETE EXISTING DATA
+      // --------------------------------------------------
+
+      final links =
+          await getExerciseVariantLinks(id);
+
+      await (delete(exerciseVariantLinks)
+            ..where(
+              (table) => table.exerciseId.equals(id),
+            ))
+          .go();
+
+      for (final link in links) {
+        await (delete(exerciseVariants)
+              ..where(
+                (table) => table.id.equals(link.variantId),
+              ))
+            .go();
+      }
+
+      // --------------------------------------------------
+      // INSERT / UPDATE EXERCISE
+      // --------------------------------------------------
+
+      final existing =
+          await getExercise(id);
+
+      if (existing != null) {
+        await updateExercise(
+          id: id,
+          name: name,
+        );
+      } else {
+        await insertExercise(
+          id: id,
+          name: name,
+        );
+      }
+
+      // --------------------------------------------------
+      // INSERT NEW VARIANTS
+      // --------------------------------------------------
+
+      for (final variant in variants) {
+        final variantId =
+            await insertExerciseVariant(
+          variantIndex: variant.index,
+          sets: variant.sets,
+          amount: variant.amount,
+          unit: variant.unit,
+        );
+
+        await insertExerciseVariantLink(
+          exerciseId: id,
+          variantId: variantId,
+        );
+      }
+    });
+  }
+
   // ==================================================
   // EXERCISE VARIANT LINKS
   // ==================================================
@@ -357,6 +424,143 @@ class AppDatabase extends _$AppDatabase {
           ..where((table) => table.id.equals(id)))
         .go()
         .then((rows) => rows > 0);
+  }
+
+  Future<void> replaceEquipmentItem({
+    required String id,
+    required String name,
+    required String rarity,
+    required String slot,
+    required int cooldownHours,
+    required List<equipment_domain.EquipmentExercise> exercises,
+    required Map<String, int> stats,
+    required Requirement unlockRequirements,
+    required Requirement equipRequirements,
+  }) async {
+    await transaction(() async {
+      // --------------------------------------------------
+      // DELETE EXISTING RELATED DATA
+      // --------------------------------------------------
+
+      await (delete(equipmentItemExercises)
+            ..where(
+              (table) =>
+                  table.equipmentItemId.equals(id),
+            ))
+          .go();
+
+      await (delete(equipmentItemStats)
+            ..where(
+              (table) =>
+                  table.equipmentItemId.equals(id),
+            ))
+          .go();
+
+      await (delete(equipmentItemUnlockRequirements)
+            ..where(
+              (table) =>
+                  table.equipmentItemId.equals(id),
+            ))
+          .go();
+
+      await (delete(equipmentItemEquipRequirements)
+            ..where(
+              (table) =>
+                  table.equipmentItemId.equals(id),
+            ))
+          .go();
+
+      // --------------------------------------------------
+      // INSERT / UPDATE BASE ITEM
+      // --------------------------------------------------
+
+      final existing =
+          await getEquipmentItem(id);
+
+      if (existing != null) {
+        await updateEquipmentItem(
+          id: id,
+          name: name,
+          rarity: rarity,
+          slot: slot,
+          cooldownHours: cooldownHours,
+        );
+      } else {
+        await insertEquipmentItem(
+          id: id,
+          name: name,
+          rarity: rarity,
+          slot: slot,
+          cooldownHours: cooldownHours,
+        );
+      }
+
+      // --------------------------------------------------
+      // EXERCISES
+      // --------------------------------------------------
+
+      for (final equipmentExercise in exercises) {
+        await insertEquipmentItemExercise(
+          equipmentItemId: id,
+          exerciseId: equipmentExercise.exerciseId,
+          maxVariant: equipmentExercise.maxVariant,
+        );
+      }
+
+      // --------------------------------------------------
+      // STATS
+      // --------------------------------------------------
+
+      for (final entry in stats.entries) {
+        await insertEquipmentItemStat(
+          equipmentItemId: id,
+          stat: entry.key,
+          value: entry.value,
+        );
+      }
+
+      // --------------------------------------------------
+      // UNLOCK REQUIREMENTS
+      // --------------------------------------------------
+
+      if (unlockRequirements.level != null) {
+        await insertEquipmentItemUnlockRequirement(
+          equipmentItemId: id,
+          condition: 'level',
+          value: unlockRequirements.level!,
+        );
+      }
+
+      for (final entry
+          in unlockRequirements.stats.entries) {
+        await insertEquipmentItemUnlockRequirement(
+          equipmentItemId: id,
+          condition: entry.key,
+          value: entry.value,
+        );
+      }
+
+      // --------------------------------------------------
+      // EQUIP REQUIREMENTS
+      // --------------------------------------------------
+
+      if (equipRequirements.level != null) {
+        await insertEquipmentItemEquipRequirement(
+          equipmentItemId: id,
+          condition: 'level',
+          value: equipRequirements.level!,
+        );
+      }
+
+      for (final entry
+          in equipRequirements.stats.entries) {
+        await insertEquipmentItemEquipRequirement(
+          equipmentItemId: id,
+          condition: entry.key,
+          value: entry.value,
+        );
+      }
+    });
   }
 
   // ==================================================
@@ -673,7 +877,7 @@ class AppDatabase extends _$AppDatabase {
   // DOMAIN REQUIREMENTS
   // ==================================================
 
-  EquipmentRequirement _buildEquipmentRequirement(
+  Requirement _buildEquipmentRequirement(
     List<dynamic> rows,
   ) {
     int? level;
@@ -687,7 +891,7 @@ class AppDatabase extends _$AppDatabase {
       }
     }
 
-    return EquipmentRequirement(
+    return Requirement(
       level: level,
       stats: stats,
     );

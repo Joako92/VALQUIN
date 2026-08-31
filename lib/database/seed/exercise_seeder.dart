@@ -4,25 +4,11 @@ import '../app_database.dart';
 class ExerciseSeeder {
   static Future<void> seed(AppDatabase database) async {
     for (final exercise in exercises) {
-      await database.insertExercise(
+      await database.replaceExercise(
         id: exercise.id,
         name: exercise.name,
+        variants: exercise.variants,
       );
-
-      for (final variant in exercise.variants) {
-        final variantId =
-            await database.insertExerciseVariant(
-          variantIndex: variant.index,
-          sets: variant.sets,
-          amount: variant.amount,
-          unit: variant.unit,
-        );
-
-        await database.insertExerciseVariantLink(
-          exerciseId: exercise.id,
-          variantId: variantId,
-        );
-      }
     }
   }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:solo_training_001/database/admin/database_admin.dart';
 
 import 'app.dart';
 
 import 'data/training_plan.dart';
 
 import 'database/app_database.dart';
-// import 'database/seed/database_seeder.dart';
+import 'database/seed/database_seeder.dart';
+import 'package:solo_training_001/database/admin/database_admin.dart';
 
 import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
@@ -25,27 +25,27 @@ Future<void> main() async {
   final database = AppDatabase();
 
   // Fill database from seeder
-  // await DatabaseSeeder.seed(database);
+  await DatabaseSeeder.seed(database);
 
-  // DATABASE ADMIN
-  await DatabaseAdmin.deleteEquipmentItem(
-    database,
-    'casco_novato',
-  );
+  // --------------------------------------------------
+  // DATABASE CLEANUP
+  // --------------------------------------------------
 
-  await DatabaseAdmin.deleteEquipmentItem(
-    database,
-    'pechera_novato',
-  );
+  // Exercises to remove
 
-  await DatabaseAdmin.deleteEquipmentItem(
-    database,
-    'item_inequipable',
-  );
+  // await database.deleteExerciseCompletely(
+  //   'carameloraro',
+  // );
 
-  // await DatabaseAdmin.printExercises(database);
+  // // Equipment items to remove
+
+  // await database.deleteEquipmentItemCompletely(
+  //   'casco_mejorado',
+  // );
+
+  await DatabaseAdmin.printExercises(database);
   await DatabaseAdmin.debugEquipmentDatabase(database);
-  // await DatabaseAdmin.debugExerciseDatabase(database);
+  await DatabaseAdmin.debugExerciseDatabase(database);
 
   // --------------------------------------------------
   // PLAYER

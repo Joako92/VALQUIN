@@ -1,6 +1,6 @@
 import '../models/equipment_item.dart';
 import '../models/equipment_slot.dart';
-import '../models/equipment_requirement.dart';
+import 'requirement.dart';
 import '../models/player.dart';
 
 enum EquipResultType {
@@ -45,7 +45,7 @@ class TrainingPlan {
   // --------------------------------------------------
 
   bool meetsRequirements(
-    EquipmentRequirement requirements,
+    Requirement requirements,
     Player player,
   ) {
     // LEVEL
