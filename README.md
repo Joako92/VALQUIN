@@ -20,7 +20,7 @@ La visión es hacerlo a través de una app con interfaz simple pero llamativa. Q
 
 # Versión
 
-**v0.5.1 — Full Exercise SQL Integration & Database Admin**
+**v0.5.2 — Adding Equipment Sets to DB**
 
 # Cambios en esta versión
 
@@ -620,7 +620,7 @@ flutter test
 
 # Cierre de versión
 
-La versión **v0.5.1** consolida la integración del sistema de ejercicios y equipamiento con SQLite mediante Drift.
+La versión **v0.5.2** consolida la integración del sistema de ejercicios y equipamiento con SQLite mediante Drift.
 
 Los `Exercise`, sus variantes y las relaciones con `EquipmentItem` pueden persistirse y reconstruirse desde la base de datos.
 
@@ -638,4 +638,4 @@ Durante este snapshot se eliminaron objetos antiguos o utilizados exclusivamente
 
 Los seeders quedan exclusivamente como herramientas de desarrollo para poblar bases de datos de prueba.
 
-**v0.5.1 — CLOSED ✓**
+**v0.5.2 — CLOSED ✓**
