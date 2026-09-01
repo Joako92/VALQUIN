@@ -64,6 +64,14 @@ class TrainingPlan {
       }
     }
 
+    // CLASS
+
+    if (requirements.classes.isNotEmpty) {
+      if (!requirements.classes.contains(player.playerClass)) {
+        return false;
+      }
+    }
+
     return true;
   }
 

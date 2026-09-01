@@ -24,6 +24,7 @@ import '../models/equipment_item.dart' as equipment_domain;
 import '../models/equipment_slot.dart';
 import '../models/rarity.dart';
 import '../models/requirement.dart';
+import '../models/player_class.dart';
 
 part 'app_database.g.dart';
 
@@ -540,6 +541,14 @@ class AppDatabase extends _$AppDatabase {
         );
       }
 
+      for (final playerClass in unlockRequirements.classes) {
+        await insertEquipmentItemUnlockRequirement(
+          equipmentItemId: id,
+          condition: 'class',
+          value: playerClass.index,
+        );
+      }
+
       // --------------------------------------------------
       // EQUIP REQUIREMENTS
       // --------------------------------------------------
@@ -558,6 +567,14 @@ class AppDatabase extends _$AppDatabase {
           equipmentItemId: id,
           condition: entry.key,
           value: entry.value,
+        );
+      }
+
+      for (final playerClass in equipRequirements.classes) {
+        await insertEquipmentItemEquipRequirement(
+          equipmentItemId: id,
+          condition: 'class',
+          value: playerClass.index,
         );
       }
     });
@@ -882,10 +899,15 @@ class AppDatabase extends _$AppDatabase {
   ) {
     int? level;
     final stats = <String, int>{};
+    final classes = <PlayerClass>{};
 
     for (final row in rows) {
       if (row.condition == 'level') {
         level = row.value;
+      } else if (row.condition == 'class') {
+        classes.add(
+          PlayerClass.values[row.value],
+        );
       } else {
         stats[row.condition] = row.value;
       }
@@ -894,6 +916,7 @@ class AppDatabase extends _$AppDatabase {
     return Requirement(
       level: level,
       stats: stats,
+      classes: classes,
     );
   }
 

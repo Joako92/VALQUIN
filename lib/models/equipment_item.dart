@@ -24,7 +24,7 @@ class EquipmentItem {
 
   final int cooldownHours;
 
-  final Requirement unlockRequirements; // aca deberia ser UnlockRequirement 
+  final Requirement unlockRequirements;
   final Requirement equipRequirements;
 
   // --------------------------------------------------
