@@ -1,5 +1,6 @@
 import '../models/equipment_item.dart';
 import '../models/equipment_slot.dart';
+import '../models/player_class.dart';
 import '../models/requirement.dart';
 import '../models/rarity.dart';
 
@@ -1264,5 +1265,414 @@ final List<EquipmentItem> equipmentItems = [
         maxVariant: 0,
       ),
     ],
+  ),
+
+  // ==================================================
+  // ITEMS ESPECIFICOS DE CLASE
+  // ==================================================
+
+  // ==================================================
+  // Power Lifter
+  // ==================================================
+
+  EquipmentItem(
+    id: 'coraza_atlas',
+    name: 'CORAZA DE ATLAS',
+    rarity: Rarity.rare,
+    slot: EquipmentSlot.chest,
+    cooldownHours: 36,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'strength': 100,
+      },
+      classes: {PlayerClass.powerLifter, PlayerClass.bodybuilder, PlayerClass.athlete},
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 140,
+      },
+    ),
+
+    stats: {
+      'strength': 60,
+      'endurance': 15,
+      'energy': 5,
+      'stamina': 0,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'press_banca',
+        maxVariant: 1,
+      ),
+      EquipmentExercise(
+        exerciseId: 'flexiones_brazos',
+        maxVariant: 1,
+      ),
+      EquipmentExercise(
+        exerciseId: 'aperturas_mancuernas',
+        maxVariant: 1,
+      ),
+    ],
+  ),
+
+  EquipmentItem(
+    id: 'guantes_atlas',
+    name: 'GUANTES DE ATLAS',
+    rarity: Rarity.rare,
+    slot: EquipmentSlot.accessory,
+    cooldownHours: 168,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'strength': 80,
+        'endurance': 30,
+      },
+      classes: {PlayerClass.powerLifter},
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 120,
+        'endurance': 50,
+      },
+    ),
+
+    stats: {
+      'strength': 50,
+      'endurance': 25,
+      'energy': 10,
+      'stamina': 5,
+    },
+
+    exercises: [],
+  ),
+
+  // ==================================================
+  // Bodybuilder
+  // ==================================================
+
+  EquipmentItem(
+    id: 'espada_heracles',
+    name: 'ESPADA DE HERACLES',
+    rarity: Rarity.rare,
+    slot: EquipmentSlot.weapon,
+    cooldownHours: 36,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'endurance': 100,
+      },
+      classes: {PlayerClass.powerLifter, PlayerClass.bodybuilder, PlayerClass.athlete},
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'endurance': 140,
+      },
+    ),
+
+    stats: {
+      'strength': 15,
+      'endurance': 60,
+      'energy': 5,
+      'stamina': 0,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'curl_biceps',
+        maxVariant: 1,
+      ),
+      EquipmentExercise(
+        exerciseId: 'curl_alternado',
+        maxVariant: 1,
+      ),
+      EquipmentExercise(
+        exerciseId: 'curl_barra',
+        maxVariant: 1,
+      ),
+    ],
+  ),
+
+  EquipmentItem(
+    id: 'pegaso',
+    name: 'PEGASO',
+    rarity: Rarity.rare,
+    slot: EquipmentSlot.accessory,
+    cooldownHours: 168,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'endurance': 80,
+        'strength': 30,
+      },
+      classes: {PlayerClass.bodybuilder},
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'endurance': 120,
+        'strength': 50,
+      },
+    ),
+
+    stats: {
+      'strength': 25,
+      'endurance': 50,
+      'energy': 10,
+      'stamina': 5,
+    },
+
+    exercises: [],
+  ),
+
+  // ==================================================
+  // Gymnast
+  // ==================================================
+
+  EquipmentItem(
+    id: 'brazales_hermes',
+    name: 'BRAZALES DE HERMES',
+    rarity: Rarity.rare,
+    slot: EquipmentSlot.shield,
+    cooldownHours: 36,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'energy': 100,
+      },
+      classes: {PlayerClass.powerLifter, PlayerClass.bodybuilder, PlayerClass.athlete, PlayerClass.gymnast},
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'energy': 140,
+      },
+    ),
+
+    stats: {
+      'strength': 15,
+      'endurance': 60,
+      'energy': 5,
+      'stamina': 0,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'fondos_banco',
+        maxVariant: 1,
+      ),
+      EquipmentExercise(
+        exerciseId: 'triceps_polea',
+        maxVariant: 1,
+      ),
+      EquipmentExercise(
+        exerciseId: 'extension_triceps',
+        maxVariant: 1,
+      ),
+    ],
+  ),
+
+  EquipmentItem(
+    id: 'pluma_icaro',
+    name: 'PLUMA DE ÍCARO',
+    rarity: Rarity.rare,
+    slot: EquipmentSlot.accessory,
+    cooldownHours: 168,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'energy': 80,
+        'stamina': 30,
+      },
+      classes: {PlayerClass.gymnast},
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'energy': 120,
+        'stamina': 50,
+      },
+    ),
+
+    stats: {
+      'strength': 10,
+      'endurance': 10,
+      'energy': 50,
+      'stamina': 25,
+    },
+
+    exercises: [],
+  ),
+
+  // ==================================================
+  // Runner
+  // ==================================================
+
+  EquipmentItem(
+    id: 'corona_atalanta',
+    name: 'CORONA DE ATALANTA',
+    rarity: Rarity.rare,
+    slot: EquipmentSlot.head,
+    cooldownHours: 36,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'stamina': 100,
+      },
+      classes: {PlayerClass.runner, PlayerClass.gymnast, PlayerClass.athlete},
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'stamina': 140,
+      },
+    ),
+
+    stats: {
+      'strength': 0,
+      'endurance': 10,
+      'energy': 20,
+      'stamina': 60,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'trote',
+        maxVariant: 1,
+      ),
+      EquipmentExercise(
+        exerciseId: 'saltos_soga',
+        maxVariant: 1,
+      ),
+      EquipmentExercise(
+        exerciseId: 'caminata',
+        maxVariant: 1,
+      ),
+    ],
+  ),
+
+  EquipmentItem(
+    id: 'sandalias_hermes',
+    name: 'SANDALIAS DE HERMES',
+    rarity: Rarity.rare,
+    slot: EquipmentSlot.accessory,
+    cooldownHours: 168,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'energy': 30,
+        'stamina': 80,
+      },
+      classes: {PlayerClass.runner},
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'energy': 50,
+        'stamina': 120,
+      },
+    ),
+
+    stats: {
+      'strength': 5,
+      'endurance': 10,
+      'energy': 25,
+      'stamina': 50,
+    },
+
+    exercises: [],
+  ),
+
+  // ==================================================
+  // Athlete
+  // ==================================================
+
+  EquipmentItem(
+    id: 'manto_campeon',
+    name: 'MANTO DEL CAMPEÓN',
+    rarity: Rarity.rare,
+    slot: EquipmentSlot.wings,
+    cooldownHours: 36,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'strength': 80,
+        'endurance': 80,
+        'energy': 40,
+        'stamina': 40,
+      },
+      classes: {PlayerClass.powerLifter, PlayerClass.bodybuilder, PlayerClass.athlete},
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 140,
+        'endurance': 140,
+        'energy': 80,
+        'stamina': 80,
+      },
+    ),
+
+    stats: {
+      'strength': 40,
+      'endurance': 40,
+      'energy': 10,
+      'stamina': 10,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'remo_sentado',
+        maxVariant: 1,
+      ),
+      EquipmentExercise(
+        exerciseId: 'polea_pecho',
+        maxVariant: 1,
+      ),
+      EquipmentExercise(
+        exerciseId: 'remo_barra',
+        maxVariant: 1,
+      ),
+    ],
+  ),
+
+  EquipmentItem(
+    id: 'laurel_apolo',
+    name: 'LAUREL DE APOLO',
+    rarity: Rarity.rare,
+    slot: EquipmentSlot.accessory,
+    cooldownHours: 168,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'strength': 60,
+        'endurance': 60,
+        'energy': 60,
+        'stamina': 60,
+      },
+      classes: {PlayerClass.athlete},
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 100,
+        'endurance': 100,
+        'energy': 80,
+        'stamina': 80,
+      },
+    ),
+
+    stats: {
+      'strength': 25,
+      'endurance': 25,
+      'energy': 25,
+      'stamina': 25,
+    },
+
+    exercises: [],
   ),
 ];

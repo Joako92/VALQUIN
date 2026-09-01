@@ -2,7 +2,7 @@ import '../models/exercise.dart';
 
 const List<Exercise> exercises = [
   // --------------------------------------------------
-  // CARDIO
+  // HEAD
   // --------------------------------------------------
 
   Exercise(
@@ -12,6 +12,11 @@ const List<Exercise> exercises = [
       ExerciseVariant(
         index: 0,
         amount: 30,
+        unit: 'min',
+      ),
+      ExerciseVariant(
+        index: 1,
+        amount: 60,
         unit: 'min',
       ),
     ],
@@ -57,6 +62,12 @@ const List<Exercise> exercises = [
         index: 0,
         sets: 4,
         amount: 30,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 1,
+        sets: 4,
+        amount: 50,
         unit: 'reps',
       ),
     ],
@@ -113,6 +124,12 @@ const List<Exercise> exercises = [
         amount: 12,
         unit: 'reps',
       ),
+      ExerciseVariant(
+        index: 1,
+        sets: 4,
+        amount: 12,
+        unit: 'reps',
+      ),
     ],
   ),
 
@@ -124,6 +141,12 @@ const List<Exercise> exercises = [
         index: 0,
         sets: 4,
         amount: 10,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 1,
+        sets: 4,
+        amount: 12,
         unit: 'reps',
       ),
     ],
@@ -173,7 +196,7 @@ const List<Exercise> exercises = [
   ),
 
   // --------------------------------------------------
-  // ARMS
+  // WEAPON
   // --------------------------------------------------
 
   Exercise(
@@ -186,17 +209,10 @@ const List<Exercise> exercises = [
         amount: 10,
         unit: 'reps',
       ),
-    ],
-  ),
-
-  Exercise(
-    id: 'fondos_banco',
-    name: 'FONDOS EN BANCO',
-    variants: [
       ExerciseVariant(
-        index: 0,
-        sets: 3,
-        amount: 10,
+        index: 1,
+        sets: 4,
+        amount: 12,
         unit: 'reps',
       ),
     ],
@@ -209,6 +225,54 @@ const List<Exercise> exercises = [
       ExerciseVariant(
         index: 0,
         sets: 3,
+        amount: 12,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 1,
+        sets: 4,
+        amount: 12,
+        unit: 'reps',
+      ),
+    ],
+  ),
+
+  Exercise(
+    id: 'curl_barra',
+    name: 'CURL CON BARRA',
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        sets: 3,
+        amount: 12,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 1,
+        sets: 4,
+        amount: 12,
+        unit: 'reps',
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // SHIELD
+  // --------------------------------------------------
+
+  Exercise(
+    id: 'fondos_banco',
+    name: 'FONDOS EN BANCO',
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 1,
+        sets: 4,
         amount: 12,
         unit: 'reps',
       ),
@@ -249,6 +313,25 @@ const List<Exercise> exercises = [
         index: 0,
         sets: 4,
         amount: 10,
+        unit: 'reps',
+      ),
+    ],
+  ),
+
+  Exercise(
+    id: 'saque_tras_nuca',
+    name: 'SAQUE TRAS LA NUCA',
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 1,
+        sets: 4,
+        amount: 12,
         unit: 'reps',
       ),
     ],
@@ -365,6 +448,26 @@ const List<Exercise> exercises = [
         index: 0,
         sets: 4,
         amount: 10,
+        unit: 'reps',
+      ),
+    ],
+  ),
+
+  Exercise(
+    id: 'remo_barra',
+    name: 'REMO CON BARRA',
+    variants: [
+      ExerciseVariant(
+        index: 0,
+        sets: 3,
+        amount: 10,
+        unit: 'reps',
+      ),
+
+      ExerciseVariant(
+        index: 1,
+        sets: 4,
+        amount: 12,
         unit: 'reps',
       ),
     ],
