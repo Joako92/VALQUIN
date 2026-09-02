@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../config/app_config.dart';
 import '../database/app_database.dart';
-import '../widgets/equipment_slot.dart';
 import '../models/equipment_slot.dart' as model;
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
@@ -42,6 +42,7 @@ class _EquipScreenState extends State<EquipScreen> {
       const Duration(seconds: 1),
       (_) {
         if (mounted) {
+          _checkCooldowns();
           setState(() {});
         }
       },
@@ -54,74 +55,409 @@ class _EquipScreenState extends State<EquipScreen> {
     super.dispose();
   }
 
-  Future<List<String>> getExerciseNames(
-    model.EquipmentSlot slot,
-  ) async {
-    final exercises = await database.getExercisesWithVariants();
+  String _formatCooldown(Duration? duration) {
+    if (duration == null || duration.isNegative) {
+      return '00:00';
+    }
 
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:'
+          '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    }
+
+    return '${minutes.toString().padLeft(2, '0')}:'
+        '${seconds.toString().padLeft(2, '0')}';
+  }
+
+  Future<void> _checkCooldowns() async {
     final trainingPlan = trainingPlanManager.trainingPlan;
-    final items = trainingPlan.itemsForSlot(slot);
 
-    return items
-        .expand((item) => item.exercises)
-        .map((equipmentExercise) {
-          final exercise = exercises.firstWhere(
-            (exercise) =>
-                exercise.id == equipmentExercise.exerciseId,
-          );
+    bool changed = false;
 
-          return exercise.name;
-        })
-        .toList();
+    for (final slot in model.EquipmentSlot.values) {
+      final items = trainingPlan.itemsForSlot(slot);
+
+      if (items.isEmpty) {
+        continue;
+      }
+
+      final item = items.first;
+
+      if (trainingPlan.isSlotActive(slot) &&
+          trainingPlan.isOnCooldown(item)) {
+        trainingPlan.deactivateSlot(slot);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      await trainingPlanManager.saveTrainingPlan();
+    }
+  }
+
+  Future<List<String>> getDailyExerciseNames() async {
+    final exercises = await database.getExercisesWithVariants();
+    final trainingPlan = trainingPlanManager.trainingPlan;
+
+    final activeSlots = model.EquipmentSlot.values.where(
+      trainingPlan.isSlotActive,
+    );
+
+    final exerciseNames = <String>[];
+
+    for (final slot in activeSlots) {
+      final items = trainingPlan.itemsForSlot(slot);
+
+      if (items.isEmpty) {
+        continue;
+      }
+
+      final item = items.first;
+
+      if (trainingPlan.isOnCooldown(item)) {
+        continue;
+      }
+
+      for (final equipmentExercise in item.exercises) {
+        final exercise = exercises.firstWhere(
+          (exercise) =>
+              exercise.id == equipmentExercise.exerciseId,
+        );
+
+        exerciseNames.add(exercise.name);
+      }
+    }
+
+    return exerciseNames;
+  }
+
+  Color rarityColor(String rarity) {
+    switch (rarity.toLowerCase()) {
+      case 'rare':
+        return AppColors.rare;
+
+      case 'legendary':
+        return AppColors.legendary;
+
+      case 'mythic':
+        return AppColors.mythic;
+
+      case 'common':
+      default:
+        return AppColors.common;
+    }
+  }
+
+  Color rarityGlowColor(String rarity) {
+    switch (rarity.toLowerCase()) {
+      case 'rare':
+        return AppColors.rareGlow;
+
+      case 'legendary':
+        return AppColors.legendaryGlow;
+
+      case 'mythic':
+        return AppColors.mythicGlow;
+
+      case 'common':
+      default:
+        return AppColors.commonGlow;
+    }
+  }
+
+  IconData slotIcon(model.EquipmentSlot slot) {
+    switch (slot) {
+      case model.EquipmentSlot.shoulders:
+        return AppIcons.shoulders;
+
+      case model.EquipmentSlot.head:
+        return AppIcons.head;
+
+      case model.EquipmentSlot.wings:
+        return AppIcons.wings;
+
+      case model.EquipmentSlot.weapon:
+        return AppIcons.weapon;
+
+      case model.EquipmentSlot.chest:
+        return AppIcons.chest;
+
+      case model.EquipmentSlot.shield:
+        return AppIcons.shield;
+
+      case model.EquipmentSlot.accessory:
+        return AppIcons.accessory;
+
+      case model.EquipmentSlot.legs:
+        return AppIcons.legs;
+
+      case model.EquipmentSlot.belt:
+        return AppIcons.belt;
+    }
+  }
+
+  String slotLabel(model.EquipmentSlot slot) {
+    return slot.name.toUpperCase();
   }
 
   Widget equipmentCard({
-    required String label,
-    required IconData icon,
     required model.EquipmentSlot slot,
   }) {
     final trainingPlan = trainingPlanManager.trainingPlan;
-    final items = trainingPlan.itemsForSlot(slot);
-    final isActive = trainingPlan.isSlotActive(slot);
 
+    final items = trainingPlan.itemsForSlot(slot);
     final item = items.isNotEmpty ? items.first : null;
+
+    final isActive =
+        item != null && trainingPlan.isSlotActive(slot);
 
     final isOnCooldown =
         item != null && trainingPlan.isOnCooldown(item);
 
-    final cooldownRemaining = item != null
-        ? trainingPlan
-            .cooldownUntil(item)
-            ?.difference(DateTime.now())
-        : null;
+    final rarity = item?.rarity.name ?? 'common';
+    final rarityColorValue = rarityColor(rarity);
+    final rarityGlow = rarityGlowColor(rarity);
 
+    final borderColor = item == null
+        ? AppColors.border
+        : rarityColorValue;
+
+    return GestureDetector(
+      onTap: item == null || isOnCooldown
+          ? null
+          : () async {
+              trainingPlan.toggleSlot(slot);
+
+              await trainingPlanManager.saveTrainingPlan();
+
+              if (!mounted) {
+                return;
+              }
+
+              setState(() {});
+            },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: borderColor,
+            width: isActive ? 2 : 1,
+          ),
+          boxShadow: isActive
+              ? [
+                  BoxShadow(
+                    color: rarityGlow.withValues(alpha: 0.65),
+                    blurRadius: 14,
+                    spreadRadius: 2,
+                  ),
+                ]
+              : null,
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      item == null
+                          ? slotIcon(slot)
+                          : slotIcon(slot),
+                      size: 38,
+                      color: item == null
+                          ? AppColors.textDisabled
+                          : rarityColorValue,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      item?.name ?? slotLabel(slot),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
+                        color: item == null
+                            ? AppColors.textDisabled
+                            : AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            if (isOnCooldown)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.55),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'COOLDOWN',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _formatCooldown(
+                            trainingPlan
+                                .cooldownUntil(item)
+                                ?.difference(DateTime.now()),
+                          ),
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget dailyPlan() {
     return FutureBuilder<List<String>>(
-      future: getExerciseNames(slot),
+      future: getDailyExerciseNames(),
       builder: (context, snapshot) {
-        final exerciseNames = snapshot.data ?? [];
+        final exercises = snapshot.data ?? [];
 
-        return EquipmentSlot(
-          label: label,
-          icon: icon,
-          exercises: exerciseNames,
-          isActive: isActive,
-          isOnCooldown: isOnCooldown,
-          cooldownRemaining: cooldownRemaining,
-          onPressed: () async {
-            trainingPlan.toggleSlot(slot);
-
-            await trainingPlanManager.saveTrainingPlan();
-
-            if (!mounted) {
-              return;
-            }
-
-            setState(() {});
-          },
+        return Container(
           width: double.infinity,
-          height: 75,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(
+              color: AppColors.border,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'DAILY EXERCISES',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              if (exercises.isEmpty)
+                const Text(
+                  'No training selected.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.textDisabled,
+                  ),
+                )
+              else
+                ...exercises.map(
+                  (exercise) => Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 7,
+                    ),
+                    child: Row(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '•',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            exercise,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
         );
       },
+    );
+  }
+
+  Future<void> executeTraining() async {
+    final player = playerManager.player;
+
+    if (player == null) {
+      return;
+    }
+
+    final trainingPlan = trainingPlanManager.trainingPlan;
+
+    final gainedStats = trainingPlan.execute(player);
+
+    if (gainedStats.isEmpty) {
+      return;
+    }
+
+    await playerManager.savePlayer();
+    await trainingPlanManager.saveTrainingPlan();
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {});
+
+    final messages = gainedStats.entries.map((entry) {
+      final statName = entry.key.toUpperCase();
+      final value = entry.value;
+
+      return '+$value $statName';
+    }).join('\n');
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'TRAINING EXECUTED!\n$messages',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 
@@ -137,163 +473,77 @@ class _EquipScreenState extends State<EquipScreen> {
       );
     }
 
-    final trainingPlan = trainingPlanManager.trainingPlan;
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('EQUIP'),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(
-          15,
-          10,
-          15,
-          20,
-        ),
-        child: Column(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Stack(
           children: [
-            const Text(
-              'TRAINING PLAN',
-              style: TextStyle(
-                fontSize: 14,
-                letterSpacing: 4,
-                color: Colors.white54,
+            SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(
+                15,
+                15,
+                15,
+                110,
+              ),
+              child: Column(
+                children: [
+                  GridView.count(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    shrinkWrap: true,
+                    physics:
+                        const NeverScrollableScrollPhysics(),
+                    childAspectRatio: 1.0,
+                    children: [
+                      equipmentCard(
+                        slot: model.EquipmentSlot.shoulders,
+                      ),
+                      equipmentCard(
+                        slot: model.EquipmentSlot.head,
+                      ),
+                      equipmentCard(
+                        slot: model.EquipmentSlot.wings,
+                      ),
+                      equipmentCard(
+                        slot: model.EquipmentSlot.weapon,
+                      ),
+                      equipmentCard(
+                        slot: model.EquipmentSlot.chest,
+                      ),
+                      equipmentCard(
+                        slot: model.EquipmentSlot.shield,
+                      ),
+                      equipmentCard(
+                        slot: model.EquipmentSlot.accessory,
+                      ),
+                      equipmentCard(
+                        slot: model.EquipmentSlot.legs,
+                      ),
+                      equipmentCard(
+                        slot: model.EquipmentSlot.belt,
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  dailyPlan(),
+                ],
               ),
             ),
-            const SizedBox(height: 5),
 
-            GridView.count(
-              crossAxisCount: 3,
-              crossAxisSpacing: 6,
-              mainAxisSpacing: 6,
-              shrinkWrap: true,
-              physics:
-                  const NeverScrollableScrollPhysics(),
-              childAspectRatio: 1.0,
-              children: [
-                equipmentCard(
-                  label: 'SHOULDERS',
-                  icon: Icons.accessibility_new,
-                  slot: model.EquipmentSlot.shoulders,
-                ),
-                equipmentCard(
-                  label: 'HEAD',
-                  icon: Icons.air,
-                  slot: model.EquipmentSlot.head,
-                ),
-                equipmentCard(
-                  label: 'WINGS',
-                  icon: Icons.flutter_dash,
-                  slot: model.EquipmentSlot.wings,
-                ),
-                equipmentCard(
-                  label: 'WEAPON',
-                  icon: Icons.sports_martial_arts,
-                  slot: model.EquipmentSlot.weapon,
-                ),
-                equipmentCard(
-                  label: 'CHEST',
-                  icon: Icons.shield,
-                  slot: model.EquipmentSlot.chest,
-                ),
-                equipmentCard(
-                  label: 'SHIELD',
-                  icon: Icons.security,
-                  slot: model.EquipmentSlot.shield,
-                ),
-                equipmentCard(
-                  label: 'ACCESSORY',
-                  icon: Icons.auto_awesome,
-                  slot: model.EquipmentSlot.accessory,
-                ),
-                equipmentCard(
-                  label: 'LEGS',
-                  icon: Icons.directions_run,
-                  slot: model.EquipmentSlot.legs,
-                ),
-                equipmentCard(
-                  label: 'BELT',
-                  icon: Icons.horizontal_rule,
-                  slot: model.EquipmentSlot.belt,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
-            SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  final gainedStats =
-                      trainingPlan.execute(player);
-
-                  if (gainedStats.isEmpty) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(
-                      const SnackBar(
-                        content:
-                            Text('No training selected.'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  await playerManager.savePlayer();
-                  await trainingPlanManager
-                      .saveTrainingPlan();
-
-                  if (!context.mounted) {
-                    return;
-                  }
-
-                  setState(() {});
-
-                  final messages =
-                      gainedStats.entries.map((entry) {
-                    final statName =
-                        entry.key.toUpperCase();
-                    final value = entry.value;
-
-                    return '+$value $statName';
-                  }).join('\n');
-
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'TRAINING EXECUTED!\n$messages',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      duration:
-                          const Duration(seconds: 2),
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.flash_on,
-                  size: 26,
-                ),
-                label: const Text(
-                  'EXECUTE',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(15),
-                  ),
+            Positioned(
+              right: 18,
+              bottom: 18,
+              child: FloatingActionButton(
+                heroTag: 'executeTraining',
+                onPressed: executeTraining,
+                backgroundColor: AppColors.warning,
+                foregroundColor: Colors.black,
+                child: const Icon(
+                  AppIcons.experience,
+                  size: 28,
                 ),
               ),
             ),

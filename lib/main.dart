@@ -5,8 +5,8 @@ import 'app.dart';
 import 'data/training_plan.dart';
 
 import 'database/app_database.dart';
-import 'database/seed/database_seeder.dart';
-import 'package:solo_training_001/database/admin/database_admin.dart';
+// import 'database/seed/database_seeder.dart';
+// import 'package:solo_training_001/database/admin/database_admin.dart';
 
 import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
@@ -25,7 +25,7 @@ Future<void> main() async {
   final database = AppDatabase();
 
   // Fill database from seeder
-  await DatabaseSeeder.seed(database);
+  // await DatabaseSeeder.seed(database);
 
   // --------------------------------------------------
   // DATABASE CLEANUP
@@ -43,9 +43,9 @@ Future<void> main() async {
   //   'casco_mejorado',
   // );
 
-  await DatabaseAdmin.printExercises(database);
-  await DatabaseAdmin.debugEquipmentDatabase(database);
-  await DatabaseAdmin.debugExerciseDatabase(database);
+  // await DatabaseAdmin.printExercises(database);
+  // await DatabaseAdmin.debugEquipmentDatabase(database);
+  // await DatabaseAdmin.debugExerciseDatabase(database);
 
   // --------------------------------------------------
   // PLAYER

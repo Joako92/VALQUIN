@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../managers/player_manager.dart';
 import '../managers/class_manager.dart';
 import '../models/player.dart';
-import '../widgets/attribute_card.dart';
 
 class PlayerScreen extends StatefulWidget {
   final PlayerManager playerManager;
@@ -48,278 +47,325 @@ class _PlayerScreenState extends State<PlayerScreen> {
         classManager.availableClasses(player);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SOLO TRAINING'),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
 
-      body: Padding(
-        padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              // --------------------------------------------------
+              // PLAYER
+              // --------------------------------------------------
 
-        child: Column(
-          children: [
-            // --------------------------------------------------
-            // PLAYER CARD
-            // --------------------------------------------------
+              Expanded(
+                child: Container(
+                  width: double.infinity,
 
-            Container(
-              width: double.infinity,
-
-              padding: const EdgeInsets.all(20),
-
-              decoration: BoxDecoration(
-                color: const Color(0xFF111827),
-
-                borderRadius: BorderRadius.circular(20),
-
-                border: Border.all(
-                  color: Colors.blueAccent.withValues(alpha: 0.5),
-                ),
-
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.blueAccent.withValues(alpha: 0.15),
-                    blurRadius: 20,
-                    spreadRadius: 2,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 24,
                   ),
-                ],
+
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF111827),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+
+                  child: Column(
+                    children: [
+                      // --------------------------------------------------
+                      // PLAYER IDENTITY
+                      // --------------------------------------------------
+
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.center,
+                        crossAxisAlignment:
+                            CrossAxisAlignment.center,
+
+                        children: [
+                          Text(
+                            player.name,
+
+                            style: const TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
+                          ),
+
+                          const SizedBox(width: 8),
+
+                          IconButton(
+                            onPressed: () {
+                              _showResetPlayerDialog(
+                                context,
+                              );
+                            },
+
+                            icon: const Icon(
+                              Icons.restart_alt,
+                              size: 20,
+                            ),
+
+                            tooltip: 'Reset Player',
+
+                            visualDensity:
+                                VisualDensity.compact,
+
+                            padding: EdgeInsets.zero,
+
+                            constraints:
+                                const BoxConstraints(),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.center,
+
+                        children: [
+                          Text(
+                            player.playerClass.name
+                                .toUpperCase(),
+
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
+                          ),
+
+                          const SizedBox(width: 12),
+
+                          Text(
+                            'LV ${player.level}',
+
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // --------------------------------------------------
+                      // XP
+                      // --------------------------------------------------
+
+                      ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(10),
+
+                        child: LinearProgressIndicator(
+                          value:
+                              player.xpForCurrentLevel /
+                                  player.xpRequiredForLevel,
+
+                          minHeight: 10,
+
+                          backgroundColor:
+                              Colors.white12,
+
+                          valueColor:
+                              const AlwaysStoppedAnimation<Color>(
+                            Colors.blueAccent,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      Text(
+                        '${player.xpForCurrentLevel}/${player.xpRequiredForLevel} XP',
+
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white70,
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // --------------------------------------------------
+                      // ATTRIBUTES
+                      // --------------------------------------------------
+
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildAttribute(
+                              'STRENGTH',
+                              player.stats.strength,
+                            ),
+                          ),
+
+                          const SizedBox(width: 20),
+
+                          Expanded(
+                            child: _buildAttribute(
+                              'ENDURANCE',
+                              player.stats.endurance,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildAttribute(
+                              'ENERGY',
+                              player.stats.energy,
+                            ),
+                          ),
+
+                          const SizedBox(width: 20),
+
+                          Expanded(
+                            child: _buildAttribute(
+                              'STAMINA',
+                              player.stats.stamina,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // --------------------------------------------------
+                      // AVATAR PLACEHOLDER
+                      // --------------------------------------------------
+
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(
+                              alpha: 0.03,
+                            ),
+
+                            borderRadius:
+                                BorderRadius.circular(16),
+                          ),
+
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(16),
+
+                            child: Image.asset(
+                              'assets/images/Avatar-01.png',
+
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
 
-              child: Column(
-                children: [
-                  const Text(
-                    'PLAYER',
+              // --------------------------------------------------
+              // CLASS CHANGE AVAILABLE
+              // --------------------------------------------------
 
-                    style: TextStyle(
-                      fontSize: 14,
-                      letterSpacing: 3,
-                      color: Colors.white54,
+              if (availableClasses.isNotEmpty) ...[
+                const SizedBox(height: 15),
+
+                SizedBox(
+                  width: double.infinity,
+
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      _showClassChangeDialog(
+                        context,
+                        availableClasses,
+                      );
+                    },
+
+                    icon: const Icon(
+                      Icons.auto_awesome,
                     ),
-                  ),
 
-                  const SizedBox(height: 8),
-
-                  Text(
-                    player.name,
-
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
+                    label: const Text(
+                      'NEW CLASS AVAILABLE',
                     ),
-                  ),
 
-                  const SizedBox(height: 6),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor:
+                          Colors.amberAccent,
 
-                  Text(
-                    player.playerClass.name.toUpperCase(),
+                      side: BorderSide(
+                        color: Colors.amberAccent
+                            .withValues(alpha: 0.7),
+                      ),
 
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.blueAccent,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 3,
-                    ),
-                  ),
+                      padding:
+                          const EdgeInsets.symmetric(
+                        vertical: 16,
+                      ),
 
-                  const SizedBox(height: 20),
-
-                  Text(
-                    'LEVEL ${player.level}',
-
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-
-                    child: LinearProgressIndicator(
-                      value: player.xpForCurrentLevel /
-                          player.xpRequiredForLevel,
-
-                      minHeight: 12,
-
-                      backgroundColor: Colors.white12,
-
-                      valueColor:
-                          const AlwaysStoppedAnimation<Color>(
-                        Colors.blueAccent,
+                      shape:
+                          RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(15),
                       ),
                     ),
                   ),
-
-                  const SizedBox(height: 8),
-
-                  Text(
-                    '${player.xpForCurrentLevel}/${player.xpRequiredForLevel} XP',
-
-                    style: const TextStyle(
-                      color: Colors.white70,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // --------------------------------------------------
-            // CLASS CHANGE AVAILABLE
-            // --------------------------------------------------
-
-            if (availableClasses.isNotEmpty) ...[
-              const SizedBox(height: 15),
-
-              SizedBox(
-                width: double.infinity,
-
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    _showClassChangeDialog(
-                      context,
-                      availableClasses,
-                    );
-                  },
-
-                  icon: const Icon(
-                    Icons.auto_awesome,
-                  ),
-
-                  label: const Text(
-                    'NEW CLASS AVAILABLE',
-                  ),
-
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.amberAccent,
-
-                    side: BorderSide(
-                      color: Colors.amberAccent.withValues(alpha: 0.7),
-                    ),
-
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 16,
-                    ),
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(15),
-                    ),
-                  ),
                 ),
-              ),
+              ],
             ],
-
-            const SizedBox(height: 25),
-
-            // --------------------------------------------------
-            // ATTRIBUTES
-            // --------------------------------------------------
-
-            const Align(
-              alignment: Alignment.centerLeft,
-
-              child: Text(
-                'ATTRIBUTES',
-
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 15),
-
-            Row(
-              children: [
-                Expanded(
-                  child: AttributeCard(
-                    name: 'STRENGTH',
-                    value: player.stats.strength,
-                  ),
-                ),
-
-                const SizedBox(width: 12),
-
-                Expanded(
-                  child: AttributeCard(
-                    name: 'ENDURANCE',
-                    value: player.stats.endurance,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            Row(
-              children: [
-                Expanded(
-                  child: AttributeCard(
-                    name: 'ENERGY',
-                    value: player.stats.energy,
-                  ),
-                ),
-
-                const SizedBox(width: 12),
-
-                Expanded(
-                  child: AttributeCard(
-                    name: 'STAMINA',
-                    value: player.stats.stamina,
-                  ),
-                ),
-              ],
-            ),
-
-            const Spacer(),
-
-            // --------------------------------------------------
-            // RESET PLAYER
-            // --------------------------------------------------
-
-            SizedBox(
-              width: double.infinity,
-
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  _showResetPlayerDialog(context);
-                },
-
-                icon: const Icon(
-                  Icons.restart_alt,
-                ),
-
-                label: const Text(
-                  'RESET PLAYER',
-                ),
-
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.redAccent,
-
-                  side: BorderSide(
-                    color: Colors.redAccent.withValues(alpha: 0.7),
-                  ),
-
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 14,
-                  ),
-
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  // --------------------------------------------------
+  // ATTRIBUTE
+  // --------------------------------------------------
+
+  Widget _buildAttribute(
+    String name,
+    int value,
+  ) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            name,
+
+            style: const TextStyle(
+              fontSize: 11,
+              color: Colors.white54,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+
+        Text(
+          value.toString(),
+
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 
@@ -434,7 +480,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
                 await playerManager.resetPlayer();
 
-                if (!mounted) {
+                if (!context.mounted) {
                   return;
                 }
 
