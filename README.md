@@ -37,29 +37,29 @@ The project is designed around a simple principle:
 
 ### Character Progression
 
-* Player creation.
-* Experience and leveling system.
-* RPG attributes:
-  * Strength
-  * Endurance
-  * Energy
-  * Stamina
-* Character classes.
-* Class progression and unlock conditions.
-* Permanent progression milestones.
-* Player reset while preserving unlocked equipment.
+- Player creation.
+- Experience and leveling system.
+- RPG attributes:
+  - Strength
+  - Endurance
+  - Energy
+  - Stamina
+- Character classes.
+- Class progression and unlock conditions.
+- Permanent progression milestones.
+- Player reset while preserving unlocked equipment.
 
 ### Training System
 
-* Exercises with multiple variants.
-* Sets, quantities and units.
-* Support for different training modalities.
-* Training plan management.
-* Daily training selection.
-* Exercise execution.
-* Experience and stat progression through training.
-* Equipment-based exercise availability.
-* Equipment cooldown system.
+- Exercises with multiple variants.
+- Sets, quantities and units.
+- Support for different training modalities.
+- Training plan management.
+- Daily training selection.
+- Exercise execution.
+- Experience and stat progression through training.
+- Equipment-based exercise availability.
+- Equipment cooldown system.
 
 ### Equipment System
 
@@ -67,14 +67,14 @@ Equipment is one of the core RPG mechanics of VALQUIN.
 
 Each equipment item can define:
 
-* Equipment slot.
-* Rarity.
-* Multiple exercises.
-* Maximum exercise variant.
-* Stat bonuses.
-* Unlock requirements.
-* Equip requirements.
-* Class compatibility.
+- Equipment slot.
+- Rarity.
+- Multiple exercises.
+- Maximum exercise variant.
+- Stat bonuses.
+- Unlock requirements.
+- Equip requirements.
+- Class compatibility.
 
 Current rarities:
 
@@ -95,6 +95,8 @@ Rare        → Green + Blue Glow
 Legendary   → Violet + Yellow Glow
 Mythic      → Fuchsia + White Glow
 ```
+
+Rarity colors are intentionally independent from the application's primary accent color.
 
 An equipment item can therefore act as both a progression reward and a way of specializing the player's training.
 
@@ -155,6 +157,72 @@ Recover & Train Again
 ```
 
 This creates a direct relationship between equipment selection and real-world training.
+
+---
+
+# Visual Identity
+
+VALQUIN follows a **dark mythic minimalism** visual direction.
+
+The interface is intentionally restrained:
+
+* Dark background.
+* Simple dark surfaces.
+* Clean typography.
+* Minimal ornamentation.
+* Strong visual hierarchy.
+* Controlled use of accent colors.
+* RPG identity expressed primarily through equipment, character and other visual assets.
+
+The core visual principle is:
+
+> **The UI stays quiet. The world speaks through the assets.**
+
+### Color System
+
+The global application palette is centralized through `AppColors`.
+
+```text
+Background      → Black
+Surface         → Dark Gray
+Accent          → Red
+Titles          → Yellow
+Primary Text    → White
+Secondary Text  → Light Gray
+```
+
+The accent color represents interaction and player identity.
+
+Yellow is primarily used for titles and important information.
+
+Rarity colors remain independent and preserve their own meaning within the game world.
+
+This separation allows the interface to maintain a consistent visual identity without changing the meaning of equipment rarities.
+
+### Visual Architecture
+
+VALQUIN separates **interface information** from **world-building elements**.
+
+The UI provides:
+
+```text
+Structure
+Hierarchy
+Interaction
+Information
+```
+
+While visual assets provide:
+
+```text
+Character Identity
+Equipment Identity
+Fantasy
+Mythology
+Atmosphere
+```
+
+This approach allows VALQUIN to remain visually clean while gradually introducing a stronger fantasy identity through custom assets.
 
 ---
 
@@ -225,6 +293,7 @@ This allows the game logic to remain independent from the database implementatio
 
 ```text
 lib/
+
 │
 ├── main.dart
 ├── app.dart
@@ -460,19 +529,19 @@ Current result:
 The database layer has been validated through the following operations:
 
 ```text
-INSERT                 ✓
-READ                   ✓
-UPDATE                 ✓
-DELETE                 ✓
-RELATIONS              ✓
-SEEDING                ✓
-DOMAIN RECONSTRUCTION  ✓
-EXERCISE CONSUMPTION   ✓
-EQUIPMENT STATS        ✓
-UNLOCK REQUIREMENTS    ✓
-EQUIP REQUIREMENTS     ✓
-DATABASE ADMIN         ✓
-CLASS COMPATIBILITY    ✓
+INSERT                  ✓
+READ                    ✓
+UPDATE                  ✓
+DELETE                  ✓
+RELATIONS               ✓
+SEEDING                 ✓
+DOMAIN RECONSTRUCTION   ✓
+EXERCISE CONSUMPTION    ✓
+EQUIPMENT STATS         ✓
+UNLOCK REQUIREMENTS     ✓
+EQUIP REQUIREMENTS      ✓
+DATABASE ADMIN          ✓
+CLASS COMPATIBILITY     ✓
 ```
 
 ---
@@ -481,9 +550,9 @@ CLASS COMPATIBILITY    ✓
 
 ### Current Version
 
-**v0.6.0 — UI & Training Experience**
+**v0.6.1 — Visual Palette**
 
-Version 0.6.0 marks the transition from establishing the application's core persistence architecture to refining the actual player experience.
+Version 0.6.1 consolidates the application's global visual palette and establishes the foundation for VALQUIN's visual identity.
 
 The current application includes:
 
@@ -514,10 +583,16 @@ The current application includes:
 * Automated tests.
 * Database seeders.
 * Database administration tools.
+* Centralized application colors.
+* Centralized application icons.
+* Unified dark application palette.
+* Initial VALQUIN visual language.
 
 The core database and domain architecture are now established.
 
-The current development focus is shifting toward the **visual identity, usability and overall player experience of VALQUIN**.
+The functional UI has also been redesigned around a consistent visual foundation.
+
+The current development focus is shifting toward **custom visual assets, deeper visual identity and player experience refinement**.
 
 ---
 
@@ -525,9 +600,9 @@ The current development focus is shifting toward the **visual identity, usabilit
 
 ## v0.6 — UI & Visual Identity
 
-The current milestone focuses on transforming the functional RPG interface into a cohesive visual experience.
+The v0.6 milestone focuses on transforming the functional RPG interface into a cohesive visual experience.
 
-Completed or currently implemented:
+### Completed
 
 * Screen layout redesign.
 * Status screen redesign.
@@ -541,12 +616,11 @@ Completed or currently implemented:
 * Reusable visual configuration.
 * Centralized application colors.
 * Centralized application icons.
+* Unified dark visual palette.
 * Initial VALQUIN visual language.
 
-Remaining visual work:
+### Remaining Visual Work
 
-* Unified application color palette.
-* Unified visual language across all screens.
 * Navigation bar redesign.
 * Custom VALQUIN icons.
 * Custom equipment visuals.
@@ -555,6 +629,7 @@ Remaining visual work:
 * Training feedback.
 * Animations.
 * Custom character/avatar.
+* Equipment visual layering.
 * Final branding and visual polish.
 
 ---
@@ -798,4 +873,9 @@ The goal is to create a **training system that feels like an RPG**.
 
 **Forge Yourself.**
 
+```
+
+Con esto, **0.6.1 queda bien definida como una versión de identidad visual/paleta**, sin venderla como una versión que agregó funcionalidades nuevas.
+
+Y me gusta especialmente que ahora el README empieza a comunicar algo que va a ser importante cuando lo vea alguien externo: **VALQUIN ya no parece simplemente "una app Flutter de gimnasio"; empieza a tener una dirección de producto propia.**
 ```

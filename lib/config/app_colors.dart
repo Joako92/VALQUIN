@@ -7,16 +7,26 @@ class AppColors {
   // GENERAL UI
   // ─────────────────────────────────────────────
 
-  static const Color background = Color(0xFF0D0D0F);
-  static const Color surface = Color(0xFF151518);
-  static const Color surfaceLight = Color(0xFF1E1E22);
+  // BACKGROUND
+  static const Color background = Color(0xFF000000);
 
-  static const Color border = Color(0xFF2A2A2F);
+  // SECONDARY / SURFACES
+  static const Color surface = Color(0xFF181818);
+  static const Color surfaceLight = Color(0xFF242424);
+  static const Color border = Color(0xFF3A3A3A);
 
-  static const Color textPrimary = Color(0xFFF5F5F5);
-  static const Color textSecondary = Color(0xFF9E9EA3);
-  static const Color textDisabled = Color(0xFF5C5C62);
+  // ACCENT
+  static const Color accent = Color(0xFFE10600);
+  static const Color accentLight = Color(0xFFFF2A23);
+  static const Color accentDark = Color(0xFF9E0000);
 
+  // TEXT
+  static const Color textPrimary = Color(0xFFFFFFFF);
+  static const Color textSecondary = Color(0xFFB0B0B0);
+  static const Color textDisabled = Color(0xFF666666);
+
+  // TITLES
+  static const Color title = Color(0xFFFFD23F);
 
   // ─────────────────────────────────────────────
   // RARITY
@@ -37,7 +47,6 @@ class AppColors {
   // MYTHIC
   static const Color mythic = Color(0xFFC2188B);
   static const Color mythicGlow = Color(0xFFFFFFFF);
-
 
   // ─────────────────────────────────────────────
   // STATES

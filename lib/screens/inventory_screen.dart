@@ -435,7 +435,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: rarity,
-                      foregroundColor: Colors.black,
+                      foregroundColor: AppColors.background,
                       disabledBackgroundColor:
                           AppColors.surfaceLight,
                       disabledForegroundColor:
@@ -572,7 +572,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(message),
+          backgroundColor: AppColors.surface,
+          content: Text(
+            message,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       );
   }
@@ -889,7 +896,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       return const Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(color: AppColors.accent,),
         ),
       );
     }

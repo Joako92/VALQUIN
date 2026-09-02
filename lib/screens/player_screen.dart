@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../config/app_config.dart';
 import '../managers/player_manager.dart';
 import '../managers/class_manager.dart';
 import '../models/player.dart';
@@ -37,8 +38,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
     if (player == null) {
       return const Scaffold(
+        backgroundColor: AppColors.background,
         body: Center(
-          child: Text('PLAYER NOT LOADED'),
+          child: Text(
+            'PLAYER NOT LOADED',
+            style: TextStyle(
+              color: AppColors.textSecondary,
+            ),
+          ),
         ),
       );
     }
@@ -47,6 +54,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
         classManager.availableClasses(player);
 
     return Scaffold(
+      backgroundColor: AppColors.background,
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -67,8 +76,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   ),
 
                   decoration: BoxDecoration(
-                    color: const Color(0xFF111827),
-                    borderRadius: BorderRadius.circular(20),
+                    color: AppColors.surface,
+                    borderRadius:
+                        BorderRadius.circular(20),
+                    border: Border.all(
+                      color: AppColors.border,
+                    ),
                   ),
 
                   child: Column(
@@ -91,6 +104,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 2,
+                              color: AppColors.title,
                             ),
                           ),
 
@@ -104,9 +118,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             },
 
                             icon: const Icon(
-                              Icons.restart_alt,
+                              AppIcons.reset,
                               size: 20,
                             ),
+
+                            color:
+                                AppColors.textSecondary,
 
                             tooltip: 'Reset Player',
 
@@ -134,7 +151,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
                             style: const TextStyle(
                               fontSize: 14,
-                              color: Colors.blueAccent,
+                              color: AppColors.accent,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 2,
                             ),
@@ -147,7 +164,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
                             style: const TextStyle(
                               fontSize: 14,
-                              color: Colors.white70,
+                              color:
+                                  AppColors.textSecondary,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1,
                             ),
@@ -173,11 +191,11 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           minHeight: 10,
 
                           backgroundColor:
-                              Colors.white12,
+                              AppColors.surfaceLight,
 
                           valueColor:
                               const AlwaysStoppedAnimation<Color>(
-                            Colors.blueAccent,
+                            AppColors.accent,
                           ),
                         ),
                       ),
@@ -189,7 +207,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
                         style: const TextStyle(
                           fontSize: 12,
-                          color: Colors.white70,
+                          color:
+                              AppColors.textSecondary,
                         ),
                       ),
 
@@ -244,7 +263,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       const SizedBox(height: 20),
 
                       // --------------------------------------------------
-                      // AVATAR PLACEHOLDER
+                      // AVATAR
                       // --------------------------------------------------
 
                       Expanded(
@@ -252,12 +271,15 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           width: double.infinity,
 
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(
-                              alpha: 0.03,
-                            ),
+                            color:
+                                AppColors.surfaceLight,
 
                             borderRadius:
                                 BorderRadius.circular(16),
+
+                            border: Border.all(
+                              color: AppColors.border,
+                            ),
                           ),
 
                           child: ClipRRect(
@@ -265,7 +287,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 BorderRadius.circular(16),
 
                             child: Image.asset(
-                              'assets/images/Avatar-01.png',
+                              'assets/images/Avatar-03.png',
 
                               fit: BoxFit.contain,
                             ),
@@ -296,7 +318,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     },
 
                     icon: const Icon(
-                      Icons.auto_awesome,
+                      AppIcons.info,
                     ),
 
                     label: const Text(
@@ -305,10 +327,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
                     style: OutlinedButton.styleFrom(
                       foregroundColor:
-                          Colors.amberAccent,
+                          AppColors.warning,
 
                       side: BorderSide(
-                        color: Colors.amberAccent
+                        color: AppColors.warning
                             .withValues(alpha: 0.7),
                       ),
 
@@ -349,7 +371,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
             style: const TextStyle(
               fontSize: 11,
-              color: Colors.white54,
+              color: AppColors.textSecondary,
               fontWeight: FontWeight.bold,
               letterSpacing: 1,
             ),
@@ -361,7 +383,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
           style: const TextStyle(
             fontSize: 14,
-            color: Colors.white,
+            color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -382,8 +404,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
       builder: (context) {
         return AlertDialog(
+          backgroundColor: AppColors.surface,
+
           title: const Text(
             'CLASS CHANGE AVAILABLE',
+            style: TextStyle(
+              color: AppColors.title,
+              fontWeight: FontWeight.bold,
+            ),
           ),
 
           content: Column(
@@ -392,6 +420,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
             children: [
               const Text(
                 'Your training has unlocked new class options.',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                ),
               ),
 
               const SizedBox(height: 20),
@@ -400,11 +431,16 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 (playerClass) {
                   return ListTile(
                     leading: const Icon(
-                      Icons.shield,
+                      AppIcons.equipment,
+                      color: AppColors.accent,
                     ),
 
                     title: Text(
                       playerClass.name.toUpperCase(),
+                      style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
 
                     onTap: () async {
@@ -434,6 +470,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
               child: const Text(
                 'LATER',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                ),
               ),
             ),
           ],
@@ -454,13 +493,22 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
       builder: (dialogContext) {
         return AlertDialog(
+          backgroundColor: AppColors.surface,
+
           title: const Text(
             'RESET PLAYER?',
+            style: TextStyle(
+              color: AppColors.title,
+              fontWeight: FontWeight.bold,
+            ),
           ),
 
           content: const Text(
             'Your level, class and attributes will be reset. '
             'Your unlocked training items will be preserved.',
+            style: TextStyle(
+              color: AppColors.textSecondary,
+            ),
           ),
 
           actions: [
@@ -471,6 +519,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
               child: const Text(
                 'CANCEL',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                ),
               ),
             ),
 
@@ -486,17 +537,23 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
                 setState(() {});
 
-                ScaffoldMessenger.of(context).showSnackBar(
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(
                   const SnackBar(
+                    backgroundColor: AppColors.error,
                     content: Text(
                       'PLAYER RESET. YOUR TRAINING JOURNEY BEGINS AGAIN.',
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 );
               },
 
               style: TextButton.styleFrom(
-                foregroundColor: Colors.redAccent,
+                foregroundColor: AppColors.error,
               ),
 
               child: const Text(

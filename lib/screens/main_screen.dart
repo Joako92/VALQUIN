@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config/app_config.dart';
 import '../database/app_database.dart';
-
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../managers/class_manager.dart';
@@ -37,13 +37,11 @@ class _MainScreenState extends State<MainScreen> {
         playerManager: widget.playerManager,
         classManager: widget.classManager,
       ),
-
       InventoryScreen(
         playerManager: widget.playerManager,
         trainingPlanManager: widget.trainingPlanManager,
         database: widget.database,
       ),
-
       EquipScreen(
         playerManager: widget.playerManager,
         trainingPlanManager: widget.trainingPlanManager,
@@ -52,40 +50,83 @@ class _MainScreenState extends State<MainScreen> {
     ];
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: screens[currentIndex],
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          backgroundColor: AppColors.surface,
+          indicatorColor: AppColors.accent.withValues(alpha: 0.2),
 
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: currentIndex,
+          labelTextStyle:
+              WidgetStateProperty.resolveWith<TextStyle>(
+            (states) {
+              if (states.contains(WidgetState.selected)) {
+                return const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11,
+                );
+              }
 
-        onDestinationSelected: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-
-        backgroundColor: const Color(0xFF0D111A),
-
-        indicatorColor: Colors.blueAccent.withValues(alpha: 0.2),
-
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'STATUS',
+              return const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 11,
+              );
+            },
           ),
 
-          NavigationDestination(
-            icon: Icon(Icons.inventory_2_outlined),
-            selectedIcon: Icon(Icons.inventory_2),
-            label: 'INVENTORY',
-          ),
+          iconTheme:
+              WidgetStateProperty.resolveWith<IconThemeData>(
+            (states) {
+              if (states.contains(WidgetState.selected)) {
+                return const IconThemeData(
+                  color: AppColors.accent,
+                );
+              }
 
-          NavigationDestination(
-            icon: Icon(Icons.shield_outlined),
-            selectedIcon: Icon(Icons.shield),
-            label: 'EQUIP',
+              return const IconThemeData(
+                color: AppColors.textSecondary,
+              );
+            },
           ),
-        ],
+        ),
+        child: NavigationBar(
+          selectedIndex: currentIndex,
+          onDestinationSelected: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(
+                Icons.person_outline,
+              ),
+              selectedIcon: Icon(
+                Icons.person,
+              ),
+              label: 'STATUS',
+            ),
+            NavigationDestination(
+              icon: Icon(
+                Icons.inventory_2_outlined,
+              ),
+              selectedIcon: Icon(
+                Icons.inventory_2,
+              ),
+              label: 'INVENTORY',
+            ),
+            NavigationDestination(
+              icon: Icon(
+                Icons.shield_outlined,
+              ),
+              selectedIcon: Icon(
+                Icons.shield,
+              ),
+              label: 'EQUIP',
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -269,9 +269,7 @@ class _EquipScreenState extends State<EquipScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      item == null
-                          ? slotIcon(slot)
-                          : slotIcon(slot),
+                      slotIcon(slot),
                       size: 38,
                       color: item == null
                           ? AppColors.textDisabled
@@ -301,7 +299,7 @@ class _EquipScreenState extends State<EquipScreen> {
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.55),
+                    color: AppColors.background.withValues(alpha: 0.55),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
@@ -453,6 +451,7 @@ class _EquipScreenState extends State<EquipScreen> {
         content: Text(
           'TRAINING EXECUTED!\n$messages',
           style: const TextStyle(
+            color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -468,7 +467,7 @@ class _EquipScreenState extends State<EquipScreen> {
     if (player == null) {
       return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(color: AppColors.accent,),
         ),
       );
     }
@@ -539,8 +538,8 @@ class _EquipScreenState extends State<EquipScreen> {
               child: FloatingActionButton(
                 heroTag: 'executeTraining',
                 onPressed: executeTraining,
-                backgroundColor: AppColors.warning,
-                foregroundColor: Colors.black,
+                backgroundColor: AppColors.accent,
+                foregroundColor: AppColors.textPrimary,
                 child: const Icon(
                   AppIcons.experience,
                   size: 28,

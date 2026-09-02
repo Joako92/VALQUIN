@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config/app_config.dart';
 import '../database/app_database.dart';
-
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../managers/class_manager.dart';
@@ -70,8 +70,13 @@ class _CreatePlayerScreenState
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
+          backgroundColor: AppColors.error,
           content: Text(
             'ENTER A PLAYER NAME',
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       );
@@ -110,11 +115,7 @@ class _CreatePlayerScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('CREATE PLAYER'),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-      ),
+      backgroundColor: AppColors.background,
 
       body: SafeArea(
         child: Padding(
@@ -139,6 +140,7 @@ class _CreatePlayerScreenState
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2,
+                  color: AppColors.title,
                 ),
               ),
 
@@ -151,7 +153,7 @@ class _CreatePlayerScreenState
                 style: TextStyle(
                   fontSize: 12,
                   letterSpacing: 2,
-                  color: Colors.white54,
+                  color: AppColors.textSecondary,
                 ),
               ),
 
@@ -169,17 +171,67 @@ class _CreatePlayerScreenState
                 textCapitalization:
                     TextCapitalization.words,
 
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                ),
+
+                cursorColor: AppColors.accent,
+
                 decoration: InputDecoration(
                   labelText: 'PLAYER NAME',
                   hintText: 'Enter your name',
 
+                  labelStyle: const TextStyle(
+                    color: AppColors.textSecondary,
+                  ),
+
+                  hintStyle: const TextStyle(
+                    color: AppColors.textDisabled,
+                  ),
+
+                  filled: true,
+                  fillColor: AppColors.surface,
+
+                  prefixIcon: const Icon(
+                    AppIcons.status,
+                    color: AppColors.textSecondary,
+                  ),
+
                   border: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(12),
+
+                    borderSide: const BorderSide(
+                      color: AppColors.border,
+                    ),
                   ),
 
-                  prefixIcon: const Icon(
-                    Icons.person,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.circular(12),
+
+                    borderSide: const BorderSide(
+                      color: AppColors.border,
+                    ),
+                  ),
+
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.circular(12),
+
+                    borderSide: const BorderSide(
+                      color: AppColors.accent,
+                      width: 2,
+                    ),
+                  ),
+
+                  disabledBorder: OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.circular(12),
+
+                    borderSide: const BorderSide(
+                      color: AppColors.border,
+                    ),
                   ),
                 ),
               ),
@@ -205,10 +257,11 @@ class _CreatePlayerScreenState
                           child:
                               CircularProgressIndicator(
                             strokeWidth: 2,
+                            color: AppColors.textPrimary,
                           ),
                         )
                       : const Icon(
-                          Icons.flash_on,
+                          AppIcons.experience,
                         ),
 
                   label: Text(
@@ -226,10 +279,18 @@ class _CreatePlayerScreenState
                   style:
                       ElevatedButton.styleFrom(
                     backgroundColor:
-                        Colors.blueAccent,
+                        AppColors.accent,
 
                     foregroundColor:
-                        Colors.white,
+                        AppColors.textPrimary,
+
+                    disabledBackgroundColor:
+                        AppColors.surfaceLight,
+
+                    disabledForegroundColor:
+                        AppColors.textDisabled,
+
+                    elevation: 0,
 
                     shape:
                         RoundedRectangleBorder(
