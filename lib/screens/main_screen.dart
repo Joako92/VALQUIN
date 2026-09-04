@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
+import '../config/app_icons.dart';
 import '../database/app_database.dart';
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../managers/class_manager.dart';
+import '../widgets/valquin_icon.dart';
 import 'player_screen.dart';
 import 'inventory_screen.dart';
 import 'equip_screen.dart';
@@ -55,75 +57,68 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           backgroundColor: AppColors.surface,
-          indicatorColor: AppColors.accent.withValues(alpha: 0.2),
+          indicatorColor:
+              AppColors.accent.withValues(alpha: 0.2),
 
+          // No labels.
           labelTextStyle:
-              WidgetStateProperty.resolveWith<TextStyle>(
-            (states) {
-              if (states.contains(WidgetState.selected)) {
-                return const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 11,
-                );
-              }
-
-              return const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 11,
-              );
-            },
-          ),
-
-          iconTheme:
-              WidgetStateProperty.resolveWith<IconThemeData>(
-            (states) {
-              if (states.contains(WidgetState.selected)) {
-                return const IconThemeData(
-                  color: AppColors.accent,
-                );
-              }
-
-              return const IconThemeData(
-                color: AppColors.textSecondary,
-              );
-            },
+              const WidgetStatePropertyAll<TextStyle>(
+            TextStyle(
+              fontSize: 0,
+              color: Colors.transparent,
+            ),
           ),
         ),
         child: NavigationBar(
           selectedIndex: currentIndex,
+
           onDestinationSelected: (index) {
             setState(() {
               currentIndex = index;
             });
           },
-          destinations: const [
+
+          destinations: [
             NavigationDestination(
-              icon: Icon(
-                Icons.person_outline,
+              icon: ValquinIcon(
+                AppIcons.status,
+                size: 60,
+                color: AppColors.textSecondary,
               ),
-              selectedIcon: Icon(
-                Icons.person,
+              selectedIcon: ValquinIcon(
+                AppIcons.status,
+                size: 70,
+                color: AppColors.accent,
               ),
-              label: 'STATUS',
+              label: '',
             ),
+
             NavigationDestination(
-              icon: Icon(
-                Icons.inventory_2_outlined,
+              icon: ValquinIcon(
+                AppIcons.inventory,
+                size: 60,
+                color: AppColors.textSecondary,
               ),
-              selectedIcon: Icon(
-                Icons.inventory_2,
+              selectedIcon: ValquinIcon(
+                AppIcons.inventory,
+                size: 70,
+                color: AppColors.accent,
               ),
-              label: 'INVENTORY',
+              label: '',
             ),
+
             NavigationDestination(
-              icon: Icon(
-                Icons.shield_outlined,
+              icon: ValquinIcon(
+                AppIcons.equipment,
+                size: 60,
+                color: AppColors.textSecondary,
               ),
-              selectedIcon: Icon(
-                Icons.shield,
+              selectedIcon: ValquinIcon(
+                AppIcons.equipment,
+                size: 70,
+                color: AppColors.accent,
               ),
-              label: 'EQUIP',
+              label: '',
             ),
           ],
         ),

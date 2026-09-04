@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'valquin_icon.dart';
+
 class EquipmentSlot extends StatelessWidget {
   final String label;
-  final IconData icon;
+  final String icon;
   final List<String> exercises;
 
   final bool isActive;
@@ -88,7 +90,7 @@ class EquipmentSlot extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
 
               children: [
-                Icon(
+                ValquinIcon(
                   icon,
 
                   size: 50,

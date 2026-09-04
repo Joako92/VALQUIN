@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
 import '../database/app_database.dart';
-import '../models/equipment_slot.dart' as model;
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
+import '../models/equipment_item.dart';
+import '../models/equipment_slot.dart' as model;
+import '../models/exercise.dart';
+
+import '../widgets/valquin_icon.dart';
+import '../widgets/valquin_icon_glow.dart';
 
 class EquipScreen extends StatefulWidget {
   final PlayerManager playerManager;
@@ -26,6 +31,14 @@ class EquipScreen extends StatefulWidget {
 
 class _EquipScreenState extends State<EquipScreen> {
   Timer? _cooldownTimer;
+
+  /// Selected variant for each equipped item.
+  ///
+  /// The value is zero-based:
+  /// 0 = variant 1
+  /// 1 = variant 2
+  /// 2 = variant 3
+  final Map<String, int> selectedVariants = {};
 
   PlayerManager get playerManager => widget.playerManager;
 
@@ -54,6 +67,10 @@ class _EquipScreenState extends State<EquipScreen> {
     _cooldownTimer?.cancel();
     super.dispose();
   }
+
+  // ---------------------------------------------------------------------------
+  // COOLDOWN
+  // ---------------------------------------------------------------------------
 
   String _formatCooldown(Duration? duration) {
     if (duration == null || duration.isNegative) {
@@ -100,7 +117,103 @@ class _EquipScreenState extends State<EquipScreen> {
     }
   }
 
-  Future<List<String>> getDailyExerciseNames() async {
+  // ---------------------------------------------------------------------------
+  // VARIANTS
+  // ---------------------------------------------------------------------------
+
+  int selectedVariantFor(EquipmentItem item) {
+    return selectedVariants[item.id] ?? 0;
+  }
+
+  void selectVariant(
+    EquipmentItem item,
+    int variantIndex,
+  ) {
+    setState(() {
+      selectedVariants[item.id] = variantIndex;
+    });
+  }
+
+  /// Returns the number of variants safely available for the item.
+  ///
+  /// The selector exposes only variants supported by all exercises
+  /// contained in the equipment item.
+  int availableVariantCount(EquipmentItem item) {
+    if (item.exercises.isEmpty) {
+      return 1;
+    }
+
+    return item.exercises
+            .map((exercise) => exercise.maxVariant)
+            .reduce(
+              (current, value) =>
+                  value < current ? value : current,
+            ) +
+        1;
+  }
+
+  String formatAmount(double amount) {
+    if (amount == amount.roundToDouble()) {
+      return amount.toInt().toString();
+    }
+
+    return amount.toString();
+  }
+
+  String formatVariant(ExerciseVariant variant) {
+    final amount = formatAmount(variant.amount);
+
+    if (variant.sets != null) {
+      return '${variant.sets} x $amount ${variant.unit}';
+    }
+
+    return '$amount ${variant.unit}';
+  }
+
+  Widget buildVariantSelector(EquipmentItem item) {
+    final selectedVariant = selectedVariantFor(item);
+    final variantCount = availableVariantCount(item);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (int variantIndex = 0;
+            variantIndex < variantCount;
+            variantIndex++)
+          GestureDetector(
+            onTap: () {
+              selectVariant(item, variantIndex);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 3,
+              ),
+              child: Text(
+                variantIndex == selectedVariant
+                    ? '[${variantIndex + 1}]'
+                    : '${variantIndex + 1}',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight:
+                      variantIndex == selectedVariant
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                  color: variantIndex == selectedVariant
+                      ? AppColors.textPrimary
+                      : AppColors.textSecondary,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // DAILY PLAN
+  // ---------------------------------------------------------------------------
+
+  Future<List<String>> getDailyExercises() async {
     final exercises = await database.getExercisesWithVariants();
     final trainingPlan = trainingPlanManager.trainingPlan;
 
@@ -108,7 +221,7 @@ class _EquipScreenState extends State<EquipScreen> {
       trainingPlan.isSlotActive,
     );
 
-    final exerciseNames = <String>[];
+    final dailyExercises = <String>[];
 
     for (final slot in activeSlots) {
       final items = trainingPlan.itemsForSlot(slot);
@@ -123,18 +236,35 @@ class _EquipScreenState extends State<EquipScreen> {
         continue;
       }
 
+      final selectedVariant = selectedVariantFor(item);
+
       for (final equipmentExercise in item.exercises) {
         final exercise = exercises.firstWhere(
           (exercise) =>
               exercise.id == equipmentExercise.exerciseId,
         );
 
-        exerciseNames.add(exercise.name);
+        final variantIndex = selectedVariant <=
+                equipmentExercise.maxVariant
+            ? selectedVariant
+            : equipmentExercise.maxVariant;
+
+        final variant = exercise.getVariant(
+          variantIndex,
+        );
+
+        dailyExercises.add(
+          '${exercise.name} — ${formatVariant(variant)}',
+        );
       }
     }
 
-    return exerciseNames;
+    return dailyExercises;
   }
+
+  // ---------------------------------------------------------------------------
+  // COLORS / ICONS
+  // ---------------------------------------------------------------------------
 
   Color rarityColor(String rarity) {
     switch (rarity.toLowerCase()) {
@@ -170,7 +300,7 @@ class _EquipScreenState extends State<EquipScreen> {
     }
   }
 
-  IconData slotIcon(model.EquipmentSlot slot) {
+  String slotIconAsset(model.EquipmentSlot slot) {
     switch (slot) {
       case model.EquipmentSlot.shoulders:
         return AppIcons.shoulders;
@@ -201,9 +331,25 @@ class _EquipScreenState extends State<EquipScreen> {
     }
   }
 
+  Widget slotIcon(
+    model.EquipmentSlot slot, {
+    double size = 38,
+    Color? color,
+  }) {
+    return ValquinIcon(
+      slotIconAsset(slot),
+      size: size,
+      color: color,
+    );
+  }
+
   String slotLabel(model.EquipmentSlot slot) {
     return slot.name.toUpperCase();
   }
+
+  // ---------------------------------------------------------------------------
+  // EQUIPMENT CARD
+  // ---------------------------------------------------------------------------
 
   Widget equipmentCard({
     required model.EquipmentSlot slot,
@@ -220,6 +366,7 @@ class _EquipScreenState extends State<EquipScreen> {
         item != null && trainingPlan.isOnCooldown(item);
 
     final rarity = item?.rarity.name ?? 'common';
+
     final rarityColorValue = rarityColor(rarity);
     final rarityGlow = rarityGlowColor(rarity);
 
@@ -250,56 +397,74 @@ class _EquipScreenState extends State<EquipScreen> {
             color: borderColor,
             width: isActive ? 2 : 1,
           ),
-          boxShadow: isActive
-              ? [
-                  BoxShadow(
-                    color: rarityGlow.withValues(alpha: 0.65),
-                    blurRadius: 14,
-                    spreadRadius: 2,
-                  ),
-                ]
-              : null,
         ),
         child: Stack(
           children: [
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 5,
+                  vertical: 8,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      slotIcon(slot),
-                      size: 38,
-                      color: item == null
-                          ? AppColors.textDisabled
-                          : rarityColorValue,
-                    ),
-                    const SizedBox(height: 6),
+                    // ITEM ICON
+                    if (item == null)
+                      slotIcon(
+                        slot,
+                        size: 60,
+                        color: AppColors.textDisabled,
+                      )
+                    else
+                      ValquinIconGlow(
+                        asset: slotIconAsset(slot),
+                        size: 60,
+                        color: rarityColorValue,
+                        glowColor: rarityGlow,
+                        glowOpacity: isActive ? 0.8 : 0.0,
+                        blur: 8,
+                      ),
+
+                    const SizedBox(height: 5),
+
+                    // ITEM NAME / SLOT NAME
                     Text(
                       item?.name ?? slotLabel(slot),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
+                        letterSpacing: 0.4,
                         color: item == null
                             ? AppColors.textDisabled
                             : AppColors.textPrimary,
                       ),
                     ),
+
+                    // VARIANTS
+                    if (item != null) ...[
+                      const SizedBox(height: 2),
+                      buildVariantSelector(item),
+                    ],
                   ],
                 ),
               ),
             ),
 
+            // -----------------------------------------------------------------
+            // COOLDOWN
+            // -----------------------------------------------------------------
+
             if (isOnCooldown)
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppColors.background.withValues(alpha: 0.55),
+                    color: AppColors.background.withValues(
+                      alpha: 0.55,
+                    ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
@@ -320,7 +485,9 @@ class _EquipScreenState extends State<EquipScreen> {
                           _formatCooldown(
                             trainingPlan
                                 .cooldownUntil(item)
-                                ?.difference(DateTime.now()),
+                                ?.difference(
+                                  DateTime.now(),
+                                ),
                           ),
                           style: const TextStyle(
                             fontSize: 15,
@@ -339,9 +506,13 @@ class _EquipScreenState extends State<EquipScreen> {
     );
   }
 
+  // ---------------------------------------------------------------------------
+  // DAILY PLAN UI
+  // ---------------------------------------------------------------------------
+
   Widget dailyPlan() {
     return FutureBuilder<List<String>>(
-      future: getDailyExerciseNames(),
+      future: getDailyExercises(),
       builder: (context, snapshot) {
         final exercises = snapshot.data ?? [];
 
@@ -367,6 +538,7 @@ class _EquipScreenState extends State<EquipScreen> {
                   color: AppColors.textSecondary,
                 ),
               ),
+
               const SizedBox(height: 12),
 
               if (exercises.isEmpty)
@@ -415,6 +587,10 @@ class _EquipScreenState extends State<EquipScreen> {
     );
   }
 
+  // ---------------------------------------------------------------------------
+  // EXECUTE
+  // ---------------------------------------------------------------------------
+
   Future<void> executeTraining() async {
     final player = playerManager.player;
 
@@ -448,6 +624,7 @@ class _EquipScreenState extends State<EquipScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        backgroundColor: AppColors.surface,
         content: Text(
           'TRAINING EXECUTED!\n$messages',
           style: const TextStyle(
@@ -460,14 +637,21 @@ class _EquipScreenState extends State<EquipScreen> {
     );
   }
 
+  // ---------------------------------------------------------------------------
+  // BUILD
+  // ---------------------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     final player = playerManager.player;
 
     if (player == null) {
       return const Scaffold(
+        backgroundColor: AppColors.background,
         body: Center(
-          child: CircularProgressIndicator(color: AppColors.accent,),
+          child: CircularProgressIndicator(
+            color: AppColors.accent,
+          ),
         ),
       );
     }
@@ -486,6 +670,10 @@ class _EquipScreenState extends State<EquipScreen> {
               ),
               child: Column(
                 children: [
+                  // -----------------------------------------------------------
+                  // EQUIPMENT GRID
+                  // -----------------------------------------------------------
+
                   GridView.count(
                     crossAxisCount: 3,
                     crossAxisSpacing: 8,
@@ -527,10 +715,18 @@ class _EquipScreenState extends State<EquipScreen> {
 
                   const SizedBox(height: 15),
 
+                  // -----------------------------------------------------------
+                  // DAILY EXERCISES
+                  // -----------------------------------------------------------
+
                   dailyPlan(),
                 ],
               ),
             ),
+
+            // ---------------------------------------------------------------
+            // EXECUTE BUTTON
+            // ---------------------------------------------------------------
 
             Positioned(
               right: 18,

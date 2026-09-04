@@ -9,6 +9,9 @@ import '../models/equipment_slot.dart';
 import '../models/exercise.dart';
 import '../models/training_plan.dart';
 
+import '../widgets/valquin_icon.dart';
+import '../widgets/valquin_icon_glow.dart';
+
 enum InventoryFilterType {
   all,
   equipped,
@@ -44,6 +47,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
   EquipmentSlot? selectedSlot;
 
   EquipmentItem? selectedItem;
+
+  /// Selected variant for each equipment item.
+  ///
+  /// The value is zero-based:
+  /// 0 = variant 1
+  /// 1 = variant 2
+  /// 2 = variant 3
+  final Map<String, int> selectedVariants = {};
 
   List<EquipmentItem> equipmentItems = [];
 
@@ -184,7 +195,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   // ICONS
   // ─────────────────────────────────────────────
 
-  IconData slotIcon(EquipmentSlot slot) {
+  String slotIconAsset(EquipmentSlot slot) {
     switch (slot) {
       case EquipmentSlot.shoulders:
         return AppIcons.shoulders;
@@ -215,6 +226,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
     }
   }
 
+  Widget slotIcon(
+    EquipmentSlot slot, {
+    double size = 30,
+    Color? color,
+  }) {
+    return ValquinIcon(
+      slotIconAsset(slot),
+      size: size,
+      color: color,
+    );
+  }
+
   // ─────────────────────────────────────────────
   // FORMATTING
   // ─────────────────────────────────────────────
@@ -242,7 +265,75 @@ class _InventoryScreenState extends State<InventoryScreen> {
     return parts.isEmpty ? 'NONE' : parts.join(' • ');
   }
 
-  String formatExercise(
+  // ─────────────────────────────────────────────
+  // VARIANTS
+  // ─────────────────────────────────────────────
+
+  int selectedVariantFor(EquipmentItem item) {
+    return selectedVariants[item.id] ?? 0;
+  }
+
+  int availableVariantCount(EquipmentItem item) {
+    if (item.exercises.isEmpty) {
+      return 1;
+    }
+
+    return item.exercises.first.maxVariant + 1;
+  }
+
+  void selectVariant(
+    EquipmentItem item,
+    int variantIndex,
+  ) {
+    setState(() {
+      selectedVariants[item.id] = variantIndex;
+    });
+  }
+
+  Widget buildVariantSelector(EquipmentItem item) {
+    final selectedVariant = selectedVariantFor(item);
+    final variantCount = availableVariantCount(item);
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (int variantIndex = 0;
+            variantIndex < variantCount;
+            variantIndex++)
+          GestureDetector(
+            onTap: () {
+              selectVariant(
+                item,
+                variantIndex,
+              );
+            },
+            child: SizedBox(
+              width: 36,
+              height: 36,
+              child: Center(
+                child: Text(
+                  variantIndex == selectedVariant
+                      ? '[${variantIndex + 1}]'
+                      : '${variantIndex + 1}',
+                  style: TextStyle(
+                    color: variantIndex == selectedVariant
+                        ? AppColors.textPrimary
+                        : AppColors.textSecondary,
+                    fontSize: 16,
+                    fontWeight:
+                        variantIndex == selectedVariant
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget buildExerciseRow(
     EquipmentItem item,
     int index,
   ) {
@@ -252,25 +343,47 @@ class _InventoryScreenState extends State<InventoryScreen> {
         exercisesById[equipmentExercise.exerciseId];
 
     if (exercise == null) {
-      return 'UNKNOWN EXERCISE';
+      return const Padding(
+        padding: EdgeInsets.only(bottom: 5),
+        child: Text(
+          '- UNKNOWN EXERCISE',
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 11,
+          ),
+        ),
+      );
     }
 
+    final selectedVariant = selectedVariantFor(item);
+
+    final variantIndex = selectedVariant <=
+            equipmentExercise.maxVariant
+        ? selectedVariant
+        : equipmentExercise.maxVariant;
+
     final variant = exercise.getVariant(
-      equipmentExercise.maxVariant,
+      variantIndex,
     );
 
     final amount = formatAmount(variant.amount);
 
-    if (variant.sets != null) {
-      return '${exercise.name} — '
-          '${variant.sets} x '
-          '$amount '
-          '${variant.unit}';
-    }
+    final detail = variant.sets != null
+        ? '${variant.sets} x $amount ${variant.unit}'
+        : '$amount ${variant.unit}';
 
-    return '${exercise.name} — '
-        '$amount '
-        '${variant.unit}';
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5),
+      child: Text(
+        '- ${exercise.name} → $detail',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 11,
+        ),
+      ),
+    );
   }
 
   // ─────────────────────────────────────────────
@@ -321,18 +434,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
               border: Border.all(
                 color: rarity.withValues(alpha: 0.7),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: glow.withValues(alpha: 0.65),
-                  blurRadius: 18,
-                  spreadRadius: 2,
-                ),
-              ],
             ),
-            child: Icon(
-              slotIcon(item.slot),
-              size: 52,
-              color: rarity,
+            child: Center(
+              child: ValquinIconGlow(
+                asset: slotIconAsset(item.slot),
+                size: 90,
+                color: rarity,
+                glowColor: glow,
+                glowOpacity: 0.75,
+                blur: 8,
+              ),
             ),
           ),
 
@@ -346,6 +457,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // ITEM NAME
                 Text(
                   item.name,
                   maxLines: 2,
@@ -359,19 +471,29 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
                 const SizedBox(height: 4),
 
-                Text(
-                  item.rarity.name.toUpperCase(),
-                  style: TextStyle(
-                    color: rarity,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
+                // RARITY + VARIANT SELECTOR
+                Row(
+                  children: [
+                    Text(
+                      item.rarity.name.toUpperCase(),
+                      style: TextStyle(
+                        color: rarity,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    buildVariantSelector(item),
+                  ],
                 ),
 
                 const SizedBox(height: 10),
 
-                Text(
+                // EXERCISES
+                const Text(
                   'EXERCISES',
                   style: TextStyle(
                     color: AppColors.textSecondary,
@@ -385,25 +507,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
                 ...List.generate(
                   item.exercises.length,
-                  (index) => Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 3,
-                    ),
-                    child: Text(
-                      '• ${formatExercise(item, index)}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 11,
-                      ),
-                    ),
+                  (index) => buildExerciseRow(
+                    item,
+                    index,
                   ),
                 ),
 
                 const SizedBox(height: 8),
 
-                Text(
+                // REQUIREMENTS
+                const Text(
                   'REQUIREMENTS',
                   style: TextStyle(
                     color: AppColors.textSecondary,
@@ -427,6 +540,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
                 const SizedBox(height: 10),
 
+                // EQUIP BUTTON
                 SizedBox(
                   height: 34,
                   child: ElevatedButton(
@@ -649,25 +763,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           : AppColors.border,
                       width: isSelected ? 2 : 1,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: glow.withValues(
-                          alpha: isSelected
-                              ? 0.45
-                              : 0.15,
-                        ),
-                        blurRadius:
-                            isSelected ? 14 : 7,
-                      ),
-                    ],
                   ),
                   child: Stack(
                     children: [
                       Center(
-                        child: Icon(
-                          slotIcon(item.slot),
-                          size: 38,
+                        child: ValquinIconGlow(
+                          asset: slotIconAsset(item.slot),
+                          size: 90,
                           color: rarity,
+                          glowColor: glow,
+                          glowOpacity:
+                              isSelected ? 0.8 : 0.35,
+                          blur: isSelected ? 10 : 7,
                         ),
                       ),
 
@@ -896,7 +1003,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
       return const Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: CircularProgressIndicator(color: AppColors.accent,),
+          child: CircularProgressIndicator(
+            color: AppColors.accent,
+          ),
         ),
       );
     }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
+import '../config/app_icons.dart';
 import '../managers/player_manager.dart';
 import '../managers/class_manager.dart';
 import '../models/player.dart';
+import '../widgets/valquin_icon.dart';
 
 class PlayerScreen extends StatefulWidget {
   final PlayerManager playerManager;
@@ -55,11 +57,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
-
           child: Column(
             children: [
               // --------------------------------------------------
@@ -69,12 +69,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
               Expanded(
                 child: Container(
                   width: double.infinity,
-
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 24,
                   ),
-
                   decoration: BoxDecoration(
                     color: AppColors.surface,
                     borderRadius:
@@ -83,7 +81,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       color: AppColors.border,
                     ),
                   ),
-
                   child: Column(
                     children: [
                       // --------------------------------------------------
@@ -95,11 +92,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             MainAxisAlignment.center,
                         crossAxisAlignment:
                             CrossAxisAlignment.center,
-
                         children: [
                           Text(
                             player.name,
-
                             style: const TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
@@ -107,31 +102,23 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               color: AppColors.title,
                             ),
                           ),
-
                           const SizedBox(width: 8),
-
                           IconButton(
                             onPressed: () {
                               _showResetPlayerDialog(
                                 context,
                               );
                             },
-
                             icon: const Icon(
                               AppIcons.reset,
                               size: 20,
                             ),
-
                             color:
                                 AppColors.textSecondary,
-
                             tooltip: 'Reset Player',
-
                             visualDensity:
                                 VisualDensity.compact,
-
                             padding: EdgeInsets.zero,
-
                             constraints:
                                 const BoxConstraints(),
                           ),
@@ -143,12 +130,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       Row(
                         mainAxisAlignment:
                             MainAxisAlignment.center,
-
                         children: [
                           Text(
                             player.playerClass.name
                                 .toUpperCase(),
-
                             style: const TextStyle(
                               fontSize: 14,
                               color: AppColors.accent,
@@ -156,12 +141,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               letterSpacing: 2,
                             ),
                           ),
-
                           const SizedBox(width: 12),
-
                           Text(
                             'LV ${player.level}',
-
                             style: const TextStyle(
                               fontSize: 14,
                               color:
@@ -182,17 +164,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       ClipRRect(
                         borderRadius:
                             BorderRadius.circular(10),
-
                         child: LinearProgressIndicator(
                           value:
                               player.xpForCurrentLevel /
                                   player.xpRequiredForLevel,
-
                           minHeight: 10,
-
                           backgroundColor:
                               AppColors.surfaceLight,
-
                           valueColor:
                               const AlwaysStoppedAnimation<Color>(
                             AppColors.accent,
@@ -204,7 +182,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
                       Text(
                         '${player.xpForCurrentLevel}/${player.xpRequiredForLevel} XP',
-
                         style: const TextStyle(
                           fontSize: 12,
                           color:
@@ -226,9 +203,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               player.stats.strength,
                             ),
                           ),
-
                           const SizedBox(width: 20),
-
                           Expanded(
                             child: _buildAttribute(
                               'ENDURANCE',
@@ -248,9 +223,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               player.stats.energy,
                             ),
                           ),
-
                           const SizedBox(width: 20),
-
                           Expanded(
                             child: _buildAttribute(
                               'STAMINA',
@@ -269,26 +242,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       Expanded(
                         child: Container(
                           width: double.infinity,
-
                           decoration: BoxDecoration(
                             color:
                                 AppColors.surfaceLight,
-
                             borderRadius:
                                 BorderRadius.circular(16),
-
                             border: Border.all(
                               color: AppColors.border,
                             ),
                           ),
-
                           child: ClipRRect(
                             borderRadius:
                                 BorderRadius.circular(16),
-
                             child: Image.asset(
-                              'assets/images/Avatar-03.png',
-
+                              'assets/images/Avatar-06.png',
                               fit: BoxFit.contain,
                             ),
                           ),
@@ -308,7 +275,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
                 SizedBox(
                   width: double.infinity,
-
                   child: OutlinedButton.icon(
                     onPressed: () {
                       _showClassChangeDialog(
@@ -316,29 +282,23 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         availableClasses,
                       );
                     },
-
                     icon: const Icon(
                       AppIcons.info,
                     ),
-
                     label: const Text(
                       'NEW CLASS AVAILABLE',
                     ),
-
                     style: OutlinedButton.styleFrom(
                       foregroundColor:
                           AppColors.warning,
-
                       side: BorderSide(
                         color: AppColors.warning
                             .withValues(alpha: 0.7),
                       ),
-
                       padding:
                           const EdgeInsets.symmetric(
                         vertical: 16,
                       ),
-
                       shape:
                           RoundedRectangleBorder(
                         borderRadius:
@@ -368,7 +328,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
         Expanded(
           child: Text(
             name,
-
             style: const TextStyle(
               fontSize: 11,
               color: AppColors.textSecondary,
@@ -377,10 +336,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
             ),
           ),
         ),
-
         Text(
           value.toString(),
-
           style: const TextStyle(
             fontSize: 14,
             color: AppColors.textPrimary,
@@ -401,11 +358,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
   ) {
     showDialog(
       context: context,
-
       builder: (context) {
         return AlertDialog(
           backgroundColor: AppColors.surface,
-
           title: const Text(
             'CLASS CHANGE AVAILABLE',
             style: TextStyle(
@@ -413,10 +368,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-
           content: Column(
             mainAxisSize: MainAxisSize.min,
-
             children: [
               const Text(
                 'Your training has unlocked new class options.',
@@ -430,8 +383,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
               ...availableClasses.map(
                 (playerClass) {
                   return ListTile(
-                    leading: const Icon(
+                    leading: ValquinIcon(
                       AppIcons.equipment,
+                      size: 24,
                       color: AppColors.accent,
                     ),
 
@@ -461,13 +415,11 @@ class _PlayerScreenState extends State<PlayerScreen> {
               ),
             ],
           ),
-
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-
               child: const Text(
                 'LATER',
                 style: TextStyle(
@@ -490,11 +442,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
   ) {
     showDialog(
       context: context,
-
       builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: AppColors.surface,
-
           title: const Text(
             'RESET PLAYER?',
             style: TextStyle(
@@ -502,7 +452,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-
           content: const Text(
             'Your level, class and attributes will be reset. '
             'Your unlocked training items will be preserved.',
@@ -510,13 +459,11 @@ class _PlayerScreenState extends State<PlayerScreen> {
               color: AppColors.textSecondary,
             ),
           ),
-
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-
               child: const Text(
                 'CANCEL',
                 style: TextStyle(
@@ -551,11 +498,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   ),
                 );
               },
-
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.error,
               ),
-
               child: const Text(
                 'RESET',
               ),

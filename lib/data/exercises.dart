@@ -434,6 +434,12 @@ const List<Exercise> exercises = [
       ExerciseVariant(
         index: 0,
         sets: 3,
+        amount: 10,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 1,
+        sets: 4,
         amount: 12,
         unit: 'reps',
       ),
@@ -446,8 +452,14 @@ const List<Exercise> exercises = [
     variants: [
       ExerciseVariant(
         index: 0,
-        sets: 4,
+        sets: 3,
         amount: 10,
+        unit: 'reps',
+      ),
+      ExerciseVariant(
+        index: 1,
+        sets: 4,
+        amount: 12,
         unit: 'reps',
       ),
     ],

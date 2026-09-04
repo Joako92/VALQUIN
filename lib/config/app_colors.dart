@@ -34,7 +34,7 @@ class AppColors {
 
   // COMMON
   static const Color common = Color(0xFFD0D0D0);
-  static const Color commonGlow = Color(0xFF000000);
+  static const Color commonGlow = Color(0xFF0213FA);
 
   // RARE
   static const Color rare = Color(0xFF2E9E4F);

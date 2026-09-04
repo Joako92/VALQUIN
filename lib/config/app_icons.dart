@@ -7,24 +7,24 @@ class AppIcons {
   // NAVIGATION
   // ─────────────────────────────────────────────
 
-  static const IconData status = Icons.person;
-  static const IconData inventory = Icons.inventory_2;
-  static const IconData equipment = Icons.shield;
+  static const String status = 'assets/icons/status.svg';
+  static const String inventory = 'assets/icons/inventory.svg';
+  static const String equipment = 'assets/icons/equip.svg';
 
 
   // ─────────────────────────────────────────────
   // EQUIPMENT SLOTS
   // ─────────────────────────────────────────────
 
-  static const IconData shoulders = Icons.accessibility_new;
-  static const IconData head = Icons.emoji_emotions;
-  static const IconData wings = Icons.flight;
-  static const IconData weapon = Icons.sports_martial_arts;
-  static const IconData chest = Icons.checkroom;
-  static const IconData shield = Icons.shield;
-  static const IconData accessory = Icons.diamond;
-  static const IconData legs = Icons.directions_run;
-  static const IconData belt = Icons.horizontal_rule;
+  static const String shoulders = 'assets/icons/shoulders.svg';
+  static const String head = 'assets/icons/head.svg';
+  static const String wings = 'assets/icons/wings.svg';
+  static const String weapon = 'assets/icons/weapon.svg';
+  static const String chest = 'assets/icons/chest.svg';
+  static const String shield = 'assets/icons/shield.svg';
+  static const String accessory = 'assets/icons/accessory.svg';
+  static const String legs = 'assets/icons/legs.svg';
+  static const String belt = 'assets/icons/belt.svg';
 
 
   // ─────────────────────────────────────────────

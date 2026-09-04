@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
+import '../config/app_icons.dart';
 import '../database/app_database.dart';
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../managers/class_manager.dart';
+import '../widgets/valquin_icon.dart';
 
 import 'main_screen.dart';
 
@@ -116,15 +118,12 @@ class _CreatePlayerScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
-
           child: Column(
             crossAxisAlignment:
                 CrossAxisAlignment.stretch,
-
             children: [
               // --------------------------------------------------
               // TITLE
@@ -135,7 +134,6 @@ class _CreatePlayerScreenState
               const Text(
                 'CREATE YOUR CHARACTER',
                 textAlign: TextAlign.center,
-
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -149,7 +147,6 @@ class _CreatePlayerScreenState
               const Text(
                 'BEGIN YOUR TRAINING JOURNEY',
                 textAlign: TextAlign.center,
-
                 style: TextStyle(
                   fontSize: 12,
                   letterSpacing: 2,
@@ -165,18 +162,13 @@ class _CreatePlayerScreenState
 
               TextField(
                 controller: _nameController,
-
                 enabled: !isCreating,
-
                 textCapitalization:
                     TextCapitalization.words,
-
                 style: const TextStyle(
                   color: AppColors.textPrimary,
                 ),
-
                 cursorColor: AppColors.accent,
-
                 decoration: InputDecoration(
                   labelText: 'PLAYER NAME',
                   hintText: 'Enter your name',
@@ -192,15 +184,15 @@ class _CreatePlayerScreenState
                   filled: true,
                   fillColor: AppColors.surface,
 
-                  prefixIcon: const Icon(
+                  prefixIcon: ValquinIcon(
                     AppIcons.status,
+                    size: 22,
                     color: AppColors.textSecondary,
                   ),
 
                   border: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(12),
-
                     borderSide: const BorderSide(
                       color: AppColors.border,
                     ),
@@ -209,7 +201,6 @@ class _CreatePlayerScreenState
                   enabledBorder: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(12),
-
                     borderSide: const BorderSide(
                       color: AppColors.border,
                     ),
@@ -218,7 +209,6 @@ class _CreatePlayerScreenState
                   focusedBorder: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(12),
-
                     borderSide: const BorderSide(
                       color: AppColors.accent,
                       width: 2,
@@ -228,7 +218,6 @@ class _CreatePlayerScreenState
                   disabledBorder: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(12),
-
                     borderSide: const BorderSide(
                       color: AppColors.border,
                     ),
@@ -244,7 +233,6 @@ class _CreatePlayerScreenState
 
               SizedBox(
                 height: 55,
-
                 child: ElevatedButton.icon(
                   onPressed:
                       isCreating ? null : createPlayer,
@@ -253,7 +241,6 @@ class _CreatePlayerScreenState
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-
                           child:
                               CircularProgressIndicator(
                             strokeWidth: 2,
@@ -268,7 +255,6 @@ class _CreatePlayerScreenState
                     isCreating
                         ? 'CREATING...'
                         : 'CREATE PLAYER',
-
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -280,18 +266,13 @@ class _CreatePlayerScreenState
                       ElevatedButton.styleFrom(
                     backgroundColor:
                         AppColors.accent,
-
                     foregroundColor:
                         AppColors.textPrimary,
-
                     disabledBackgroundColor:
                         AppColors.surfaceLight,
-
                     disabledForegroundColor:
                         AppColors.textDisabled,
-
                     elevation: 0,
-
                     shape:
                         RoundedRectangleBorder(
                       borderRadius:
