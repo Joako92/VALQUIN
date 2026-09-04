@@ -5,9 +5,7 @@
 <p align="center">
 
   <img src="assets\screenshots\status.png" alt="VALQUIN Status" width="250"/>
-
   <img src="assets\screenshots\inventory.png" alt="VALQUIN Inventory" width="250"/>
-
   <img src="assets\screenshots\equip.png" alt="VALQUIN Equip" width="250"/>
 
 </p>
@@ -80,11 +78,8 @@ Current rarities:
 
 ```text
 Common
-
 Rare
-
 Legendary
-
 Mythic
 ```
 
@@ -144,43 +139,36 @@ The daily training flow is intentionally simple:
 Select Equipment
 
        │
-
        ▼
 
 Activate Equipment
 
        │
-
        ▼
 
 Select Variants
 
        │
-
        ▼
 
 Generate Daily Plan
 
        │
-
        ▼
 
 Review Exercises
 
        │
-
        ▼
 
 Execute Training
 
        │
-
        ▼
 
 Equipment Cooldown
 
        │
-
        ▼
 
 Recover & Train Again
@@ -208,6 +196,25 @@ The interface is intentionally restrained:
 The core visual principle is:
 
 > **The UI stays quiet. The world speaks through the assets.**
+
+### Branding
+
+VALQUIN's visual identity is built around a custom emblem representing progression, strength and upward movement.
+
+The primary logo combines:
+
+* A shield silhouette.
+* A central V symbol.
+* Wing-like extensions.
+* A red upward arrow representing progression.
+
+The logo is designed as a simple, recognizable symbol rather than a detailed illustration.
+
+The application name is presented separately from the emblem, allowing the logo to function independently as an application icon and visual mark.
+
+The core branding principle is:
+
+> **Forge yourself through progression.**
 
 ### Iconography
 
@@ -242,6 +249,22 @@ Custom icons are currently used for:
 
 SVG assets are rendered through reusable Flutter widgets, allowing their color to be controlled by the application's visual system.
 
+### Application Icon
+
+VALQUIN uses a dedicated launcher icon for the Android application.
+
+The launcher icon is based on the VALQUIN emblem and is designed independently from the in-app SVG assets to accommodate Android launcher masking and icon proportions.
+
+The launcher asset uses:
+
+* A square canvas.
+* Centered logo geometry.
+* Controlled padding.
+* A dedicated background.
+* The VALQUIN emblem as the primary visual element.
+
+This keeps the application icon visually consistent across Android launchers while preserving the original transparent SVG logo for use inside the application.
+
 ### Rarity Glow
 
 Equipment rarity is represented not only through color, but also through a localized glow effect.
@@ -252,6 +275,7 @@ This creates a visual hierarchy where:
 
 ```text
 Card
+
  │
  ├── Border → Equipment rarity
  │
@@ -324,362 +348,13 @@ This approach allows VALQUIN to remain visually clean while gradually introducin
 
 ---
 
-# Data Persistence
-
-The application uses a local SQLite database as its primary source of persisted game data.
-
-Persisted domain data currently includes:
-
-* Players.
-* Exercises.
-* Exercise variants.
-* Equipment.
-* Equipment/exercise relationships.
-* Equipment stats.
-* Unlock requirements.
-* Equip requirements.
-
----
-
-# Architecture
-
-VALQUIN follows a layered architecture that separates the application UI, domain models, business logic and persistence.
-
-```text
-                    ┌─────────────────────┐
-                    │       Flutter       │
-                    │     Presentation    │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │      Managers       │
-                    │   Business Logic    │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │    Domain Models    │
-                    │                     │
-                    │ Player              │
-                    │ Exercise            │
-                    │ EquipmentItem       │
-                    │ TrainingPlan        │
-                    │ PlayerClass         │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │     Persistence     │
-                    │                     │
-                    │   SQLite + Drift    │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │     SQLite DB       │
-                    └─────────────────────┘
-```
-
-The persistence layer is intentionally separated from the domain layer.
-
-Drift-generated database models are not exposed directly to the UI. Instead, database records are reconstructed into domain models before being consumed by the application.
-
-This allows the game logic to remain independent from the database implementation.
-
-### Project Structure
-
-```text
-lib/
-
-│
-├── main.dart
-├── app.dart
-│
-├── config/
-│   ├── app_config.dart
-│   ├── app_colors.dart
-│   └── app_icons.dart
-│
-├── data/
-│   ├── exercises.dart
-│   └── equipment_items.dart
-│
-├── database/
-│   ├── app_database.dart
-│   ├── database_admin.dart
-│   │
-│   ├── seed/
-│   │   └── exercise_seeder.dart
-│   │
-│   └── tables/
-│       ├── test_entries.dart
-│       ├── exercise_variants.dart
-│       ├── exercises.dart
-│       ├── exercise_variant_links.dart
-│       ├── equipment_items.dart
-│       ├── equipment_item_exercises.dart
-│       ├── equipment_item_stats.dart
-│       ├── equipment_item_unlock_requirements.dart
-│       └── equipment_item_equip_requirements.dart
-│
-├── models/
-│   ├── exercise.dart
-│   ├── equipment_item.dart
-│   ├── equipment_slot.dart
-│   ├── rarity.dart
-│   ├── equipment_requirement.dart
-│   ├── player.dart
-│   ├── player_class.dart
-│   └── training_plan.dart
-│
-├── managers/
-│   ├── player_manager.dart
-│   ├── training_plan_manager.dart
-│   └── class_manager.dart
-│
-├── persistence/
-│   ├── player_storage.dart
-│   └── training_plan_storage.dart
-│
-├── screens/
-│   ├── main_screen.dart
-│   ├── create_player_screen.dart
-│   ├── player_screen.dart
-│   ├── inventory_screen.dart
-│   └── equip_screen.dart
-│
-└── widgets/
-    ├── attribute_card.dart
-    ├── equipment_item.dart
-    ├── equipment_slot.dart
-    ├── exercise_item.dart
-    ├── inventory_filter.dart
-    ├── valquin_icon.dart
-    └── valquin_icon_glow.dart
-```
-
----
-
-# Tech Stack
-
-| Technology       | Purpose                                  |
-| ---------------- | ---------------------------------------- |
-| **Flutter**      | Cross-platform mobile application        |
-| **Dart**         | Application and domain logic             |
-| **SQLite**       | Local persistent database                |
-| **Drift**        | Type-safe SQLite abstraction and queries |
-| **Flutter Test** | Automated testing                        |
-| **Git**          | Version control                          |
-
-The application is currently focused on Android, with the architecture designed around Flutter's cross-platform capabilities.
-
----
-
-# Database Design
-
-The database is designed around the relationship between **players, exercises and equipment**.
-
-### Core Exercise Model
-
-```text
-Exercise
-
-   │
-
-   └── ExerciseVariantLinks
-
-            │
-
-            └── ExerciseVariant
-```
-
-An exercise can have multiple variants.
-
-Each variant can define:
-
-```text
-variantIndex
-
-sets
-
-amount
-
-unit
-```
-
-Supported units currently include:
-
-```text
-reps
-
-min
-
-km
-
-hs
-```
-
----
-
-### Equipment Model
-
-```text
-EquipmentItem
-
-│
-
-├── EquipmentItemExercises
-│       ├── exerciseId
-│       └── maxVariant
-│
-├── EquipmentItemStats
-│       ├── stat
-│       └── value
-│
-├── EquipmentItemUnlockRequirements
-│       ├── condition
-│       └── value
-│
-└── EquipmentItemEquipRequirements
-        ├── condition
-        └── value
-```
-
-This model allows an equipment item to contain multiple exercises while controlling the maximum variant available through that specific item.
-
-For example:
-
-```text
-EquipmentItem
-
-      │
-
-      ├── Push Ups      → maxVariant: 3
-
-      ├── Dips          → maxVariant: 2
-
-      └── Plank         → maxVariant: 4
-```
-
-The same exercise can also belong to multiple equipment items.
-
----
-
-### Equipment & Classes
-
-Equipment can be:
-
-```text
-Shared
-
-   │
-
-   ├── available to multiple classes
-
-
-Partially Restricted
-
-   │
-
-   ├── unavailable to selected classes
-
-
-Exclusive
-
-   │
-
-   └── available to a specific class
-```
-
-This allows the equipment system to become progressively more specialized as the player advances.
-
-Basic exercises remain reusable across different classes, while specialized equipment can define a class's identity.
-
----
-
-### Current Database Content
-
-```text
-Exercises:        26
-
-Equipment Items:  43
-```
-
----
-
-# Testing
-
-Testing is an important part of the project, particularly around the persistence layer and the relationships between entities.
-
-The test suite currently covers:
-
-* Exercise CRUD.
-* Equipment CRUD.
-* Equipment/exercise relationships.
-* Duplicate relationship prevention.
-* `maxVariant` updates.
-* Equipment stats.
-* Unlock requirements.
-* Equip requirements.
-* Exercise variants.
-* Domain model reconstruction.
-* Database seeders.
-* Database administration tools.
-* Class compatibility.
-* Persistence integrity.
-
-### Full Test Suite
-
-```bash
-flutter test
-```
-
-Current result:
-
-```text
-+86: All tests passed!
-```
-
-The database layer has been validated through the following operations:
-
-```text
-INSERT                  ✓
-
-READ                    ✓
-
-UPDATE                  ✓
-
-DELETE                  ✓
-
-RELATIONS               ✓
-
-SEEDING                 ✓
-
-DOMAIN RECONSTRUCTION   ✓
-
-EXERCISE CONSUMPTION    ✓
-
-EQUIPMENT STATS         ✓
-
-UNLOCK REQUIREMENTS     ✓
-
-EQUIP REQUIREMENTS      ✓
-
-DATABASE ADMIN          ✓
-
-CLASS COMPATIBILITY     ✓
-```
-
----
-
 # Project Status
 
 ### Current Version
 
-**v0.6.2 — Custom Iconography**
+**v0.6.3 — Branding & Launcher Identity**
 
-Version 0.6.2 consolidates VALQUIN's custom icon system and establishes a reusable visual language for the application's interface.
+Version 0.6.3 completes the first major branding layer of VALQUIN by introducing the final application logo, Android launcher icon and application name.
 
 The current application includes:
 
@@ -720,14 +395,19 @@ The current application includes:
 * Reusable icon glow widget.
 * Rarity-based icon glow.
 * Unified visual language across Status, Inventory and Equip screens.
+* Final VALQUIN logo.
+* Android launcher icon.
+* VALQUIN application name.
 
 The core database and domain architecture are now established.
 
 The functional UI has also been redesigned around a consistent visual foundation.
 
-The application now has a defined visual language for color, rarity, iconography and interaction states.
+The application now has a defined visual language for color, rarity, iconography, branding and interaction states.
 
-The current development focus is shifting toward **branding, custom visual assets and deeper world-building elements**.
+The first layer of VALQUIN's visual identity is now complete.
+
+The current development focus is shifting toward **custom background assets, deeper atmosphere and world-building elements**.
 
 ---
 
@@ -757,12 +437,13 @@ The v0.6 milestone focuses on transforming the functional RPG interface into a c
 * Custom VALQUIN icons.
 * Custom equipment slot visuals.
 * Rarity-based icon glow.
+* Final VALQUIN logo.
+* Android launcher icon.
+* VALQUIN application name.
 
 ### Remaining Visual Work
 
-* VALQUIN logo and branding.
 * Custom splash screen.
-* Custom application icon.
 * Background assets.
 * Card visual refinement.
 * Custom borders and frames.
@@ -820,154 +501,42 @@ It should make the process of training more engaging.
 REAL TRAINING
 
       │
-
       ▼
 
    PROGRESS
 
       │
-
       ▼
 
    EXPERIENCE
 
       │
-
       ▼
 
      LEVEL
 
       │
-
       ▼
 
      STATS
 
       │
-
       ▼
 
    EQUIPMENT
 
       │
-
       ▼
 
  SPECIALIZATION
 
       │
-
       ▼
 
  NEW TRAINING
 
       │
-
       └───────────────►
-```
-
----
-
-# Getting Started
-
-## Requirements
-
-* Flutter SDK
-* Dart SDK
-* Android Studio
-* Android SDK
-* Android device or emulator
-
-Verify your Flutter installation:
-
-```bash
-flutter doctor
-```
-
----
-
-## Clone the repository
-
-```bash
-git clone <repository-url>
-
-cd valquin
-```
-
----
-
-## Install dependencies
-
-```bash
-flutter pub get
-```
-
----
-
-## Run the application
-
-For an available Android device:
-
-```bash
-flutter devices
-```
-
-Then:
-
-```bash
-flutter run
-```
-
-Or specify a device directly:
-
-```bash
-flutter run -d <device-id>
-```
-
----
-
-## Run tests
-
-Run the complete test suite:
-
-```bash
-flutter test
-```
-
-Run the database tests:
-
-```bash
-flutter test test/database/app_database_test.dart
-```
-
-Run equipment/exercise relationship tests:
-
-```bash
-flutter test test/database/equipment_item_exercises_test.dart
-```
-
-Run equipment stats tests:
-
-```bash
-flutter test test/database/equipment_item_stats_test.dart
-```
-
-Run unlock requirement tests:
-
-```bash
-flutter test test/database/equipment_item_unlock_requirements_test.dart
-```
-
-Run equip requirement tests:
-
-```bash
-flutter test test/database/equipment_item_equip_requirements_test.dart
-```
-
-Run seeder tests:
-
-```bash
-flutter test test/database/exercise_seeder_test.dart
 ```
 
 ---
