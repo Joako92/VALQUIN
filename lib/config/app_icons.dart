@@ -51,6 +51,7 @@ class AppIcons {
   static const IconData endurance = Icons.repeat;
   static const IconData energy = Icons.flash_on;
   static const IconData stamina = Icons.directions_run;
+  static const IconData settings = Icons.settings;
 
 
   // ─────────────────────────────────────────────

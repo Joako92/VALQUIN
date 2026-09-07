@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'config/app_config.dart';
+import 'config/app_settings.dart';
+
 import 'database/app_database.dart';
 
 import 'managers/player_manager.dart';
@@ -14,6 +17,7 @@ class SoloTrainingApp extends StatelessWidget {
   final TrainingPlanManager trainingPlanManager;
   final ClassManager classManager;
   final AppDatabase database;
+  final AppSettings settings;
 
   const SoloTrainingApp({
     super.key,
@@ -21,33 +25,45 @@ class SoloTrainingApp extends StatelessWidget {
     required this.trainingPlanManager,
     required this.classManager,
     required this.database,
+    required this.settings,
   });
 
   @override
   Widget build(BuildContext context) {
     final hasPlayer = playerManager.player != null;
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return ListenableBuilder(
+      listenable: settings,
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
 
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF080B12),
-      ),
-
-      home: hasPlayer
-          ? MainScreen(
-              playerManager: playerManager,
-              trainingPlanManager: trainingPlanManager,
-              classManager: classManager,
-              database: database,
-            )
-          : CreatePlayerScreen(
-              playerManager: playerManager,
-              trainingPlanManager: trainingPlanManager,
-              classManager: classManager,
-              database: database,
+          theme: ThemeData(
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor: AppColors.background,
+            colorScheme: ColorScheme.dark(
+              primary: settings.accentColor,
+              secondary: settings.accentColor,
             ),
+          ),
+
+          home: hasPlayer
+              ? MainScreen(
+                  playerManager: playerManager,
+                  trainingPlanManager: trainingPlanManager,
+                  classManager: classManager,
+                  database: database,
+                  settings: settings,
+                )
+              : CreatePlayerScreen(
+                  playerManager: playerManager,
+                  trainingPlanManager: trainingPlanManager,
+                  classManager: classManager,
+                  database: database,
+                  settings: settings,
+                ),
+        );
+      },
     );
   }
 }

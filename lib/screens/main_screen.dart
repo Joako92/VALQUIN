@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
-import '../config/app_icons.dart';
 import '../database/app_database.dart';
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
@@ -11,12 +10,14 @@ import '../widgets/valquin_background.dart';
 import 'player_screen.dart';
 import 'inventory_screen.dart';
 import 'equip_screen.dart';
+import '../config/app_settings.dart';
 
 class MainScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
   final ClassManager classManager;
   final AppDatabase database;
+  final AppSettings settings;
 
   const MainScreen({
     super.key,
@@ -24,6 +25,7 @@ class MainScreen extends StatefulWidget {
     required this.trainingPlanManager,
     required this.classManager,
     required this.database,
+    required this.settings,
   });
 
   @override
@@ -39,6 +41,7 @@ class _MainScreenState extends State<MainScreen> {
       PlayerScreen(
         playerManager: widget.playerManager,
         classManager: widget.classManager,
+        settings: widget.settings,
       ),
       InventoryScreen(
         playerManager: widget.playerManager,
@@ -109,7 +112,7 @@ class _MainScreenState extends State<MainScreen> {
                         selectedIcon: ValquinIcon(
                           AppIcons.status,
                           size: 70,
-                          color: AppColors.accent,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         label: '',
                       ),
@@ -122,7 +125,7 @@ class _MainScreenState extends State<MainScreen> {
                         selectedIcon: ValquinIcon(
                           AppIcons.inventory,
                           size: 70,
-                          color: AppColors.accent,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         label: '',
                       ),
@@ -135,7 +138,7 @@ class _MainScreenState extends State<MainScreen> {
                         selectedIcon: ValquinIcon(
                           AppIcons.equipment,
                           size: 70,
-                          color: AppColors.accent,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         label: '',
                       ),

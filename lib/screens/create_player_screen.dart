@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
-import '../config/app_icons.dart';
+import '../config/app_settings.dart';
 import '../database/app_database.dart';
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
@@ -15,6 +15,7 @@ class CreatePlayerScreen extends StatefulWidget {
   final TrainingPlanManager trainingPlanManager;
   final ClassManager classManager;
   final AppDatabase database;
+  final AppSettings settings;
 
   const CreatePlayerScreen({
     super.key,
@@ -22,6 +23,7 @@ class CreatePlayerScreen extends StatefulWidget {
     required this.trainingPlanManager,
     required this.classManager,
     required this.database,
+    required this.settings,
   });
 
   @override
@@ -51,6 +53,9 @@ class _CreatePlayerScreenState
 
   AppDatabase get database =>
       widget.database;
+
+  AppSettings get settings => 
+      widget.settings;
 
   // --------------------------------------------------
   // DISPOSE
@@ -105,6 +110,7 @@ class _CreatePlayerScreenState
           trainingPlanManager: trainingPlanManager,
           classManager: classManager,
           database: database,
+          settings: settings,
         ),
       ),
     );
@@ -168,7 +174,7 @@ class _CreatePlayerScreenState
                 style: const TextStyle(
                   color: AppColors.textPrimary,
                 ),
-                cursorColor: AppColors.accent,
+                cursorColor: Theme.of(context).colorScheme.primary,
                 decoration: InputDecoration(
                   labelText: 'PLAYER NAME',
                   hintText: 'Enter your name',
@@ -209,8 +215,8 @@ class _CreatePlayerScreenState
                   focusedBorder: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.accent,
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
                       width: 2,
                     ),
                   ),
@@ -265,7 +271,7 @@ class _CreatePlayerScreenState
                   style:
                       ElevatedButton.styleFrom(
                     backgroundColor:
-                        AppColors.accent,
+                        Theme.of(context).colorScheme.primary,
                     foregroundColor:
                         AppColors.textPrimary,
                     disabledBackgroundColor:

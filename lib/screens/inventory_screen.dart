@@ -1000,11 +1000,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
     final player = playerManager.player;
 
     if (player == null || isLoading) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
           child: CircularProgressIndicator(
-            color: AppColors.accent,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
       );

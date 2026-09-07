@@ -646,11 +646,11 @@ class _EquipScreenState extends State<EquipScreen> {
     final player = playerManager.player;
 
     if (player == null) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
           child: CircularProgressIndicator(
-            color: AppColors.accent,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
       );
@@ -734,7 +734,7 @@ class _EquipScreenState extends State<EquipScreen> {
               child: FloatingActionButton(
                 heroTag: 'executeTraining',
                 onPressed: executeTraining,
-                backgroundColor: AppColors.accent,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: AppColors.textPrimary,
                 child: const Icon(
                   AppIcons.experience,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../config/app_config.dart';
+
+// import '../config/app_config.dart';
 
 class ValquinBackground extends StatelessWidget {
   const ValquinBackground({
@@ -11,18 +12,20 @@ class ValquinBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = Theme.of(context).colorScheme.primary;
+
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            AppColors.accentDark,
-            Color(0xFF120B0E),
-            Color(0xFF08090B),
-            Color.fromARGB(255, 0, 0, 0),
+            accent,
+            const Color(0xFF120B0E),
+            const Color(0xFF08090B),
+            const Color.fromARGB(255, 0, 0, 0),
           ],
-          stops: [
+          stops: const [
             0.0,
             0.25,
             0.65,

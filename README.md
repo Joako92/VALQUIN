@@ -94,8 +94,11 @@ Each rarity has its own primary color and glow effect:
 
 ```text
 Common      → Light Gray + Blue Glow
+
 Rare        → Green + Blue Glow
+
 Legendary   → Violet + Yellow Glow
+
 Mythic      → Fuchsia + White Glow
 ```
 
@@ -188,6 +191,36 @@ Recover & Train Again
 
 This creates a direct relationship between equipment selection and real-world training.
 
+### Settings & Customization
+
+VALQUIN includes a centralized application settings system for user-facing visual preferences.
+
+Current settings include:
+
+* Accent color customization.
+* Runtime accent color changes.
+* Centralized application settings state.
+* Reactive theme updates.
+
+The selected accent color is propagated through the application's theme rather than being manually passed through individual screens.
+
+The architecture follows:
+
+```text
+AppColors
+    │
+    ▼
+AppSettings
+    │
+    ▼
+ThemeData
+    │
+    ▼
+Application UI
+```
+
+This allows visual preferences to affect the application consistently while keeping gameplay-related colors independent from user customization.
+
 ---
 
 # Visual Identity
@@ -260,6 +293,7 @@ Custom icons are currently used for:
 * Status navigation.
 * Inventory navigation.
 * Equipment navigation.
+* Player actions and settings.
 
 SVG assets are rendered through reusable Flutter widgets, allowing their color to be controlled by the application's visual system.
 
@@ -313,22 +347,45 @@ This keeps the interface restrained while allowing rare equipment to visually st
 
 The global application palette is centralized through `AppColors`.
 
+The default visual palette is:
+
 ```text
-Background      → Black
-Surface         → Dark Gray
-Accent          → Red
-Titles          → Yellow
-Primary Text    → White
-Secondary Text  → Light Gray
+Background       → Black
+
+Surface          → Dark Gray
+
+Default Accent   → Red
+
+Titles           → Yellow
+
+Primary Text     → White
+
+Secondary Text   → Light Gray
 ```
 
-The accent color represents interaction and player identity.
+The application's accent color is user-configurable through the Settings system.
+
+`AppColors.accent` defines the default accent used when no customization has been selected.
+
+At runtime, the active accent is provided through `AppSettings` and exposed to the UI through `ThemeData`.
+
+This architecture allows components to consume:
+
+```dart
+Theme.of(context).colorScheme.primary
+```
+
+instead of depending directly on a fixed accent color.
+
+The accent color represents interaction, emphasis and player identity.
 
 Yellow is primarily used for titles and important information.
 
 Rarity colors remain independent and preserve their own meaning within the game world.
 
-This separation allows the interface to maintain a consistent visual identity without changing the meaning of equipment rarities.
+Semantic state colors such as success, warning and error also remain independent from the configurable accent.
+
+This separation allows the interface to maintain a consistent visual identity without changing the meaning of equipment rarities or system states.
 
 ### Background & Atmosphere
 
@@ -366,6 +423,7 @@ The navigation system follows the same visual principles as the rest of the appl
 * Strong central alignment.
 * Consistent icon sizing.
 * Clear active-state feedback.
+* Accent-based active state.
 
 The navigation bar is treated as part of VALQUIN's visual identity rather than as a generic Flutter component.
 
@@ -407,9 +465,9 @@ This approach allows VALQUIN to remain visually clean while gradually introducin
 
 ### Current Version
 
-**v0.6.4 — UI Atmosphere & Navigation**
+**v0.6.5 — Settings & Accent Customization**
 
-Version 0.6.4 completes the current visual foundation of VALQUIN by introducing the new atmospheric background system and the redesigned bottom navigation.
+Version 0.6.5 extends the visual foundation established in v0.6.4 by introducing the first user-facing application customization system.
 
 The current application includes:
 
@@ -456,6 +514,10 @@ The current application includes:
 * Custom atmospheric background.
 * Redesigned bottom navigation.
 * Custom navigation layout and positioning.
+* Settings system.
+* Runtime accent color customization.
+* Reactive application theme.
+* Theme-based accent color usage across the UI.
 
 The core database and domain architecture are now established.
 
@@ -479,11 +541,15 @@ Background
 Atmosphere
 
 Interaction states
+
+Customization
 ```
 
 The first major visual foundation of VALQUIN is now complete.
 
-The next development stage will focus on **deeper character presentation, equipment visualization and visual feedback**, rather than further redesigning the application's basic UI structure.
+The application also now provides the first layer of user customization without coupling user preferences to gameplay or rarity semantics.
+
+The next development stage will focus on **deeper character presentation, avatar customization, equipment visualization and visual feedback**, rather than further redesigning the application's basic UI structure.
 
 ---
 
@@ -519,6 +585,10 @@ The v0.6 milestone focuses on transforming the functional RPG interface into a c
 * Custom atmospheric background.
 * Bottom navigation refinement.
 * Navigation icon positioning and spacing.
+* Settings architecture.
+* Accent color customization.
+* Runtime theme updates.
+* Theme-based accent color consumption.
 
 ### Remaining Visual Work
 
@@ -569,6 +639,14 @@ The remaining visual work will continue outside the basic UI foundation:
 * More immersive RPG screens.
 * Custom VALQUIN visual assets.
 * Dynamic visual states.
+
+### Application Customization
+
+* Persistent user settings.
+* Additional accent color options.
+* Language selection.
+* Custom avatar configuration.
+* Additional personalization options.
 
 ### Long-Term Vision
 

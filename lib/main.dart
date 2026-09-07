@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:valquin/config/app_settings.dart';
 
 import 'app.dart';
 
@@ -82,12 +83,15 @@ Future<void> main() async {
   // APP
   // --------------------------------------------------
 
+  final settings = AppSettings();
+
   runApp(
     SoloTrainingApp(
       playerManager: playerManager,
       trainingPlanManager: trainingPlanManager,
       classManager: classManager,
       database: database,
+      settings: settings,
     ),
   );
 }

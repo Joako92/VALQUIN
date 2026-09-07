@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
+import '../config/app_settings.dart';
 import '../managers/player_manager.dart';
 import '../managers/class_manager.dart';
 import '../models/player.dart';
@@ -9,11 +10,13 @@ import '../widgets/valquin_icon.dart';
 class PlayerScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final ClassManager classManager;
+  final AppSettings settings;
 
   const PlayerScreen({
     super.key,
     required this.playerManager,
     required this.classManager,
+    required this.settings,
   });
 
   @override
@@ -28,6 +31,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
   PlayerManager get playerManager => widget.playerManager;
 
   ClassManager get classManager => widget.classManager;
+
+  AppSettings get settings => widget.settings;
 
   // --------------------------------------------------
   // BUILD
@@ -130,9 +135,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           children: [
                             Text(
                               player.playerClass.name.toUpperCase(),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
-                                color: AppColors.accent,
+                                color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 2,
                               ),
@@ -163,9 +168,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 player.xpRequiredForLevel,
                             minHeight: 10,
                             backgroundColor: AppColors.surfaceLight,
-                            valueColor:
-                                const AlwaysStoppedAnimation<Color>(
-                              AppColors.accent,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ),
@@ -224,6 +228,26 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           ],
                         ),
                       ],
+                    ),
+                  ),
+
+                  // --------------------------------------------------
+                  // SETTINGS
+                  // --------------------------------------------------
+
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: IconButton(
+                      onPressed: () {
+                        _showSettingsDialog(context);
+                      },
+                      icon: const Icon(
+                        AppIcons.settings,
+                        size: 22,
+                      ),
+                      color: AppColors.textSecondary,
+                      tooltip: 'Settings',
                     ),
                   ),
 
@@ -414,7 +438,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     leading: ValquinIcon(
                       AppIcons.equipment,
                       size: 24,
-                      color: AppColors.accent,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                     title: Text(
                       playerClass.name.toUpperCase(),
@@ -456,6 +480,112 @@ class _PlayerScreenState extends State<PlayerScreen> {
           ],
         );
       },
+    );
+  }
+
+  // --------------------------------------------------
+  // SETTINGS DIALOG
+  // --------------------------------------------------
+
+  void _showSettingsDialog(
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: AppColors.surface,
+          title: const Text(
+            'SETTINGS',
+            style: TextStyle(
+              color: AppColors.title,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'ACCENT COLOR',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: [
+                  _buildAccentOption(
+                    Colors.red,
+                  ),
+                  _buildAccentOption(
+                    Colors.blue,
+                  ),
+                  _buildAccentOption(
+                    Colors.green,
+                  ),
+                  _buildAccentOption(
+                    Colors.purple,
+                  ),
+                  _buildAccentOption(
+                    Colors.orange,
+                  ),
+                  _buildAccentOption(
+                    Colors.cyan,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text(
+                'CLOSE',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildAccentOption(
+    Color color,
+  ) {
+    final isSelected = settings.accentColor == color;
+
+    return GestureDetector(
+      onTap: () {
+        settings.setAccentColor(color);
+      },
+      child: Container(
+        width: 42,
+        height: 42,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color,
+          border: Border.all(
+            color: isSelected
+                ? AppColors.textPrimary
+                : Colors.transparent,
+            width: 3,
+          ),
+        ),
+      ),
     );
   }
 
