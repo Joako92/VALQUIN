@@ -647,7 +647,7 @@ class _EquipScreenState extends State<EquipScreen> {
 
     if (player == null) {
       return const Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: Colors.transparent,
         body: Center(
           child: CircularProgressIndicator(
             color: AppColors.accent,
@@ -657,7 +657,7 @@ class _EquipScreenState extends State<EquipScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Stack(
           children: [

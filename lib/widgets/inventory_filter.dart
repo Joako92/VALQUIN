@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config/app_config.dart';
+
 class InventoryFilter extends StatelessWidget {
   final String label;
   final bool selected;
@@ -16,33 +18,30 @@ class InventoryFilter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(right: 8),
-
       child: FilterChip(
         label: Text(label),
-
         selected: selected,
 
         onSelected: (_) {
           onSelected();
         },
 
-        backgroundColor: const Color(0xFF111827),
-
-        selectedColor: Colors.blueAccent.withValues(alpha: 0.25),
+        backgroundColor: AppColors.surface,
+        selectedColor:
+            AppColors.accent.withValues(alpha: 0.2),
 
         side: BorderSide(
           color: selected
-              ? Colors.blueAccent
-              : Colors.white12,
+              ? AppColors.accent
+              : AppColors.border,
         ),
 
         labelStyle: TextStyle(
           fontSize: 11,
           letterSpacing: 1,
-
           color: selected
-              ? Colors.blueAccent
-              : Colors.white54,
+              ? AppColors.accent
+              : AppColors.textSecondary,
         ),
       ),
     );

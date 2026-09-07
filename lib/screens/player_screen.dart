@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
-import '../config/app_icons.dart';
 import '../managers/player_manager.dart';
 import '../managers/class_manager.dart';
 import '../models/player.dart';
@@ -40,7 +39,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
     if (player == null) {
       return const Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: Colors.transparent,
         body: Center(
           child: Text(
             'PLAYER NOT LOADED',
@@ -56,213 +55,244 @@ class _PlayerScreenState extends State<PlayerScreen> {
         classManager.availableClasses(player);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               // --------------------------------------------------
-              // PLAYER
+              // PLAYER STATS
+              // --------------------------------------------------
+
+              Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  // --------------------------------------------------
+                  // STATS CARD
+                  // --------------------------------------------------
+
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 24,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: AppColors.border,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        // --------------------------------------------------
+                        // PLAYER IDENTITY
+                        // --------------------------------------------------
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              player.name,
+                              style: const TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                                color: AppColors.title,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              onPressed: () {
+                                _showResetPlayerDialog(context);
+                              },
+                              icon: const Icon(
+                                AppIcons.reset,
+                                size: 20,
+                              ),
+                              color: AppColors.textSecondary,
+                              tooltip: 'Reset Player',
+                              visualDensity: VisualDensity.compact,
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              player.playerClass.name.toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: AppColors.accent,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'LV ${player.level}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: AppColors.textSecondary,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // --------------------------------------------------
+                        // XP
+                        // --------------------------------------------------
+
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: LinearProgressIndicator(
+                            value: player.xpForCurrentLevel /
+                                player.xpRequiredForLevel,
+                            minHeight: 10,
+                            backgroundColor: AppColors.surfaceLight,
+                            valueColor:
+                                const AlwaysStoppedAnimation<Color>(
+                              AppColors.accent,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        Text(
+                          '${player.xpForCurrentLevel}/${player.xpRequiredForLevel} XP',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // --------------------------------------------------
+                        // ATTRIBUTES
+                        // --------------------------------------------------
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildAttribute(
+                                'STRENGTH',
+                                player.stats.strength,
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: _buildAttribute(
+                                'ENDURANCE',
+                                player.stats.endurance,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildAttribute(
+                                'ENERGY',
+                                player.stats.energy,
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: _buildAttribute(
+                                'STAMINA',
+                                player.stats.stamina,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // --------------------------------------------------
+                  // TOP GEM
+                  // --------------------------------------------------
+
+                  Positioned(
+                    top: -15,
+                    child: Transform.scale(
+                      scaleX: 5.0,
+                      scaleY: 1.0,
+                      child: Image.asset(
+                        'assets/images/gema.png',
+                        width: 60,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+
+                  // --------------------------------------------------
+                  // BOTTOM FRAME
+                  // --------------------------------------------------
+
+                  Positioned(
+                    bottom: -98,
+                    child: Transform.scale(
+                      scaleX: 1.55,
+                      scaleY: 0.7,
+                      child: Image.asset(
+                        'assets/images/marco.png',
+                        width: 320,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              // --------------------------------------------------
+              // AVATAR
               // --------------------------------------------------
 
               Expanded(
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 24,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius:
-                        BorderRadius.circular(20),
-                    border: Border.all(
-                      color: AppColors.border,
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    // COLUMN
+                    Transform.translate(
+                      offset: const Offset(0, 240),
+                      child: Transform.scale(
+                        scaleX: 1.2,
+                        scaleY: 0.7,
+                        child: Image.asset(
+                          'assets/images/valquin_column.png',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    children: [
-                      // --------------------------------------------------
-                      // PLAYER IDENTITY
-                      // --------------------------------------------------
 
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
-                        crossAxisAlignment:
-                            CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            player.name,
-                            style: const TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                              color: AppColors.title,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          IconButton(
-                            onPressed: () {
-                              _showResetPlayerDialog(
-                                context,
-                              );
-                            },
-                            icon: const Icon(
-                              AppIcons.reset,
-                              size: 20,
-                            ),
-                            color:
-                                AppColors.textSecondary,
-                            tooltip: 'Reset Player',
-                            visualDensity:
-                                VisualDensity.compact,
-                            padding: EdgeInsets.zero,
-                            constraints:
-                                const BoxConstraints(),
-                          ),
-                        ],
+                    // AVATAR
+                    Transform.translate(
+                      offset: const Offset(0, -100),
+                      child: Image.asset(
+                        'assets/images/Avatar-05.png',
+                        fit: BoxFit.contain,
                       ),
-
-                      const SizedBox(height: 6),
-
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            player.playerClass.name
-                                .toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: AppColors.accent,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            'LV ${player.level}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color:
-                                  AppColors.textSecondary,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // --------------------------------------------------
-                      // XP
-                      // --------------------------------------------------
-
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(10),
-                        child: LinearProgressIndicator(
-                          value:
-                              player.xpForCurrentLevel /
-                                  player.xpRequiredForLevel,
-                          minHeight: 10,
-                          backgroundColor:
-                              AppColors.surfaceLight,
-                          valueColor:
-                              const AlwaysStoppedAnimation<Color>(
-                            AppColors.accent,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 6),
-
-                      Text(
-                        '${player.xpForCurrentLevel}/${player.xpRequiredForLevel} XP',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color:
-                              AppColors.textSecondary,
-                        ),
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // --------------------------------------------------
-                      // ATTRIBUTES
-                      // --------------------------------------------------
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildAttribute(
-                              'STRENGTH',
-                              player.stats.strength,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: _buildAttribute(
-                              'ENDURANCE',
-                              player.stats.endurance,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildAttribute(
-                              'ENERGY',
-                              player.stats.energy,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: _buildAttribute(
-                              'STAMINA',
-                              player.stats.stamina,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // --------------------------------------------------
-                      // AVATAR
-                      // --------------------------------------------------
-
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color:
-                                AppColors.surfaceLight,
-                            borderRadius:
-                                BorderRadius.circular(16),
-                            border: Border.all(
-                              color: AppColors.border,
-                            ),
-                          ),
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(16),
-                            child: Image.asset(
-                              'assets/images/Avatar-06.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
 
@@ -377,9 +407,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   color: AppColors.textSecondary,
                 ),
               ),
-
               const SizedBox(height: 20),
-
               ...availableClasses.map(
                 (playerClass) {
                   return ListTile(
@@ -388,7 +416,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       size: 24,
                       color: AppColors.accent,
                     ),
-
                     title: Text(
                       playerClass.name.toUpperCase(),
                       style: const TextStyle(
@@ -396,7 +423,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     onTap: () async {
                       Navigator.of(context).pop();
 
@@ -471,7 +497,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 ),
               ),
             ),
-
             TextButton(
               onPressed: () async {
                 Navigator.of(dialogContext).pop();

@@ -5,7 +5,9 @@
 <p align="center">
 
   <img src="assets\screenshots\status.png" alt="VALQUIN Status" width="250"/>
+
   <img src="assets\screenshots\inventory.png" alt="VALQUIN Inventory" width="250"/>
+
   <img src="assets\screenshots\equip.png" alt="VALQUIN Equip" width="250"/>
 
 </p>
@@ -78,8 +80,11 @@ Current rarities:
 
 ```text
 Common
+
 Rare
+
 Legendary
+
 Mythic
 ```
 
@@ -139,36 +144,43 @@ The daily training flow is intentionally simple:
 Select Equipment
 
        │
+
        ▼
 
 Activate Equipment
 
        │
+
        ▼
 
 Select Variants
 
        │
+
        ▼
 
 Generate Daily Plan
 
        │
+
        ▼
 
 Review Exercises
 
        │
+
        ▼
 
 Execute Training
 
        │
+
        ▼
 
 Equipment Cooldown
 
        │
+
        ▼
 
 Recover & Train Again
@@ -192,6 +204,8 @@ The interface is intentionally restrained:
 * Controlled use of accent colors.
 * Custom symbolic iconography.
 * RPG identity expressed primarily through equipment, character and other visual assets.
+* Custom atmospheric background elements.
+* Dedicated bottom navigation.
 
 The core visual principle is:
 
@@ -277,12 +291,19 @@ This creates a visual hierarchy where:
 Card
 
  │
+
  ├── Border → Equipment rarity
+
  │
+
  └── Icon
+
       │
+
       ├── Color → Equipment rarity
+
       │
+
       └── Glow → Equipment rarity + active state
 ```
 
@@ -294,15 +315,10 @@ The global application palette is centralized through `AppColors`.
 
 ```text
 Background      → Black
-
 Surface         → Dark Gray
-
 Accent          → Red
-
 Titles          → Yellow
-
 Primary Text    → White
-
 Secondary Text  → Light Gray
 ```
 
@@ -313,6 +329,45 @@ Yellow is primarily used for titles and important information.
 Rarity colors remain independent and preserve their own meaning within the game world.
 
 This separation allows the interface to maintain a consistent visual identity without changing the meaning of equipment rarities.
+
+### Background & Atmosphere
+
+VALQUIN's visual architecture separates functional interface elements from atmospheric world-building elements.
+
+The application now uses dedicated visual assets to establish a stronger sense of place while keeping the UI itself restrained.
+
+Background elements are designed to:
+
+* Establish the visual atmosphere of VALQUIN.
+* Reinforce the fantasy identity of the application.
+* Provide depth behind functional screens.
+* Support the character and equipment presentation.
+* Avoid interfering with readability and interaction.
+
+The background system is intentionally independent from functional UI components so that world-building elements can evolve without coupling them to application logic.
+
+### Bottom Navigation
+
+VALQUIN uses a custom bottom navigation system designed to replace the standard Material navigation appearance.
+
+The navigation bar provides access to the application's primary screens through custom VALQUIN iconography.
+
+The current navigation structure includes:
+
+* Status.
+* Inventory.
+* Equip.
+
+The navigation system follows the same visual principles as the rest of the application:
+
+* Dark surface.
+* Custom SVG icons.
+* Minimal visual noise.
+* Strong central alignment.
+* Consistent icon sizing.
+* Clear active-state feedback.
+
+The navigation bar is treated as part of VALQUIN's visual identity rather than as a generic Flutter component.
 
 ### Visual Architecture
 
@@ -352,9 +407,9 @@ This approach allows VALQUIN to remain visually clean while gradually introducin
 
 ### Current Version
 
-**v0.6.3 — Branding & Launcher Identity**
+**v0.6.4 — UI Atmosphere & Navigation**
 
-Version 0.6.3 completes the first major branding layer of VALQUIN by introducing the final application logo, Android launcher icon and application name.
+Version 0.6.4 completes the current visual foundation of VALQUIN by introducing the new atmospheric background system and the redesigned bottom navigation.
 
 The current application includes:
 
@@ -398,16 +453,37 @@ The current application includes:
 * Final VALQUIN logo.
 * Android launcher icon.
 * VALQUIN application name.
+* Custom atmospheric background.
+* Redesigned bottom navigation.
+* Custom navigation layout and positioning.
 
 The core database and domain architecture are now established.
 
-The functional UI has also been redesigned around a consistent visual foundation.
+The functional UI has been redesigned around a consistent visual foundation.
 
-The application now has a defined visual language for color, rarity, iconography, branding and interaction states.
+The application now has a defined visual language for:
 
-The first layer of VALQUIN's visual identity is now complete.
+```text
+Color
 
-The current development focus is shifting toward **custom background assets, deeper atmosphere and world-building elements**.
+Rarity
+
+Iconography
+
+Branding
+
+Navigation
+
+Background
+
+Atmosphere
+
+Interaction states
+```
+
+The first major visual foundation of VALQUIN is now complete.
+
+The next development stage will focus on **deeper character presentation, equipment visualization and visual feedback**, rather than further redesigning the application's basic UI structure.
 
 ---
 
@@ -440,11 +516,15 @@ The v0.6 milestone focuses on transforming the functional RPG interface into a c
 * Final VALQUIN logo.
 * Android launcher icon.
 * VALQUIN application name.
+* Custom atmospheric background.
+* Bottom navigation refinement.
+* Navigation icon positioning and spacing.
 
 ### Remaining Visual Work
 
+The remaining visual work will continue outside the basic UI foundation:
+
 * Custom splash screen.
-* Background assets.
 * Card visual refinement.
 * Custom borders and frames.
 * Decorative UI elements.
@@ -453,7 +533,8 @@ The v0.6 milestone focuses on transforming the functional RPG interface into a c
 * Animations.
 * Custom character/avatar.
 * Equipment visual layering.
-* Deeper visual atmosphere.
+* Deeper character presentation.
+* Dynamic visual states.
 
 ---
 
@@ -501,41 +582,49 @@ It should make the process of training more engaging.
 REAL TRAINING
 
       │
+
       ▼
 
    PROGRESS
 
       │
+
       ▼
 
    EXPERIENCE
 
       │
+
       ▼
 
      LEVEL
 
       │
+
       ▼
 
      STATS
 
       │
+
       ▼
 
    EQUIPMENT
 
       │
+
       ▼
 
  SPECIALIZATION
 
       │
+
       ▼
 
  NEW TRAINING
 
       │
+
       └───────────────►
 ```
 
@@ -554,23 +643,23 @@ Every workout should contribute to something:
 ```text
 Train
 
-  ↓
+ ↓
 
 Improve
 
-  ↓
+ ↓
 
 Level Up
 
-  ↓
+ ↓
 
 Unlock
 
-  ↓
+ ↓
 
 Specialize
 
-  ↓
+ ↓
 
 Become Stronger
 ```

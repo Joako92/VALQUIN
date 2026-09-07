@@ -7,6 +7,7 @@ import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../managers/class_manager.dart';
 import '../widgets/valquin_icon.dart';
+import '../widgets/valquin_background.dart';
 import 'player_screen.dart';
 import 'inventory_screen.dart';
 import 'equip_screen.dart';
@@ -52,75 +53,98 @@ class _MainScreenState extends State<MainScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: screens[currentIndex],
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          backgroundColor: AppColors.surface,
-          indicatorColor:
-              AppColors.accent.withValues(alpha: 0.2),
+      backgroundColor: Colors.transparent,
+      body: ValquinBackground(
+        child: screens[currentIndex],
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 125,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Decorative stone navigation plate
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/Nav.png',
+                  fit: BoxFit.fill,
+                ),
+              ),
 
-          // No labels.
-          labelTextStyle:
-              const WidgetStatePropertyAll<TextStyle>(
-            TextStyle(
-              fontSize: 0,
-              color: Colors.transparent,
-            ),
+              // Navigation icons
+              Positioned(
+                left: 45,
+                right: 45,
+                bottom: 0,
+                height: 105,
+                child: NavigationBarTheme(
+                  data: NavigationBarThemeData(
+                    backgroundColor: Colors.transparent,
+                    indicatorColor: Colors.transparent,
+                    labelTextStyle:
+                        const WidgetStatePropertyAll<TextStyle>(
+                      TextStyle(
+                        fontSize: 0,
+                        color: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                  child: NavigationBar(
+                    height: 85,
+                    backgroundColor: Colors.transparent,
+                    selectedIndex: currentIndex,
+                    onDestinationSelected: (index) {
+                      setState(() {
+                        currentIndex = index;
+                      });
+                    },
+                    destinations: [
+                      NavigationDestination(
+                        icon: ValquinIcon(
+                          AppIcons.status,
+                          size: 60,
+                          color: AppColors.textSecondary,
+                        ),
+                        selectedIcon: ValquinIcon(
+                          AppIcons.status,
+                          size: 70,
+                          color: AppColors.accent,
+                        ),
+                        label: '',
+                      ),
+                      NavigationDestination(
+                        icon: ValquinIcon(
+                          AppIcons.inventory,
+                          size: 60,
+                          color: AppColors.textSecondary,
+                        ),
+                        selectedIcon: ValquinIcon(
+                          AppIcons.inventory,
+                          size: 70,
+                          color: AppColors.accent,
+                        ),
+                        label: '',
+                      ),
+                      NavigationDestination(
+                        icon: ValquinIcon(
+                          AppIcons.equipment,
+                          size: 60,
+                          color: AppColors.textSecondary,
+                        ),
+                        selectedIcon: ValquinIcon(
+                          AppIcons.equipment,
+                          size: 70,
+                          color: AppColors.accent,
+                        ),
+                        label: '',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-        child: NavigationBar(
-          selectedIndex: currentIndex,
-
-          onDestinationSelected: (index) {
-            setState(() {
-              currentIndex = index;
-            });
-          },
-
-          destinations: [
-            NavigationDestination(
-              icon: ValquinIcon(
-                AppIcons.status,
-                size: 60,
-                color: AppColors.textSecondary,
-              ),
-              selectedIcon: ValquinIcon(
-                AppIcons.status,
-                size: 70,
-                color: AppColors.accent,
-              ),
-              label: '',
-            ),
-
-            NavigationDestination(
-              icon: ValquinIcon(
-                AppIcons.inventory,
-                size: 60,
-                color: AppColors.textSecondary,
-              ),
-              selectedIcon: ValquinIcon(
-                AppIcons.inventory,
-                size: 70,
-                color: AppColors.accent,
-              ),
-              label: '',
-            ),
-
-            NavigationDestination(
-              icon: ValquinIcon(
-                AppIcons.equipment,
-                size: 60,
-                color: AppColors.textSecondary,
-              ),
-              selectedIcon: ValquinIcon(
-                AppIcons.equipment,
-                size: 70,
-                color: AppColors.accent,
-              ),
-              label: '',
-            ),
-          ],
         ),
       ),
     );
