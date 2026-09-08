@@ -1,6 +1,8 @@
 class SpanishStrings {
   static const playerNamePlaceholder = 'INGRESE UN NOMBRE DE JUGADOR';
 
+  // Player Screen
+
   static const attributeStrength = 'FUERZA';
   static const attributeEndurance = 'RESISTENCIA';
   static const attributeEnergy = 'ENERGÍA';
@@ -43,4 +45,58 @@ class SpanishStrings {
 
   static const playerResetMessage =
       'JUGADOR REINICIADO. TU VIAJE DE ENTRENAMIENTO COMIENZA DE NUEVO.';
+  
+  // Inventory Screen
+
+  static const all = 'TODOS';
+  static const equipped = 'EQUIPADOS';
+
+  static const shoulders = 'HOMBROS';
+  static const head = 'CABEZA';
+  static const wings = 'ALAS';
+  static const weapon = 'ARMA';
+  static const chest = 'PECHO';
+  static const shield = 'ESCUDO';
+  static const accessory = 'ACCESORIO';
+  static const legs = 'PIERNAS';
+  static const belt = 'CINTURÓN';
+
+  static const exercises = 'EJERCICIOS';
+  static const requirements = 'REQUISITOS';
+
+  static const equip = 'EQUIPAR';
+  static const unequip = 'DESEQUIPAR';
+
+  static const none = 'NINGUNO';
+  static const unknownExercise = 'EJERCICIO DESCONOCIDO';
+  static const isOnCooldown = 'ESTÁ EN COOLDOWN';
+
+  static const unequipped = 'DESEQUIPADO';
+  static const equippedMessage = 'EQUIPADO';
+  static const replaced = 'REEMPLAZADO';
+
+  static const unlockRequirementsNotMet =
+      'REQUISITOS DE DESBLOQUEO NO CUMPLIDOS';
+
+  static const equipRequirementsNotMet =
+      'REQUISITOS DE EQUIPAMIENTO NO CUMPLIDOS';
+
+  static const noItems = 'SIN OBJETOS';
+
+  // Create Player Screen
+
+  static const createYourCharacter = 'CREA TU PERSONAJE';
+  static const beginTrainingJourney = 'COMIENZA TU VIAJE DE ENTRENAMIENTO';
+  static const playerName = 'NOMBRE DEL JUGADOR';
+  static const enterYourName = 'Ingresa tu nombre';
+  static const creating = 'CREANDO...';
+  static const createPlayer = 'CREAR JUGADOR';
+
+  // Equip Screen
+
+  static const cooldown = 'DESCANSO';
+  static const dailyExercises = 'EJERCICIOS DIARIOS';
+  static const noTrainingSelected = 'No hay entrenamiento seleccionado.';
+  static const trainingExecuted = '¡ENTRENAMIENTO EJECUTADO!';
+
 }

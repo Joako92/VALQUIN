@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
+import '../config/app_settings.dart';
 import '../database/app_database.dart';
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
@@ -17,12 +18,14 @@ class EquipScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
   final AppDatabase database;
+  final AppSettings settings;
 
   const EquipScreen({
     super.key,
     required this.playerManager,
     required this.trainingPlanManager,
     required this.database,
+    required this.settings,
   });
 
   @override
@@ -46,6 +49,8 @@ class _EquipScreenState extends State<EquipScreen> {
       widget.trainingPlanManager;
 
   AppDatabase get database => widget.database;
+
+  AppSettings get settings => widget.settings;
 
   @override
   void initState() {
@@ -344,7 +349,34 @@ class _EquipScreenState extends State<EquipScreen> {
   }
 
   String slotLabel(model.EquipmentSlot slot) {
-    return slot.name.toUpperCase();
+    switch (slot) {
+      case model.EquipmentSlot.shoulders:
+        return settings.strings.shoulders;
+
+      case model.EquipmentSlot.head:
+        return settings.strings.head;
+
+      case model.EquipmentSlot.wings:
+        return settings.strings.wings;
+
+      case model.EquipmentSlot.weapon:
+        return settings.strings.weapon;
+
+      case model.EquipmentSlot.chest:
+        return settings.strings.chest;
+
+      case model.EquipmentSlot.shield:
+        return settings.strings.shield;
+
+      case model.EquipmentSlot.accessory:
+        return settings.strings.accessory;
+
+      case model.EquipmentSlot.legs:
+        return settings.strings.legs;
+
+      case model.EquipmentSlot.belt:
+        return settings.strings.belt;
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -410,6 +442,7 @@ class _EquipScreenState extends State<EquipScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // ITEM ICON
+
                     if (item == null)
                       slotIcon(
                         slot,
@@ -429,6 +462,7 @@ class _EquipScreenState extends State<EquipScreen> {
                     const SizedBox(height: 5),
 
                     // ITEM NAME / SLOT NAME
+
                     Text(
                       item?.name ?? slotLabel(slot),
                       textAlign: TextAlign.center,
@@ -445,6 +479,7 @@ class _EquipScreenState extends State<EquipScreen> {
                     ),
 
                     // VARIANTS
+
                     if (item != null) ...[
                       const SizedBox(height: 2),
                       buildVariantSelector(item),
@@ -471,16 +506,18 @@ class _EquipScreenState extends State<EquipScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
-                          'COOLDOWN',
-                          style: TextStyle(
+                        Text(
+                          settings.strings.cooldown,
+                          style: const TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1,
                             color: AppColors.textSecondary,
                           ),
                         ),
+
                         const SizedBox(height: 4),
+
                         Text(
                           _formatCooldown(
                             trainingPlan
@@ -529,9 +566,9 @@ class _EquipScreenState extends State<EquipScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'DAILY EXERCISES',
-                style: TextStyle(
+              Text(
+                settings.strings.dailyExercises,
+                style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2,
@@ -542,9 +579,9 @@ class _EquipScreenState extends State<EquipScreen> {
               const SizedBox(height: 12),
 
               if (exercises.isEmpty)
-                const Text(
-                  'No training selected.',
-                  style: TextStyle(
+                Text(
+                  settings.strings.noTrainingSelected,
+                  style: const TextStyle(
                     fontSize: 14,
                     color: AppColors.textDisabled,
                   ),
@@ -566,7 +603,9 @@ class _EquipScreenState extends State<EquipScreen> {
                             color: AppColors.textSecondary,
                           ),
                         ),
+
                         const SizedBox(width: 8),
+
                         Expanded(
                           child: Text(
                             exercise,
@@ -626,7 +665,7 @@ class _EquipScreenState extends State<EquipScreen> {
       SnackBar(
         backgroundColor: AppColors.surface,
         content: Text(
-          'TRAINING EXECUTED!\n$messages',
+          '${settings.strings.trainingExecuted}\n$messages',
           style: const TextStyle(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
@@ -734,7 +773,8 @@ class _EquipScreenState extends State<EquipScreen> {
               child: FloatingActionButton(
                 heroTag: 'executeTraining',
                 onPressed: executeTraining,
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                backgroundColor:
+                    Theme.of(context).colorScheme.primary,
                 foregroundColor: AppColors.textPrimary,
                 child: const Icon(
                   AppIcons.experience,

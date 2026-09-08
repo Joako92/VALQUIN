@@ -35,7 +35,7 @@ class AppSettingsStorage {
         .insertOnConflictUpdate(
       AppSettingsCompanion(
         id: const Value(1),
-        accentColor: Value(accentColor.value),
+        accentColor: Value(accentColor.toARGB32()),
         language: Value(language.name),
       ),
     );

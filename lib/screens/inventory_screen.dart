@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
+import '../config/app_settings.dart';
+
 import '../database/app_database.dart';
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
@@ -22,12 +24,14 @@ class InventoryScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
   final AppDatabase database;
+  final AppSettings settings;
 
   const InventoryScreen({
     super.key,
     required this.playerManager,
     required this.trainingPlanManager,
     required this.database,
+    required this.settings, 
   });
 
   @override
@@ -41,6 +45,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
       widget.trainingPlanManager;
 
   AppDatabase get database => widget.database;
+
+  AppSettings get settings => widget.settings;
 
   InventoryFilterType selectedFilter = InventoryFilterType.all;
 
@@ -255,14 +261,33 @@ class _InventoryScreenState extends State<InventoryScreen> {
     final parts = <String>[];
 
     if (requirements.level != null) {
-      parts.add('LEVEL: ${requirements.level}');
+      parts.add('${settings.strings.level}: ${requirements.level}');
     }
 
     requirements.stats.forEach((stat, value) {
-      parts.add('${stat.toUpperCase()}: $value');
+      parts.add('${formatStatName(stat)}: $value');
     });
 
-    return parts.isEmpty ? 'NONE' : parts.join(' • ');
+    return parts.isEmpty ? settings.strings.none : parts.join(' • ');
+  }
+
+  String formatStatName(String stat) {
+    switch (stat.toLowerCase()) {
+      case 'strength':
+        return settings.strings.attributeStrength;
+
+      case 'endurance':
+        return settings.strings.attributeEndurance;
+
+      case 'energy':
+        return settings.strings.attributeEnergy;
+
+      case 'stamina':
+        return settings.strings.attributeStamina;
+
+      default:
+        return stat.toUpperCase();
+    }
   }
 
   // ─────────────────────────────────────────────
@@ -343,10 +368,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
         exercisesById[equipmentExercise.exerciseId];
 
     if (exercise == null) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.only(bottom: 5),
         child: Text(
-          '- UNKNOWN EXERCISE',
+          settings.strings.unknownExercise,
           style: TextStyle(
             color: AppColors.textPrimary,
             fontSize: 11,
@@ -493,8 +518,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 const SizedBox(height: 10),
 
                 // EXERCISES
-                const Text(
-                  'EXERCISES',
+                Text(
+                  settings.strings.exercises,
                   style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 10,
@@ -516,8 +541,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 const SizedBox(height: 8),
 
                 // REQUIREMENTS
-                const Text(
-                  'REQUIREMENTS',
+                Text(
+                  settings.strings.requirements,
                   style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 10,
@@ -559,7 +584,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ),
                     ),
                     child: Text(
-                      isEquipped ? 'UNEQUIP' : 'EQUIP',
+                      isEquipped
+                        ? settings.strings.unequip
+                        : settings.strings.equip,
                       style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
@@ -597,7 +624,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         if (!mounted) return;
 
         showMessage(
-          '${item.name} IS ON COOLDOWN',
+          '${item.name} ${settings.strings.isOnCooldown}'
         );
 
         return;
@@ -610,7 +637,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       setState(() {});
 
       showMessage(
-        'UNEQUIPPED ${item.name}',
+        '${settings.strings.unequipped} ${item.name}'
       );
 
       return;
@@ -630,7 +657,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         setState(() {});
 
         showMessage(
-          'EQUIPPED ${item.name}',
+          '${settings.strings.equippedMessage} ${item.name}'
         );
 
         break;
@@ -643,9 +670,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
         setState(() {});
 
         showMessage(
-          'REPLACED '
+          '${settings.strings.replaced} '
           '${result.item!.name} '
-          '→ ${item.name}',
+          '→ ${item.name}'
         );
 
         break;
@@ -654,7 +681,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         if (!mounted) return;
 
         showMessage(
-          '${result.item!.name} IS ON COOLDOWN',
+          '${result.item!.name} ${settings.strings.isOnCooldown}',
         );
 
         break;
@@ -664,7 +691,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
         showMessage(
           '${item.name}: '
-          'UNLOCK REQUIREMENTS NOT MET',
+          '${settings.strings.unlockRequirementsNotMet}'
         );
 
         break;
@@ -674,7 +701,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
         showMessage(
           '${item.name}: '
-          'EQUIP REQUIREMENTS NOT MET',
+          '${settings.strings.equipRequirementsNotMet}'
         );
 
         break;
@@ -707,9 +734,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
     final trainingPlan = trainingPlanManager.trainingPlan;
 
     if (items.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
-          'NO ITEMS',
+          settings.strings.noItems,
           style: TextStyle(
             color: AppColors.textSecondary,
             fontSize: 13,
@@ -831,20 +858,20 @@ class _InventoryScreenState extends State<InventoryScreen> {
         ),
         children: [
           buildFilter(
-            label: 'ALL',
+            label: settings.strings.all,
             selected:
                 selectedFilter == InventoryFilterType.all,
             onTap: selectAll,
           ),
           buildFilter(
-            label: 'EQUIPPED',
+            label: settings.strings.equipped,
             selected:
                 selectedFilter ==
                     InventoryFilterType.equipped,
             onTap: selectEquipped,
           ),
           buildFilter(
-            label: 'SHOULDERS',
+            label: settings.strings.shoulders,
             selected:
                 selectedFilter ==
                         InventoryFilterType.slot &&
@@ -855,7 +882,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ),
           ),
           buildFilter(
-            label: 'HEAD',
+            label: settings.strings.head,
             selected:
                 selectedFilter ==
                         InventoryFilterType.slot &&
@@ -866,7 +893,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ),
           ),
           buildFilter(
-            label: 'WINGS',
+            label: settings.strings.wings,
             selected:
                 selectedFilter ==
                         InventoryFilterType.slot &&
@@ -877,7 +904,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ),
           ),
           buildFilter(
-            label: 'WEAPON',
+            label: settings.strings.weapon,
             selected:
                 selectedFilter ==
                         InventoryFilterType.slot &&
@@ -888,7 +915,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ),
           ),
           buildFilter(
-            label: 'CHEST',
+            label: settings.strings.chest,
             selected:
                 selectedFilter ==
                         InventoryFilterType.slot &&
@@ -899,7 +926,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ),
           ),
           buildFilter(
-            label: 'SHIELD',
+            label: settings.strings.shield,
             selected:
                 selectedFilter ==
                         InventoryFilterType.slot &&
@@ -910,7 +937,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ),
           ),
           buildFilter(
-            label: 'ACCESSORY',
+            label: settings.strings.accessory,
             selected:
                 selectedFilter ==
                         InventoryFilterType.slot &&
@@ -921,7 +948,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ),
           ),
           buildFilter(
-            label: 'LEGS',
+            label: settings.strings.legs,
             selected:
                 selectedFilter ==
                         InventoryFilterType.slot &&
@@ -932,7 +959,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ),
           ),
           buildFilter(
-            label: 'BELT',
+            label: settings.strings.belt,
             selected:
                 selectedFilter ==
                         InventoryFilterType.slot &&

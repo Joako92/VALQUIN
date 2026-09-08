@@ -1,6 +1,8 @@
 class EnglishStrings {
   static const playerNamePlaceholder = 'ENTER A PLAYER NAME';
 
+  // Player Screen
+
   static const attributeStrength = 'STRENGTH';
   static const attributeEndurance = 'ENDURANCE';
   static const attributeEnergy = 'ENERGY';
@@ -43,4 +45,58 @@ class EnglishStrings {
 
   static const playerResetMessage =
       'PLAYER RESET. YOUR TRAINING JOURNEY BEGINS AGAIN.';
+
+  // Inventory Screen
+
+  static const all = 'ALL';
+  static const equipped = 'EQUIPPED';
+
+  static const shoulders = 'SHOULDERS';
+  static const head = 'HEAD';
+  static const wings = 'WINGS';
+  static const weapon = 'WEAPON';
+  static const chest = 'CHEST';
+  static const shield = 'SHIELD';
+  static const accessory = 'ACCESSORY';
+  static const legs = 'LEGS';
+  static const belt = 'BELT';
+
+  static const exercises = 'EXERCISES';
+  static const requirements = 'REQUIREMENTS';
+
+  static const equip = 'EQUIP';
+  static const unequip = 'UNEQUIP';
+
+  static const none = 'NONE';
+  static const unknownExercise = 'UNKNOWN EXERCISE';
+  static const isOnCooldown = 'IS ON COOLDOWN';
+
+  static const unequipped = 'UNEQUIPPED';
+  static const equippedMessage = 'EQUIPPED';
+  static const replaced = 'REPLACED';
+
+  static const unlockRequirementsNotMet =
+      'UNLOCK REQUIREMENTS NOT MET';
+
+  static const equipRequirementsNotMet =
+      'EQUIP REQUIREMENTS NOT MET';
+
+  static const noItems = 'NO ITEMS';
+
+  // Create Player Screen
+
+  static const createYourCharacter = 'CREATE YOUR CHARACTER';
+  static const beginTrainingJourney = 'BEGIN YOUR TRAINING JOURNEY';
+  static const playerName = 'PLAYER NAME';
+  static const enterYourName = 'Enter your name';
+  static const creating = 'CREATING...';
+  static const createPlayer = 'CREATE PLAYER';
+
+  // Equip Screen
+
+  static const cooldown = 'COOLDOWN';
+  static const dailyExercises = 'DAILY EXERCISES';
+  static const noTrainingSelected = 'No training selected.';
+  static const trainingExecuted = 'TRAINING EXECUTED!';
+
 }

@@ -193,33 +193,50 @@ This creates a direct relationship between equipment selection and real-world tr
 
 ### Settings & Customization
 
-VALQUIN includes a centralized application settings system for user-facing visual preferences.
+VALQUIN includes a centralized application settings system for user-facing preferences.
 
 Current settings include:
 
 * Accent color customization.
 * Runtime accent color changes.
+* Language selection.
+* Runtime language changes.
+* Persistent settings storage.
 * Centralized application settings state.
 * Reactive theme updates.
+* Reactive localization updates.
 
-The selected accent color is propagated through the application's theme rather than being manually passed through individual screens.
-
-The architecture follows:
+Supported languages:
 
 ```text
-AppColors
-    │
-    ▼
-AppSettings
-    │
-    ▼
-ThemeData
-    │
-    ▼
-Application UI
+English
+
+Spanish
 ```
 
-This allows visual preferences to affect the application consistently while keeping gameplay-related colors independent from user customization.
+Settings are persisted locally through SQLite, allowing user preferences to survive application restarts.
+
+The settings architecture follows:
+
+```text
+AppSettings
+    │
+    ├── Accent Color
+    │
+    └── Language
+           │
+           ▼
+   AppSettingsStorage
+           │
+           ▼
+        SQLite
+```
+
+The active accent color is propagated through the application's theme rather than being manually passed through individual screens.
+
+The selected language is consumed through the centralized localization system, keeping screens independent from language-specific implementation details.
+
+This separation keeps user preferences independent from gameplay state, player progression and equipment rarity semantics.
 
 ---
 
@@ -465,9 +482,9 @@ This approach allows VALQUIN to remain visually clean while gradually introducin
 
 ### Current Version
 
-**v0.6.5 — Settings & Accent Customization**
+**v0.6.6 — Settings & Customization**
 
-Version 0.6.5 extends the visual foundation established in v0.6.4 by introducing the first user-facing application customization system.
+Version 0.6.6 completes the first user-facing application customization layer established during the v0.6 visual identity milestone.
 
 The current application includes:
 
@@ -516,7 +533,12 @@ The current application includes:
 * Custom navigation layout and positioning.
 * Settings system.
 * Runtime accent color customization.
+* Runtime language selection.
+* English and Spanish localization.
+* Persistent accent color settings.
+* Persistent language settings.
 * Reactive application theme.
+* Reactive localization updates.
 * Theme-based accent color usage across the UI.
 
 The core database and domain architecture are now established.
@@ -543,11 +565,13 @@ Atmosphere
 Interaction states
 
 Customization
+
+Localization
 ```
 
 The first major visual foundation of VALQUIN is now complete.
 
-The application also now provides the first layer of user customization without coupling user preferences to gameplay or rarity semantics.
+The application also provides a persistent user customization layer without coupling user preferences to gameplay or rarity semantics.
 
 The next development stage will focus on **deeper character presentation, avatar customization, equipment visualization and visual feedback**, rather than further redesigning the application's basic UI structure.
 
@@ -589,6 +613,12 @@ The v0.6 milestone focuses on transforming the functional RPG interface into a c
 * Accent color customization.
 * Runtime theme updates.
 * Theme-based accent color consumption.
+* Language selection.
+* English and Spanish localization.
+* Runtime language updates.
+* Persistent application settings.
+* Persistent accent color.
+* Persistent language selection.
 
 ### Remaining Visual Work
 
@@ -642,9 +672,7 @@ The remaining visual work will continue outside the basic UI foundation:
 
 ### Application Customization
 
-* Persistent user settings.
 * Additional accent color options.
-* Language selection.
 * Custom avatar configuration.
 * Additional personalization options.
 

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:solo_training_001/managers/player_manager.dart';
-import 'package:solo_training_001/models/player.dart';
-import 'package:solo_training_001/persistence/player_storage.dart';
+import 'package:valquin/managers/player_manager.dart';
+import 'package:valquin/models/player.dart';
+import 'package:valquin/persistence/player_storage.dart';
 
 class FakePlayerStorage extends PlayerStorage {
   Player? savedPlayer;

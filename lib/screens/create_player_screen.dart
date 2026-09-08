@@ -54,7 +54,7 @@ class _CreatePlayerScreenState
   AppDatabase get database =>
       widget.database;
 
-  AppSettings get settings => 
+  AppSettings get settings =>
       widget.settings;
 
   // --------------------------------------------------
@@ -76,11 +76,11 @@ class _CreatePlayerScreenState
 
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: AppColors.error,
           content: Text(
-            'ENTER A PLAYER NAME',
-            style: TextStyle(
+            settings.strings.playerNamePlaceholder,
+            style: const TextStyle(
               color: AppColors.textPrimary,
               fontWeight: FontWeight.bold,
             ),
@@ -137,10 +137,10 @@ class _CreatePlayerScreenState
 
               const SizedBox(height: 30),
 
-              const Text(
-                'CREATE YOUR CHARACTER',
+              Text(
+                settings.strings.createYourCharacter,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2,
@@ -150,10 +150,10 @@ class _CreatePlayerScreenState
 
               const SizedBox(height: 8),
 
-              const Text(
-                'BEGIN YOUR TRAINING JOURNEY',
+              Text(
+                settings.strings.beginTrainingJourney,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   letterSpacing: 2,
                   color: AppColors.textSecondary,
@@ -174,10 +174,11 @@ class _CreatePlayerScreenState
                 style: const TextStyle(
                   color: AppColors.textPrimary,
                 ),
-                cursorColor: Theme.of(context).colorScheme.primary,
+                cursorColor:
+                    Theme.of(context).colorScheme.primary,
                 decoration: InputDecoration(
-                  labelText: 'PLAYER NAME',
-                  hintText: 'Enter your name',
+                  labelText: settings.strings.playerName,
+                  hintText: settings.strings.enterYourName,
 
                   labelStyle: const TextStyle(
                     color: AppColors.textSecondary,
@@ -216,7 +217,10 @@ class _CreatePlayerScreenState
                     borderRadius:
                         BorderRadius.circular(12),
                     borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.primary,
+                      color:
+                          Theme.of(context)
+                              .colorScheme
+                              .primary,
                       width: 2,
                     ),
                   ),
@@ -250,7 +254,8 @@ class _CreatePlayerScreenState
                           child:
                               CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: AppColors.textPrimary,
+                            color:
+                                AppColors.textPrimary,
                           ),
                         )
                       : const Icon(
@@ -259,8 +264,8 @@ class _CreatePlayerScreenState
 
                   label: Text(
                     isCreating
-                        ? 'CREATING...'
-                        : 'CREATE PLAYER',
+                        ? settings.strings.creating
+                        : settings.strings.createPlayer,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -271,7 +276,9 @@ class _CreatePlayerScreenState
                   style:
                       ElevatedButton.styleFrom(
                     backgroundColor:
-                        Theme.of(context).colorScheme.primary,
+                        Theme.of(context)
+                            .colorScheme
+                            .primary,
                     foregroundColor:
                         AppColors.textPrimary,
                     disabledBackgroundColor:
