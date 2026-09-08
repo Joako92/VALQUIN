@@ -16,10 +16,10 @@ class AppColors {
   static const Color border = Color(0xFF3A3A3A);
 
   // ACCENT
-  // static const Color accent = Color(0xFFE10600);
-  static const Color accent = Color(0xFF2979FF);
+  static const Color accent = Color(0xFFE10600);
+  // static const Color accent = Color(0xFF2979FF);
   // static const Color accentLight = Color(0xFFFF2A23);
-  static const Color accentDark = Color(0xFF9E0000);
+  // static const Color accentDark = Color(0xFF9E0000);
 
   // TEXT
   static const Color textPrimary = Color(0xFFFFFFFF);

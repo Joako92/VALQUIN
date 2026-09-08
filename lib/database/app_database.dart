@@ -14,6 +14,7 @@ import 'tables/equipment_item_exercises.dart';
 import 'tables/equipment_item_stats.dart';
 import 'tables/equipment_item_unlock_requirements.dart';
 import 'tables/equipment_item_equip_requirements.dart';
+import 'tables/app_settings.dart';
 
 // --------------------------------------------------
 // DOMAIN MODELS
@@ -39,6 +40,7 @@ part 'app_database.g.dart';
     EquipmentItemStats,
     EquipmentItemUnlockRequirements,
     EquipmentItemEquipRequirements,
+    AppSettings,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -51,7 +53,19 @@ class AppDatabase extends _$AppDatabase {
         );
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (Migrator m) async {
+      await m.createAll();
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 2) {
+        await m.createTable(appSettings);
+      }
+    },
+  );
 
   // ==================================================
   // TEST METHODS

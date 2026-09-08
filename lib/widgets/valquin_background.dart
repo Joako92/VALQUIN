@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-// import '../config/app_config.dart';
-
 class ValquinBackground extends StatelessWidget {
   const ValquinBackground({
     super.key,

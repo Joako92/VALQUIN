@@ -13,6 +13,7 @@ import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
 import 'managers/class_manager.dart';
 
+import 'persistence/app_settings_storage.dart';
 import 'persistence/player_storage.dart';
 import 'persistence/training_plan_storage.dart';
 
@@ -49,6 +50,20 @@ Future<void> main() async {
   // await DatabaseAdmin.debugExerciseDatabase(database);
 
   // --------------------------------------------------
+  // APP SETTINGS
+  // --------------------------------------------------
+
+  final appSettingsStorage = AppSettingsStorage(
+    database: database,
+  );
+
+  final settings = AppSettings(
+    storage: appSettingsStorage,
+  );
+
+  await settings.load();
+
+  // --------------------------------------------------
   // PLAYER
   // --------------------------------------------------
 
@@ -82,8 +97,6 @@ Future<void> main() async {
   // --------------------------------------------------
   // APP
   // --------------------------------------------------
-
-  final settings = AppSettings();
 
   runApp(
     SoloTrainingApp(
