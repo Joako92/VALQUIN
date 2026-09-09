@@ -36,6 +36,35 @@ class _PlayerScreenState extends State<PlayerScreen> {
   AppSettings get settings => widget.settings;
 
   // --------------------------------------------------
+  // AVATAR
+  // --------------------------------------------------
+
+  int _avatarViewIndex = 0;
+
+  final List<String> _avatarViews = [
+    'assets/images/avatar/female_01_front.png',
+    'assets/images/avatar/female_01_3q.png',
+    'assets/images/avatar/female_01_side.png',
+    'assets/images/avatar/female_01_back.png',
+  ];
+
+  void _rotateAvatarRight() {
+    if (_avatarViewIndex < _avatarViews.length - 1) {
+      setState(() {
+        _avatarViewIndex++;
+      });
+    }
+  }
+
+  void _rotateAvatarLeft() {
+    if (_avatarViewIndex > 0) {
+      setState(() {
+        _avatarViewIndex--;
+      });
+    }
+  }
+
+  // --------------------------------------------------
   // BUILD
   // --------------------------------------------------
 
@@ -302,7 +331,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   children: [
                     // COLUMN
                     Transform.translate(
-                      offset: const Offset(0, 240),
+                      offset: const Offset(0, 320),
                       child: Transform.scale(
                         scaleX: 1.2,
                         scaleY: 0.7,
@@ -314,11 +343,22 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     ),
 
                     // AVATAR
-                    Transform.translate(
-                      offset: const Offset(0, -100),
-                      child: Image.asset(
-                        'assets/images/Avatar-05.png',
-                        fit: BoxFit.contain,
+                    GestureDetector(
+                      onHorizontalDragEnd: (details) {
+                        final velocity = details.primaryVelocity ?? 0;
+
+                        if (velocity < 0) {
+                          _rotateAvatarRight();
+                        } else if (velocity > 0) {
+                          _rotateAvatarLeft();
+                        }
+                      },
+                      child: Transform.translate(
+                        offset: const Offset(0, 30),
+                        child: Image.asset(
+                          _avatarViews[_avatarViewIndex],
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ],

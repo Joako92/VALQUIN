@@ -49,6 +49,53 @@ The project is designed around a simple principle:
 * Permanent progression milestones.
 * Player reset while preserving unlocked equipment.
 
+### Avatar System
+
+VALQUIN now introduces the first stage of its character avatar system.
+
+The avatar represents the player's visual identity inside the RPG layer and is designed to become the foundation for future character customization and equipment visualization.
+
+Current functionality includes:
+
+* Male avatar 01.
+* Dedicated avatar artwork.
+* Multiple character views.
+* Front view.
+* Front 3/4 view.
+* Side profile.
+* Back view.
+* Horizontal swipe navigation between available views.
+* Consistent character identity across all views.
+
+The current avatar is intentionally presented as a simple, lightly equipped beginner character.
+
+This establishes the base visual layer that future equipment and customization systems will build upon.
+
+The current rotation flow is:
+
+```text
+Front
+
+  │
+  ▼
+
+Front 3/4
+
+  │
+  ▼
+
+Side
+
+  │
+  ▼
+
+Back
+```
+
+The current implementation intentionally uses four production views rather than a complete 360-degree sprite system.
+
+A future iteration will extend the avatar rotation into a full **360-degree character view**.
+
 ### Training System
 
 * Exercises with multiple variants.
@@ -220,16 +267,26 @@ The settings architecture follows:
 
 ```text
 AppSettings
+
     │
+
     ├── Accent Color
+
     │
+
     └── Language
+
            │
+
            ▼
-   AppSettingsStorage
+
+    AppSettingsStorage
+
            │
+
            ▼
-        SQLite
+
+         SQLite
 ```
 
 The active accent color is propagated through the application's theme rather than being manually passed through individual screens.
@@ -260,6 +317,117 @@ The interface is intentionally restrained:
 The core visual principle is:
 
 > **The UI stays quiet. The world speaks through the assets.**
+
+### Character Identity
+
+With v0.7.0, VALQUIN introduces the first dedicated character identity layer.
+
+The avatar is treated as a world-building element rather than a conventional UI component.
+
+The base character intentionally uses a simple and understated appearance:
+
+* Slim, lightly built silhouette.
+* Slightly elongated limbs.
+* Simple fitted clothing.
+* Barefoot appearance.
+* Minimal visual accessories.
+* Distinctive anime-inspired facial features.
+* Large expressive eyes.
+* Simple hairstyle.
+
+The character is intentionally designed to look like a beginner before equipment is introduced.
+
+This establishes a visual progression principle:
+
+```text
+BASE CHARACTER
+
+      │
+
+      ▼
+
+  EQUIPMENT
+
+      │
+
+      ▼
+
+VISUAL IDENTITY
+
+      │
+
+      ▼
+
+SPECIALIZATION
+```
+
+The base avatar is therefore not intended to represent the final power level of the player.
+
+Its purpose is to provide a stable visual foundation for future equipment, customization and progression systems.
+
+### Avatar Views
+
+The first avatar implementation uses four dedicated production views:
+
+```text
+Front
+Front 3/4
+Side
+Back
+```
+
+The same character design is preserved across all views.
+
+The avatar can currently be rotated through these views using horizontal swipe gestures.
+
+The implementation is intentionally simple at this stage.
+
+The current system validates:
+
+* Asset loading.
+* View switching.
+* Character positioning.
+* Consistent presentation.
+* Gesture interaction.
+* Integration with the Status screen.
+
+Future iterations will expand this into a complete 360-degree rotation system.
+
+### Avatar Architecture
+
+Avatar assets are stored independently from the functional UI:
+
+```text
+assets/
+└── images/
+    └── avatar/
+        ├── male_01_front.png
+        ├── male_01_3q.png
+        ├── male_01_side.png
+        └── male_01_back.png
+```
+
+The avatar system is designed around the idea of separating the character's base appearance from future equipment layers.
+
+The long-term visual architecture is:
+
+```text
+Base Avatar
+
+    │
+
+    ├── Hair
+
+    ├── Equipment
+
+    ├── Weapons
+
+    └── Visual Effects
+```
+
+This allows the character to remain visually consistent while equipment progressively changes the player's appearance.
+
+The current four-view system is the first step toward that architecture.
 
 ### Branding
 
@@ -474,6 +642,8 @@ Mythology
 Atmosphere
 ```
 
+With v0.7.0, the character becomes the first major world-building element capable of interacting directly with the player's actions.
+
 This approach allows VALQUIN to remain visually clean while gradually introducing a stronger fantasy identity through custom assets.
 
 ---
@@ -482,9 +652,9 @@ This approach allows VALQUIN to remain visually clean while gradually introducin
 
 ### Current Version
 
-**v0.6.6 — Settings & Customization**
+**v0.7.0 — Avatar Identity & Rotation**
 
-Version 0.6.6 completes the first user-facing application customization layer established during the v0.6 visual identity milestone.
+Version 0.7.0 introduces the first functional avatar system for VALQUIN.
 
 The current application includes:
 
@@ -540,8 +710,17 @@ The current application includes:
 * Reactive application theme.
 * Reactive localization updates.
 * Theme-based accent color usage across the UI.
+* Initial male avatar.
+* Dedicated avatar assets.
+* Four avatar production views.
+* Front avatar view.
+* Front 3/4 avatar view.
+* Side avatar view.
+* Back avatar view.
+* Horizontal swipe avatar rotation.
+* Avatar integration into the Status screen.
 
-The core database and domain architecture are now established.
+The core database and domain architecture remain established.
 
 The functional UI has been redesigned around a consistent visual foundation.
 
@@ -562,18 +741,24 @@ Background
 
 Atmosphere
 
-Interaction states
+Character Identity
+
+Avatar Presentation
+
+Interaction States
 
 Customization
 
 Localization
 ```
 
-The first major visual foundation of VALQUIN is now complete.
+Version 0.7.0 represents the beginning of the character presentation layer.
 
-The application also provides a persistent user customization layer without coupling user preferences to gameplay or rarity semantics.
+The avatar currently provides a stable visual foundation for future equipment visualization and character customization.
 
-The next development stage will focus on **deeper character presentation, avatar customization, equipment visualization and visual feedback**, rather than further redesigning the application's basic UI structure.
+The current rotation system intentionally uses four views.
+
+The next avatar iteration will expand the rotation toward a complete **360-degree view**.
 
 ---
 
@@ -581,7 +766,7 @@ The next development stage will focus on **deeper character presentation, avatar
 
 ## v0.6 — UI & Visual Identity
 
-The v0.6 milestone focuses on transforming the functional RPG interface into a cohesive visual experience.
+The v0.6 milestone focused on transforming the functional RPG interface into a cohesive visual experience.
 
 ### Completed
 
@@ -620,25 +805,55 @@ The v0.6 milestone focuses on transforming the functional RPG interface into a c
 * Persistent accent color.
 * Persistent language selection.
 
-### Remaining Visual Work
+---
 
-The remaining visual work will continue outside the basic UI foundation:
+## v0.7 — Avatar Identity & Rotation
 
-* Custom splash screen.
-* Card visual refinement.
-* Custom borders and frames.
-* Decorative UI elements.
-* Improved stat visualization.
-* Training feedback.
-* Animations.
-* Custom character/avatar.
+The v0.7 milestone introduces the first real character presentation system.
+
+### Completed
+
+* Initial male avatar.
+* Male avatar 01.
+* Dedicated avatar artwork.
+* Four production views.
+* Front view.
+* Front 3/4 view.
+* Side profile.
+* Back view.
+* Avatar asset organization.
+* Avatar integration into the Status screen.
+* Avatar positioning and presentation.
+* Horizontal swipe interaction.
+* Sequential avatar rotation.
+* Base character designed as an equipment-ready RPG avatar.
+* Foundation for future equipment layering.
+
+### Next Step
+
+* Full 360-degree avatar rotation.
+* Bidirectional continuous rotation.
+* Additional avatar variants.
+* Female avatar variants.
+* Blond and dark-haired variants.
+* Improved avatar transition animations.
+* Avatar selection system.
+* Persistent avatar selection.
+
+### Future Avatar & Equipment Work
+
 * Equipment visual layering.
-* Deeper character presentation.
-* Dynamic visual states.
+* Weapon visualization.
+* Armor visualization.
+* Hair variations.
+* Character customization.
+* Dynamic equipment appearance.
+* Visual progression based on player equipment.
+* Character-specific visual states.
 
 ---
 
-## Future Development
+# Future Development
 
 ### RPG Progression
 
@@ -660,8 +875,11 @@ The remaining visual work will continue outside the basic UI foundation:
 
 ### Visual Experience
 
+* Complete 360-degree avatar rotation.
 * Character customization.
+* Multiple avatar variants.
 * Equipment visual representation.
+* Weapon visualization.
 * Animated progression.
 * Unlock animations.
 * Level-up feedback.
@@ -674,6 +892,7 @@ The remaining visual work will continue outside the basic UI foundation:
 
 * Additional accent color options.
 * Custom avatar configuration.
+* Avatar selection.
 * Additional personalization options.
 
 ### Long-Term Vision
@@ -715,7 +934,7 @@ REAL TRAINING
 
       ▼
 
-   EQUIPMENT
+  EQUIPMENT
 
       │
 
