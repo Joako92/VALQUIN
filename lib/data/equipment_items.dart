@@ -32,7 +32,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'caminata',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -55,7 +55,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'trote',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -82,7 +82,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'flexiones_brazos',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -109,7 +109,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'press_militar',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -136,7 +136,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'curl_biceps',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -163,7 +163,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'fondos_banco',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -190,7 +190,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'sentadilla_libre',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -217,7 +217,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'plancha_frontal',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -301,7 +301,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'vuelo_lateral',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -341,7 +341,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'press_banca',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -381,7 +381,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'curl_alternado',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -421,7 +421,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'sentadilla_carga',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -461,7 +461,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'crunches',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -501,7 +501,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'triceps_polea',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -539,7 +539,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'polea_pecho',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -553,7 +553,7 @@ final List<EquipmentItem> equipmentItems = [
     name: 'BITÁCORA SEMANAL',
     rarity: Rarity.common,
     slot: EquipmentSlot.accessory,
-    cooldownHours: 168,
+    cooldownHours: 168, // ONE WEEK
 
     unlockRequirements: Requirement(
       stats: {
@@ -622,7 +622,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'saltos_soga',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -662,7 +662,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'aperturas_mancuernas',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -700,7 +700,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'vuelo_frontal',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -738,7 +738,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'curl_martillo',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -776,7 +776,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'extension_triceps',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -814,7 +814,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'prensa_piernas',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -852,7 +852,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'elevaciones_piernas',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -890,7 +890,7 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'remo_sentado',
-        maxVariant: 0,
+        maxVariant: 1,
       ),
     ],
   ),
@@ -936,11 +936,11 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'trote',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'saltos_soga',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -982,11 +982,11 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'flexiones_brazos',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'press_banca',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1028,11 +1028,11 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'press_militar',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'vuelo_lateral',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1074,11 +1074,11 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'curl_biceps',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'curl_alternado',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1120,11 +1120,11 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'fondos_banco',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'triceps_polea',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1166,11 +1166,11 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'sentadilla_libre',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'sentadilla_carga',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1212,11 +1212,11 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'plancha_frontal',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'crunches',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1258,11 +1258,11 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'polea_pecho',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'remo_sentado',
-        maxVariant: 0,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1305,15 +1305,15 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'press_banca',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'flexiones_brazos',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'aperturas_mancuernas',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1384,15 +1384,15 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'curl_biceps',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'curl_alternado',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'curl_barra',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1463,15 +1463,15 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'fondos_banco',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'triceps_polea',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'extension_triceps',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1542,15 +1542,15 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'trote',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'saltos_soga',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'caminata',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
     ],
   ),
@@ -1627,15 +1627,15 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [
       EquipmentExercise(
         exerciseId: 'remo_sentado',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'polea_pecho',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'remo_barra',
-        maxVariant: 1,
+        maxVariant: 2,
       ),
     ],
   ),

@@ -40,6 +40,7 @@ class _MainScreenState extends State<MainScreen> {
     final screens = [
       PlayerScreen(
         playerManager: widget.playerManager,
+        trainingPlanManager: widget.trainingPlanManager,
         classManager: widget.classManager,
         settings: widget.settings,
       ),

@@ -198,7 +198,7 @@ class _EquipScreenState extends State<EquipScreen> {
                     ? '[${variantIndex + 1}]'
                     : '${variantIndex + 1}',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight:
                       variantIndex == selectedVariant
                           ? FontWeight.bold
@@ -469,7 +469,7 @@ class _EquipScreenState extends State<EquipScreen> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 8,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.4,
                         color: item == null

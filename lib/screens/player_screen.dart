@@ -3,20 +3,31 @@ import 'package:valquin/localization/language.dart';
 
 import '../config/app_config.dart';
 import '../config/app_settings.dart';
+import '../config/equipment_visual_config.dart';
+
+import '../renderers/avatar_renderer.dart';
+import '../renderers/equipment_renderer.dart';
+
 import '../managers/player_manager.dart';
 import '../managers/class_manager.dart';
+import '../managers/training_plan_manager.dart';
+
 import '../models/player.dart';
+import '../models/equipment_slot.dart';
+
 import '../widgets/valquin_icon.dart';
 
 class PlayerScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final ClassManager classManager;
+  final TrainingPlanManager trainingPlanManager;
   final AppSettings settings;
 
   const PlayerScreen({
     super.key,
     required this.playerManager,
     required this.classManager,
+    required this.trainingPlanManager,
     required this.settings,
   });
 
@@ -33,6 +44,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
   ClassManager get classManager => widget.classManager;
 
+  TrainingPlanManager get trainingPlanManager =>
+      widget.trainingPlanManager;
+
   AppSettings get settings => widget.settings;
 
   // --------------------------------------------------
@@ -41,15 +55,27 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
   int _avatarViewIndex = 0;
 
-  final List<String> _avatarViews = [
-    'assets/images/avatar/female_01_front.png',
-    'assets/images/avatar/female_01_3q.png',
-    'assets/images/avatar/female_01_side.png',
-    'assets/images/avatar/female_01_back.png',
-  ];
+  EquipmentView get _equipmentView {
+    switch (_avatarViewIndex) {
+      case 0:
+        return EquipmentView.front;
+
+      case 1:
+        return EquipmentView.threeQuarter;
+
+      case 2:
+        return EquipmentView.side;
+
+      case 3:
+        return EquipmentView.back;
+
+      default:
+        return EquipmentView.front;
+    }
+  }
 
   void _rotateAvatarRight() {
-    if (_avatarViewIndex < _avatarViews.length - 1) {
+    if (_avatarViewIndex < 3) {
       setState(() {
         _avatarViewIndex++;
       });
@@ -89,11 +115,31 @@ class _PlayerScreenState extends State<PlayerScreen> {
     final availableClasses =
         classManager.availableClasses(player);
 
+    // --------------------------------------------------
+    // EQUIPPED ITEMS
+    // --------------------------------------------------
+
+    final trainingPlan = trainingPlanManager.trainingPlan;
+    final equippedItems = trainingPlan.equipment;
+
+    final equippedBySlot = {
+      for (final item in equippedItems)
+        item.slot: item,
+    };
+
+    final head = equippedBySlot[EquipmentSlot.head];
+    final shoulders = equippedBySlot[EquipmentSlot.shoulders];
+    final chest = equippedBySlot[EquipmentSlot.chest];
+    final belt = equippedBySlot[EquipmentSlot.belt];
+    final legs = equippedBySlot[EquipmentSlot.legs];
+
+    final hasHelmet = head != null;
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(10),
           child: Column(
             children: [
               // --------------------------------------------------
@@ -108,18 +154,25 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   // STATS CARD
                   // --------------------------------------------------
 
+                  Positioned.fill(
+                    child: Image.asset(
+                      'assets/images/card.png',
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 24,
+                      horizontal: 50,
+                      vertical: 34,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: AppColors.border,
-                      ),
+                      // color: AppColors.surface,
+                      // borderRadius: BorderRadius.circular(20),
+                      // border: Border.all(
+                      //   color: AppColors.border,
+                      // ),
                     ),
                     child: Column(
                       children: [
@@ -270,8 +323,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   // --------------------------------------------------
 
                   Positioned(
-                    top: 12,
-                    right: 12,
+                    top: 25,
+                    right: 15,
                     child: IconButton(
                       onPressed: () {
                         _showSettingsDialog(context);
@@ -285,39 +338,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     ),
                   ),
 
-                  // --------------------------------------------------
-                  // TOP GEM
-                  // --------------------------------------------------
-
-                  Positioned(
-                    top: -15,
-                    child: Transform.scale(
-                      scaleX: 5.0,
-                      scaleY: 1.0,
-                      child: Image.asset(
-                        'assets/images/gema.png',
-                        width: 60,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-
-                  // --------------------------------------------------
-                  // BOTTOM FRAME
-                  // --------------------------------------------------
-
-                  Positioned(
-                    bottom: -98,
-                    child: Transform.scale(
-                      scaleX: 1.55,
-                      scaleY: 0.7,
-                      child: Image.asset(
-                        'assets/images/marco.png',
-                        width: 320,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
                 ],
               ),
 
@@ -329,7 +349,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 child: Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
+                    // --------------------------------------------------
                     // COLUMN
+                    // --------------------------------------------------
+
                     Transform.translate(
                       offset: const Offset(0, 320),
                       child: Transform.scale(
@@ -342,10 +365,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       ),
                     ),
 
-                    // AVATAR
+                    // --------------------------------------------------
+                    // AVATAR + EQUIPMENT
+                    // --------------------------------------------------
+
                     GestureDetector(
                       onHorizontalDragEnd: (details) {
-                        final velocity = details.primaryVelocity ?? 0;
+                        final velocity =
+                            details.primaryVelocity ?? 0;
 
                         if (velocity < 0) {
                           _rotateAvatarRight();
@@ -355,9 +382,69 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       },
                       child: Transform.translate(
                         offset: const Offset(0, 30),
-                        child: Image.asset(
-                          _avatarViews[_avatarViewIndex],
-                          fit: BoxFit.contain,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // --------------------------------------------------
+                            // BASE AVATAR
+                            // --------------------------------------------------
+
+                            AvatarRenderer(
+                              avatarId: 'male_02',
+                              viewIndex: _avatarViewIndex,
+                              hasHelmet: hasHelmet,
+                            ),
+
+                            // --------------------------------------------------
+                            // LEGS
+                            // --------------------------------------------------
+
+                            if (legs != null)
+                              EquipmentRenderer(
+                                item: legs,
+                                view: _equipmentView,
+                              ),
+
+                            // --------------------------------------------------
+                            // CHEST
+                            // --------------------------------------------------
+
+                            if (chest != null)
+                              EquipmentRenderer(
+                                item: chest,
+                                view: _equipmentView,
+                              ),
+
+                            // --------------------------------------------------
+                            // BELT
+                            // --------------------------------------------------
+
+                            if (belt != null)
+                              EquipmentRenderer(
+                                item: belt,
+                                view: _equipmentView,
+                              ),
+
+                            // --------------------------------------------------
+                            // SHOULDERS
+                            // --------------------------------------------------
+
+                            if (shoulders != null)
+                              EquipmentRenderer(
+                                item: shoulders,
+                                view: _equipmentView,
+                              ),
+
+                            // --------------------------------------------------
+                            // HEAD
+                            // --------------------------------------------------
+
+                            if (head != null)
+                              EquipmentRenderer(
+                                item: head,
+                                view: _equipmentView,
+                              ),
+                          ],
                         ),
                       ),
                     ),

@@ -76,6 +76,20 @@ Future<void> main() async {
   await playerManager.loadPlayer();
 
   // --------------------------------------------------
+  // EDIT PLAYER - DEBUG ONLY
+  // --------------------------------------------------
+
+  // await playerManager.loadPlayer();
+
+  // // DEBUG ONLY
+  // await playerManager.applyDebugStats(
+  //   strength: 2500,
+  //   endurance: 2500,
+  //   energy: 2500,
+  //   stamina: 2500,
+  // );
+
+  // --------------------------------------------------
   // TRAINING PLAN
   // --------------------------------------------------
 

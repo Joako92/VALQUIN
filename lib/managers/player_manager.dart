@@ -63,6 +63,28 @@ class PlayerManager {
   }
 
   // --------------------------------------------------
+  // EDIT STATS
+  // --------------------------------------------------
+
+  Future<void> applyDebugStats({
+    required int strength,
+    required int endurance,
+    required int energy,
+    required int stamina,
+  }) async {
+    if (_player == null) {
+      return;
+    }
+
+    _player!.stats.strength = strength;
+    _player!.stats.endurance = endurance;
+    _player!.stats.energy = energy;
+    _player!.stats.stamina = stamina;
+
+    await savePlayer();
+  }
+
+  // --------------------------------------------------
   // RESET PLAYER
   // --------------------------------------------------
 

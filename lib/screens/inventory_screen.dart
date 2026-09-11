@@ -405,7 +405,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(
           color: AppColors.textPrimary,
-          fontSize: 11,
+          fontSize: 14,
         ),
       ),
     );
@@ -447,29 +447,63 @@ class _InventoryScreenState extends State<InventoryScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ─────────────────────────────────────
-          // ITEM ICON
+          // ITEM ICON + EQUIP BUTTON
           // ─────────────────────────────────────
 
-          Container(
-            width: 90,
-            height: 90,
-            decoration: BoxDecoration(
-              color: AppColors.background,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: rarity.withValues(alpha: 0.7),
+          Column(
+            children: [
+              Container(
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  color: AppColors.background,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: rarity.withValues(alpha: 0.7),
+                  ),
+                ),
+                child: Center(
+                  child: ValquinIconGlow(
+                    asset: slotIconAsset(item.slot),
+                    size: 90,
+                    color: rarity,
+                    glowColor: glow,
+                    glowOpacity: 0.75,
+                    blur: 8,
+                  ),
+                ),
               ),
-            ),
-            child: Center(
-              child: ValquinIconGlow(
-                asset: slotIconAsset(item.slot),
-                size: 90,
-                color: rarity,
-                glowColor: glow,
-                glowOpacity: 0.75,
-                blur: 8,
+
+              const SizedBox(height: 8),
+
+              SizedBox(
+                width: 90,
+                height: 34,
+                child: ElevatedButton(
+                  onPressed: canEquip || isEquipped
+                      ? () => handleEquip(item)
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: rarity,
+                    foregroundColor: AppColors.background,
+                    disabledBackgroundColor:
+                        AppColors.surfaceLight,
+                    disabledForegroundColor:
+                        AppColors.textDisabled,
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: Text(
+                    isEquipped
+                        ? settings.strings.unequip
+                        : settings.strings.equip,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
 
           const SizedBox(width: 16),
@@ -489,20 +523,33 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: AppColors.textPrimary,
-                    fontSize: 20,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
 
                 const SizedBox(height: 4),
 
-                // RARITY + VARIANT SELECTOR
+                // RARITY 
+                Text(
+                  item.rarity.name.toUpperCase(),
+                  style: TextStyle(
+                    color: rarity,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                // EXERCISES + VARIANT SELECTOR
                 Row(
                   children: [
                     Text(
-                      item.rarity.name.toUpperCase(),
+                      settings.strings.exercises,
                       style: TextStyle(
-                        color: rarity,
+                        color: AppColors.textSecondary,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.2,
@@ -514,19 +561,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     buildVariantSelector(item),
                   ],
                 ),
-
-                const SizedBox(height: 10),
-
-                // EXERCISES
-                Text(
-                  settings.strings.exercises,
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
-                ),
+                
 
                 const SizedBox(height: 4),
 
@@ -559,41 +594,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: AppColors.textPrimary,
-                    fontSize: 11,
+                    fontSize: 8,
                   ),
                 ),
 
                 const SizedBox(height: 10),
 
-                // EQUIP BUTTON
-                SizedBox(
-                  height: 34,
-                  child: ElevatedButton(
-                    onPressed: canEquip || isEquipped
-                        ? () => handleEquip(item)
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: rarity,
-                      foregroundColor: AppColors.background,
-                      disabledBackgroundColor:
-                          AppColors.surfaceLight,
-                      disabledForegroundColor:
-                          AppColors.textDisabled,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
-                    ),
-                    child: Text(
-                      isEquipped
-                        ? settings.strings.unequip
-                        : settings.strings.equip,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
