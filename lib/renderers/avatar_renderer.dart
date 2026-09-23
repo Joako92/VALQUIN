@@ -32,7 +32,7 @@ class AvatarRenderer extends StatelessWidget {
     final suffix = hasHelmet ? '_b' : '';
 
     return 'assets/images/avatar/'
-        '${avatarId}_${viewName}${suffix}.png';
+        '${avatarId}_$viewName$suffix.png';
   }
 
   @override

@@ -180,7 +180,9 @@ const Map<String, EquipmentVisualConfig> equipmentVisualConfigs = {
   'capa_pesada': EquipmentVisualConfig(),
   'capa_sabio': EquipmentVisualConfig(
     offsets: {
-      EquipmentView.front: Offset(23, 0),
+      EquipmentView.front: Offset(28, 0),
+      EquipmentView.threeQuarter: Offset(26, 0),
+      EquipmentView.side: Offset(24, 0),
       EquipmentView.back: Offset(-38, 0),
     }
   ),
