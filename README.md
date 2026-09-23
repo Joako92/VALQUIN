@@ -704,7 +704,7 @@ Atmosphere
 
 With the v0.7 milestone, the character became the first major world-building element capable of interacting directly with the player's progression.
 
-With v0.7.1, equipment can now participate in that visual layer through dedicated assets and frontend rendering.
+With v0.7.2, equipment can now participate in that visual layer through dedicated assets and frontend rendering.
 
 This creates the first complete visual loop between:
 
@@ -765,9 +765,9 @@ The database layer is built around SQLite and Drift, keeping persistent gameplay
 
 ### Current Version
 
-**v0.7.1 — Avatar & Equipment Vertical Slice**
+**v0.7.2 — Player Screen Modularization**
 
-Version 0.7.1 closes the first functional character presentation vertical slice for VALQUIN.
+Version 0.7.2 refactors player screen to be an orchestator.
 
 The current application includes:
 
@@ -878,7 +878,7 @@ Customization
 Localization
 ```
 
-Version 0.7.1 represents the first functional vertical slice connecting the RPG character, visual equipment and training systems.
+Version 0.7.2 is an intermediate version before working on Create Player Screen.
 
 The avatar can now act as a stable visual foundation while equipment changes the player's appearance.
 
@@ -957,9 +957,9 @@ The v0.7 milestone introduced the first real character presentation system.
 * Base character designed as an equipment-ready RPG avatar.
 * Foundation for future equipment layering.
 
-### v0.7.1 — Equipment Vertical Slice
+### v0.7.2 — Mid Version
 
-The v0.7.1 milestone extends the avatar system into the first functional equipment visualization layer.
+The v0.7.2 creates modularization on Player Screen.
 
 ### Completed
 
