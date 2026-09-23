@@ -59,80 +59,136 @@ const Map<String, EquipmentVisualConfig> equipmentVisualConfigs = {
   // HEAD
   // --------------------------------------------------
 
-  'gorra_cuero': EquipmentVisualConfig(
-    scale: 0.45,
-    offsets: {
-      EquipmentView.front: Offset(3, -185),
-      EquipmentView.threeQuarter: Offset(9, -185),
-      EquipmentView.side: Offset(0, -185),
-      EquipmentView.back: Offset(-3, -185),
-    },
-  ),
+  // EJEMPLO DE SCALE Y OFFSETS
+  // 'gorra_cuero': EquipmentVisualConfig(
+  //   scale: 0.45,
+  //   offsets: {
+  //     EquipmentView.front: Offset(3, -185),
+  //     EquipmentView.threeQuarter: Offset(9, -185),
+  //     EquipmentView.side: Offset(0, -185),
+  //     EquipmentView.back: Offset(-3, -185),
+  //   },
+  // ),
 
-  // Legacy / individually positioned head item.
-  'casco_hierro': EquipmentVisualConfig(
-    scale: 0.28,
+  'gorra_cuero': EquipmentVisualConfig(),
+  'casco_hierro': EquipmentVisualConfig(),
+  'visera_bronce': EquipmentVisualConfig(),
+  'capucha_sabio': EquipmentVisualConfig(
     offsets: {
-      EquipmentView.front: Offset(9, -180),
-      EquipmentView.threeQuarter: Offset(8, -180),
-      EquipmentView.side: Offset(-3, -180),
-      EquipmentView.back: Offset(-9, -180),
-    },
+      EquipmentView.front: Offset(0, -10),
+      EquipmentView.threeQuarter: Offset(0, -10),
+      EquipmentView.side: Offset(0, -10),
+      EquipmentView.back: Offset(0, -5),
+    }
   ),
+  'corona_atalanta': EquipmentVisualConfig(),
 
   // --------------------------------------------------
   // SHOULDERS
   // --------------------------------------------------
 
-  'hombreras_cuero': EquipmentVisualConfig(
-    scale: 0.5,
-    offsets: {
-      EquipmentView.front: Offset(3, -115),
-      EquipmentView.threeQuarter: Offset(9, -115),
-      EquipmentView.side: Offset(0, -115),
-      EquipmentView.back: Offset(-3, -115),
-    },
-  ),
+  'hombreras_cuero': EquipmentVisualConfig(),
+  'hombrera_hierro': EquipmentVisualConfig(),
+  'hombreras_bronce': EquipmentVisualConfig(),
+  'manto_sabio': EquipmentVisualConfig(),
 
   // --------------------------------------------------
   // CHEST
   // --------------------------------------------------
 
-  'pechera_cuero': EquipmentVisualConfig(
-    scale: 0.58,
-    offsets: {
-      EquipmentView.front: Offset(-1, -78),
-      EquipmentView.threeQuarter: Offset(8, -78),
-      EquipmentView.side: Offset(-2, -75),
-      EquipmentView.back: Offset(-3, -75),
-    },
-  ),
+  'pechera_cuero': EquipmentVisualConfig(),
+  'pechera_hierro': EquipmentVisualConfig(),
+  'pectoral_bronce': EquipmentVisualConfig(),
+  'tunica_sabio': EquipmentVisualConfig(),
+  'coraza_atlas': EquipmentVisualConfig(),
 
   // --------------------------------------------------
   // BELT
   // --------------------------------------------------
 
-  'cinturon_cuero': EquipmentVisualConfig(
-    scale: 0.55,
-    offsets: {
-      EquipmentView.front: Offset(2, -24),
-      EquipmentView.threeQuarter: Offset(8, -24),
-      EquipmentView.side: Offset(-2, -24),
-      EquipmentView.back: Offset(-3, -24),
-    },
-  ),
+  'cinturon_cuero': EquipmentVisualConfig(),
+  'cinturon_reforzado': EquipmentVisualConfig(),
+  'faja_bronce': EquipmentVisualConfig(),
+  'cinturon_sabio': EquipmentVisualConfig(),
 
   // --------------------------------------------------
   // LEGS
   // --------------------------------------------------
 
-  'pantalones_cuero': EquipmentVisualConfig(
-    scale: 0.55,
+  'pantalones_cuero': EquipmentVisualConfig(),
+  'pantalones_cota': EquipmentVisualConfig(),
+  'pollera_bronce': EquipmentVisualConfig(),
+  'grebas_sabio': EquipmentVisualConfig(),
+
+  // --------------------------------------------------
+  // WEAPONS
+  // --------------------------------------------------
+
+  'baculo_madera': EquipmentVisualConfig(
     offsets: {
-      EquipmentView.front: Offset(2, 90),
-      EquipmentView.threeQuarter: Offset(8, 90),
-      EquipmentView.side: Offset(-2, 90),
-      EquipmentView.back: Offset(-3, 90),
+      EquipmentView.back: Offset(10, 0),
+    },),
+  'cuchillas_livianas': EquipmentVisualConfig(),
+  'daga_larga': EquipmentVisualConfig(),
+  'baston_sabio': EquipmentVisualConfig(
+    offsets: {
+      EquipmentView.back: Offset(10, 0),
+    },),
+  'espada_heracles': EquipmentVisualConfig(
+    offsets: {
+      EquipmentView.front: Offset(-22, -16),
+      EquipmentView.threeQuarter: Offset(-42, -6),
+      EquipmentView.back: Offset(26, 0),
+    },),
+
+  // --------------------------------------------------
+  // SHIELD
+  // --------------------------------------------------
+
+  'escudo_madera': EquipmentVisualConfig(
+    offsets: {
+      EquipmentView.front: Offset(22, 0),
+      EquipmentView.back: Offset(-26, 0),
     },
+  ),
+  'escudo_hierro': EquipmentVisualConfig(
+    offsets: {
+      EquipmentView.front: Offset(15, 0),
+      EquipmentView.back: Offset(-15, 0),
+    },
+  ),
+  'escudo_largo': EquipmentVisualConfig(
+    offsets: {
+      EquipmentView.front: Offset(15, 0),
+      EquipmentView.back: Offset(-15, 0),
+    },
+  ),
+  'egida_sabio': EquipmentVisualConfig(
+    offsets: {
+      EquipmentView.front: Offset(15, 0),
+      EquipmentView.threeQuarter: Offset(15, 0),
+      EquipmentView.back: Offset(-15, 0),
+    },
+  ),
+  'brazales_hermes': EquipmentVisualConfig(),
+
+  // --------------------------------------------------
+  // WINGS
+  // --------------------------------------------------
+
+  'capa_viajero': EquipmentVisualConfig(),
+  'capa_pesada': EquipmentVisualConfig(),
+  'capa_sabio': EquipmentVisualConfig(
+    offsets: {
+      EquipmentView.front: Offset(23, 0),
+      EquipmentView.back: Offset(-38, 0),
+    }
+  ),
+  'manto_campeon': EquipmentVisualConfig(
+    offsets: {
+      EquipmentView.front: Offset(33, 0),
+      EquipmentView.threeQuarter: Offset(29, 0),
+      EquipmentView.back: Offset(-53, 0),
+    }
   ),
 };

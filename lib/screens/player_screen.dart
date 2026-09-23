@@ -91,6 +91,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
   }
 
   // --------------------------------------------------
+  // SHIELD AND WINGS LAYERING
+  // --------------------------------------------------
+
+  bool _shouldRenderShieldBehind() {
+    return _avatarViewIndex >= 2;
+  }
+
+  bool _shouldRenderWingsBehind() {
+    return _avatarViewIndex < 3;
+  }
+
+  // --------------------------------------------------
   // BUILD
   // --------------------------------------------------
 
@@ -132,6 +144,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
     final chest = equippedBySlot[EquipmentSlot.chest];
     final belt = equippedBySlot[EquipmentSlot.belt];
     final legs = equippedBySlot[EquipmentSlot.legs];
+    final weapon = equippedBySlot[EquipmentSlot.weapon];
+    final shield = equippedBySlot[EquipmentSlot.shield];
+    final wings = equippedBySlot[EquipmentSlot.wings];
 
     final hasHelmet = head != null;
 
@@ -385,6 +400,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
+                            
+                            // --------------------------------------------------
+                            // SHIELD - BEHIND
+                            // --------------------------------------------------
+
+                            if (shield != null &&
+                                _shouldRenderShieldBehind())
+                              EquipmentRenderer(
+                                item: shield,
+                                view: _equipmentView,
+                              ),
+                            
                             // --------------------------------------------------
                             // BASE AVATAR
                             // --------------------------------------------------
@@ -396,22 +423,23 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             ),
 
                             // --------------------------------------------------
+                            // WINGS - BEHIND
+                            // --------------------------------------------------
+
+                            if (wings != null &&
+                                _shouldRenderWingsBehind())
+                              EquipmentRenderer(
+                                item: wings,
+                                view: _equipmentView,
+                              ),
+                            
+                            // --------------------------------------------------
                             // LEGS
                             // --------------------------------------------------
 
                             if (legs != null)
                               EquipmentRenderer(
                                 item: legs,
-                                view: _equipmentView,
-                              ),
-
-                            // --------------------------------------------------
-                            // CHEST
-                            // --------------------------------------------------
-
-                            if (chest != null)
-                              EquipmentRenderer(
-                                item: chest,
                                 view: _equipmentView,
                               ),
 
@@ -426,12 +454,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               ),
 
                             // --------------------------------------------------
-                            // SHOULDERS
+                            // CHEST
                             // --------------------------------------------------
 
-                            if (shoulders != null)
+                            if (chest != null)
                               EquipmentRenderer(
-                                item: shoulders,
+                                item: chest,
                                 view: _equipmentView,
                               ),
 
@@ -444,6 +472,49 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 item: head,
                                 view: _equipmentView,
                               ),
+
+                            // --------------------------------------------------
+                            // WEAPON
+                            // --------------------------------------------------
+
+                            if (weapon != null)
+                              EquipmentRenderer(
+                                item: weapon,
+                                view: _equipmentView,
+                              ),
+
+                            // --------------------------------------------------
+                            // WINGS - FRONT
+                            // --------------------------------------------------
+
+                            if (wings != null &&
+                                !_shouldRenderWingsBehind())
+                              EquipmentRenderer(
+                                item: wings,
+                                view: _equipmentView,
+                              ),
+
+                            // --------------------------------------------------
+                            // SHOULDERS
+                            // --------------------------------------------------
+
+                            if (shoulders != null)
+                              EquipmentRenderer(
+                                item: shoulders,
+                                view: _equipmentView,
+                              ),
+                            
+                            // --------------------------------------------------
+                            // SHIELD - FRONT
+                            // --------------------------------------------------
+
+                            if (shield != null &&
+                                !_shouldRenderShieldBehind())
+                              EquipmentRenderer(
+                                item: shield,
+                                view: _equipmentView,
+                              ),
+
                           ],
                         ),
                       ),

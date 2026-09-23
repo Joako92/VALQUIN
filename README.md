@@ -3,13 +3,9 @@
 ### Forge Yourself.
 
 <p align="center">
-
   <img src="assets\screenshots\status.png" alt="VALQUIN Status" width="250"/>
-
   <img src="assets\screenshots\inventory.png" alt="VALQUIN Inventory" width="250"/>
-
   <img src="assets\screenshots\equip.png" alt="VALQUIN Equip" width="250"/>
-
 </p>
 
 ---
@@ -51,9 +47,7 @@ The project is designed around a simple principle:
 
 ### Avatar System
 
-VALQUIN now introduces the first stage of its character avatar system.
-
-The avatar represents the player's visual identity inside the RPG layer and is designed to become the foundation for future character customization and equipment visualization.
+VALQUIN includes a dedicated character avatar system that provides the visual foundation for character customization and equipment presentation.
 
 Current functionality includes:
 
@@ -66,29 +60,24 @@ Current functionality includes:
 * Back view.
 * Horizontal swipe navigation between available views.
 * Consistent character identity across all views.
+* Avatar integration with equipment visualization.
 
 The current avatar is intentionally presented as a simple, lightly equipped beginner character.
 
-This establishes the base visual layer that future equipment and customization systems will build upon.
+This establishes the base visual layer on which equipment and future customization systems are built.
 
 The current rotation flow is:
 
 ```text
 Front
-
   │
   ▼
-
 Front 3/4
-
   │
   ▼
-
 Side
-
   │
   ▼
-
 Back
 ```
 
@@ -122,6 +111,7 @@ Each equipment item can define:
 * Unlock requirements.
 * Equip requirements.
 * Class compatibility.
+* Visual assets.
 
 Current rarities:
 
@@ -141,17 +131,64 @@ Each rarity has its own primary color and glow effect:
 
 ```text
 Common      → Light Gray + Blue Glow
-
 Rare        → Green + Blue Glow
-
 Legendary   → Violet + Yellow Glow
-
 Mythic      → Fuchsia + White Glow
 ```
 
 Rarity colors are intentionally independent from the application's primary accent color.
 
 An equipment item can therefore act as both a progression reward and a way of specializing the player's training.
+
+### Equipment Visualization
+
+VALQUIN now includes the first functional equipment visualization layer.
+
+Equipment artwork is rendered directly over the selected avatar and changes according to the avatar's current view.
+
+Current functionality includes:
+
+* Equipment PNG assets.
+* View-specific equipment artwork.
+* Front equipment rendering.
+* Front 3/4 equipment rendering.
+* Side equipment rendering.
+* Back equipment rendering.
+* Equipment positioning relative to the base avatar.
+* Layer ordering between avatar and equipment.
+* Equipment-specific rendering behavior.
+* Front/3/4 shield presentation.
+* Side/back shield presentation.
+* Rear-layer wing rendering.
+* Integration with the Status screen.
+* Visual testing across the available avatar views.
+
+The equipment renderer uses the avatar as a stable coordinate system so that equipment assets remain aligned with the character across different views.
+
+The current architecture separates:
+
+```text
+Base Avatar
+    │
+    ▼
+Equipment Renderer
+    │
+    ├── Head
+    ├── Shoulders
+    ├── Chest
+    ├── Belt
+    ├── Legs
+    ├── Weapon
+    ├── Shield
+    ├── Wings
+    └── Accessory
+```
+
+Most current equipment slots already have production PNG assets.
+
+**Accessory visual assets are still pending.**
+
+The current equipment system therefore represents the first functional vertical slice of the complete character visualization architecture.
 
 ### Inventory
 
@@ -192,47 +229,26 @@ The daily training flow is intentionally simple:
 
 ```text
 Select Equipment
-
        │
-
        ▼
-
 Activate Equipment
-
        │
-
        ▼
-
 Select Variants
-
        │
-
        ▼
-
 Generate Daily Plan
-
        │
-
        ▼
-
 Review Exercises
-
        │
-
        ▼
-
 Execute Training
-
        │
-
        ▼
-
 Equipment Cooldown
-
        │
-
        ▼
-
 Recover & Train Again
 ```
 
@@ -267,25 +283,15 @@ The settings architecture follows:
 
 ```text
 AppSettings
-
     │
-
     ├── Accent Color
-
     │
-
     └── Language
-
            │
-
            ▼
-
     AppSettingsStorage
-
            │
-
            ▼
-
          SQLite
 ```
 
@@ -320,7 +326,7 @@ The core visual principle is:
 
 ### Character Identity
 
-With v0.7.0, VALQUIN introduces the first dedicated character identity layer.
+VALQUIN's character system introduces a dedicated visual identity layer.
 
 The avatar is treated as a world-building element rather than a conventional UI component.
 
@@ -363,7 +369,7 @@ SPECIALIZATION
 
 The base avatar is therefore not intended to represent the final power level of the player.
 
-Its purpose is to provide a stable visual foundation for future equipment, customization and progression systems.
+Its purpose is to provide a stable visual foundation for equipment, customization and progression systems.
 
 ### Avatar Views
 
@@ -371,8 +377,11 @@ The first avatar implementation uses four dedicated production views:
 
 ```text
 Front
+
 Front 3/4
+
 Side
+
 Back
 ```
 
@@ -380,9 +389,7 @@ The same character design is preserved across all views.
 
 The avatar can currently be rotated through these views using horizontal swipe gestures.
 
-The implementation is intentionally simple at this stage.
-
-The current system validates:
+The implementation validates:
 
 * Asset loading.
 * View switching.
@@ -390,6 +397,7 @@ The current system validates:
 * Consistent presentation.
 * Gesture interaction.
 * Integration with the Status screen.
+* Equipment compatibility across views.
 
 Future iterations will expand this into a complete 360-degree rotation system.
 
@@ -399,35 +407,94 @@ Avatar assets are stored independently from the functional UI:
 
 ```text
 assets/
+
 └── images/
+
     └── avatar/
+
         ├── male_01_front.png
         ├── male_01_3q.png
         ├── male_01_side.png
         └── male_01_back.png
 ```
 
-The avatar system is designed around the idea of separating the character's base appearance from future equipment layers.
+The avatar system is designed around the idea of separating the character's base appearance from equipment layers.
 
-The long-term visual architecture is:
+The current visual architecture is:
 
 ```text
 Base Avatar
-
     │
-
-    ├── Hair
-
     ├── Equipment
-
+    │
     ├── Weapons
-
-    └── Visual Effects
+    │
+    ├── Shields
+    │
+    ├── Wings
+    │
+    └── Future Visual Effects
 ```
 
 This allows the character to remain visually consistent while equipment progressively changes the player's appearance.
 
-The current four-view system is the first step toward that architecture.
+### Equipment Visual Architecture
+
+Equipment assets are organized around the same four-view structure as the avatar:
+
+```text
+Equipment Item
+      │
+      ├── Front
+      ├── Front 3/4
+      ├── Side
+      └── Back
+```
+
+The equipment renderer selects the correct asset according to the avatar's current view.
+
+The resulting presentation is:
+
+```text
+Avatar View
+     │
+     ▼
+Equipment View
+     │
+     ▼
+Position + Scale
+     │
+     ▼
+Layer Ordering
+     │
+     ▼
+Rendered Character
+```
+
+This architecture allows individual equipment categories to define special rendering behavior without coupling that behavior to the main player screen.
+
+Certain equipment types require specific layer handling.
+
+For example:
+
+```text
+Shield
+    │
+    ├── Front      → In front of avatar
+    ├── Front 3/4  → In front of avatar
+    ├── Side       → Behind avatar
+    └── Back       → Behind avatar
+
+Wings
+    │
+    └── Always behind avatar
+```
+
+These rendering rules are handled by the equipment visualization layer.
+
+The result is a more reliable visual representation of equipment without requiring the base avatar assets to change.
+
+The current implementation has been tested with the available avatar views and equipment assets directly in the frontend.
 
 ### Branding
 
@@ -509,21 +576,14 @@ This creates a visual hierarchy where:
 ```text
 Card
 
- │
-
- ├── Border → Equipment rarity
-
- │
-
- └── Icon
-
-      │
-
-      ├── Color → Equipment rarity
-
-      │
-
-      └── Glow → Equipment rarity + active state
+│
+├── Border → Equipment rarity
+│
+└── Icon
+     │
+     ├── Color → Equipment rarity
+     │
+     └── Glow → Equipment rarity + active state
 ```
 
 This keeps the interface restrained while allowing rare equipment to visually stand out.
@@ -576,7 +636,7 @@ This separation allows the interface to maintain a consistent visual identity wi
 
 VALQUIN's visual architecture separates functional interface elements from atmospheric world-building elements.
 
-The application now uses dedicated visual assets to establish a stronger sense of place while keeping the UI itself restrained.
+The application uses dedicated visual assets to establish a stronger sense of place while keeping the UI itself restrained.
 
 Background elements are designed to:
 
@@ -642,9 +702,62 @@ Mythology
 Atmosphere
 ```
 
-With v0.7.0, the character becomes the first major world-building element capable of interacting directly with the player's actions.
+With the v0.7 milestone, the character became the first major world-building element capable of interacting directly with the player's progression.
 
-This approach allows VALQUIN to remain visually clean while gradually introducing a stronger fantasy identity through custom assets.
+With v0.7.1, equipment can now participate in that visual layer through dedicated assets and frontend rendering.
+
+This creates the first complete visual loop between:
+
+```text
+Player
+  │
+  ▼
+Avatar
+  │
+  ▼
+Equipment
+  │
+  ▼
+Training
+  │
+  ▼
+Progression
+```
+
+---
+
+# Development & Database Tools
+
+VALQUIN includes development tools that make database initialization and testing easier during development.
+
+### Database Seeders
+
+The application includes database seeders for initializing the local game database with the required development data.
+
+Seeder execution can be explicitly requested through a command-line argument:
+
+```bash
+flutter run -- --seeder
+```
+
+This keeps database initialization separate from the normal application startup flow.
+
+The seeded database can be used to quickly populate:
+
+* Exercises.
+* Exercise variants.
+* Equipment.
+* Equipment relationships.
+* Requirements.
+* Other development data.
+
+This is particularly useful when testing the application from a clean database state.
+
+### Database Administration
+
+VALQUIN also includes database administration tools for development and testing.
+
+The database layer is built around SQLite and Drift, keeping persistent gameplay data structured and locally accessible.
 
 ---
 
@@ -652,9 +765,9 @@ This approach allows VALQUIN to remain visually clean while gradually introducin
 
 ### Current Version
 
-**v0.7.0 — Avatar Identity & Rotation**
+**v0.7.1 — Avatar & Equipment Vertical Slice**
 
-Version 0.7.0 introduces the first functional avatar system for VALQUIN.
+Version 0.7.1 closes the first functional character presentation vertical slice for VALQUIN.
 
 The current application includes:
 
@@ -684,6 +797,7 @@ The current application includes:
 * Local persistence.
 * Automated tests.
 * Database seeders.
+* Command-line seeder execution.
 * Database administration tools.
 * Centralized application colors.
 * Centralized application icons.
@@ -719,6 +833,14 @@ The current application includes:
 * Back avatar view.
 * Horizontal swipe avatar rotation.
 * Avatar integration into the Status screen.
+* Equipment PNG assets.
+* View-specific equipment assets.
+* Equipment visualization in the frontend.
+* Equipment positioning relative to avatar views.
+* Equipment layer ordering.
+* Shield-specific layer handling.
+* Wing-specific rear-layer rendering.
+* Equipment visualization testing across avatar views.
 
 The core database and domain architecture remain established.
 
@@ -745,6 +867,10 @@ Character Identity
 
 Avatar Presentation
 
+Equipment Presentation
+
+Layering
+
 Interaction States
 
 Customization
@@ -752,13 +878,15 @@ Customization
 Localization
 ```
 
-Version 0.7.0 represents the beginning of the character presentation layer.
+Version 0.7.1 represents the first functional vertical slice connecting the RPG character, visual equipment and training systems.
 
-The avatar currently provides a stable visual foundation for future equipment visualization and character customization.
+The avatar can now act as a stable visual foundation while equipment changes the player's appearance.
 
-The current rotation system intentionally uses four views.
+The current system intentionally uses four production views.
 
 The next avatar iteration will expand the rotation toward a complete **360-degree view**.
+
+The remaining equipment visualization work includes accessory assets and additional visual content.
 
 ---
 
@@ -807,9 +935,9 @@ The v0.6 milestone focused on transforming the functional RPG interface into a c
 
 ---
 
-## v0.7 — Avatar Identity & Rotation
+## v0.7 — Avatar & Character Presentation
 
-The v0.7 milestone introduces the first real character presentation system.
+The v0.7 milestone introduced the first real character presentation system.
 
 ### Completed
 
@@ -829,8 +957,36 @@ The v0.7 milestone introduces the first real character presentation system.
 * Base character designed as an equipment-ready RPG avatar.
 * Foundation for future equipment layering.
 
+### v0.7.1 — Equipment Vertical Slice
+
+The v0.7.1 milestone extends the avatar system into the first functional equipment visualization layer.
+
+### Completed
+
+* Production PNG assets for the current equipment catalog.
+* Equipment assets for multiple equipment slots.
+* Four-view equipment assets.
+* Front equipment rendering.
+* Front 3/4 equipment rendering.
+* Side equipment rendering.
+* Back equipment rendering.
+* Equipment positioning relative to the avatar.
+* Equipment scale and alignment.
+* Equipment layer ordering.
+* Shield-specific layer behavior.
+* Wings rendered behind the avatar.
+* Frontend testing with the available avatar views.
+* Integration between avatar and equipment visualization.
+* Seeder execution arguments.
+* Explicit database seeder execution through `--seeder`.
+* Corrections to avatar/equipment rendering layers.
+* Initial vertical slice connecting avatar, equipment and frontend presentation.
+
+Accessory visual assets remain pending.
+
 ### Next Step
 
+* Complete accessory visual assets.
 * Full 360-degree avatar rotation.
 * Bidirectional continuous rotation.
 * Additional avatar variants.
@@ -842,14 +998,16 @@ The v0.7 milestone introduces the first real character presentation system.
 
 ### Future Avatar & Equipment Work
 
-* Equipment visual layering.
-* Weapon visualization.
-* Armor visualization.
+* Complete equipment visual layering.
+* Weapon visualization expansion.
+* Armor visualization expansion.
 * Hair variations.
 * Character customization.
 * Dynamic equipment appearance.
 * Visual progression based on player equipment.
 * Character-specific visual states.
+* Additional equipment visual effects.
+* More complete accessory visualization.
 
 ---
 
@@ -878,7 +1036,7 @@ The v0.7 milestone introduces the first real character presentation system.
 * Complete 360-degree avatar rotation.
 * Character customization.
 * Multiple avatar variants.
-* Equipment visual representation.
+* Complete equipment visual representation.
 * Weapon visualization.
 * Animated progression.
 * Unlock animations.
@@ -968,23 +1126,23 @@ Every workout should contribute to something:
 ```text
 Train
 
- ↓
+↓
 
 Improve
 
- ↓
+↓
 
 Level Up
 
- ↓
+↓
 
 Unlock
 
- ↓
+↓
 
 Specialize
 
- ↓
+↓
 
 Become Stronger
 ```

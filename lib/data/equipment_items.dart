@@ -37,29 +37,6 @@ final List<EquipmentItem> equipmentItems = [
     ],
   ),
 
-  EquipmentItem(
-    id: 'vincha_cuero',
-    name: 'VINCHA DE CUERO',
-    rarity: Rarity.common,
-    slot: EquipmentSlot.head,
-    cooldownHours: 24,
-
-    unlockRequirements: Requirement(),
-    equipRequirements: Requirement(),
-
-    stats: {
-      'stamina': 10,
-      'energy': 10,
-    },
-
-    exercises: [
-      EquipmentExercise(
-        exerciseId: 'trote',
-        maxVariant: 1,
-      ),
-    ],
-  ),
-
   // --------------------------------------------------
   // CHEST
   // --------------------------------------------------
@@ -352,7 +329,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'cuchillas_livianas',
-    name: 'CUCHILLAS LIVIANAS',
+    name: 'CUCHILLA LIVIANA',
     rarity: Rarity.common,
     slot: EquipmentSlot.weapon,
     cooldownHours: 24,
@@ -392,7 +369,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'pantalones_cota',
-    name: 'PANTALONES DE COTA',
+    name: 'PANTALONES DE HIERRO',
     rarity: Rarity.common,
     slot: EquipmentSlot.legs,
     cooldownHours: 24,
@@ -432,7 +409,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'cinturon_reforzado',
-    name: 'CINTURÓN REFORZADO',
+    name: 'CINTURÓN HIERRO',
     rarity: Rarity.common,
     slot: EquipmentSlot.belt,
     cooldownHours: 24,
@@ -593,12 +570,11 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'visera_bronce',
-    name: 'VISERA DE BRONCE',
+    name: 'CASCO DE BRONCE',
     rarity: Rarity.common,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
 
-    // 3 km de trote = +15 stamina +15 energy
     unlockRequirements: Requirement(
       stats: {
         'stamina': 15,
@@ -606,7 +582,6 @@ final List<EquipmentItem> equipmentItems = [
       },
     ),
 
-    // 6 km de progreso de trote acumulado = +30 stamina +30 energy
     equipRequirements: Requirement(
       stats: {
         'stamina': 30,
@@ -633,13 +608,11 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'pectoral_bronce',
-    name: 'PECTORAL DE BRONCE',
+    name: 'PECHERA DE BRONCE',
     rarity: Rarity.common,
     slot: EquipmentSlot.chest,
     cooldownHours: 24,
 
-    // 1 sesión de flexiones = +10 strength +10 endurance.
-    // 3 sesiones = +30 strength +30 endurance.
     unlockRequirements: Requirement(
       stats: {
         'strength': 30,
@@ -787,7 +760,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'pollera_bronce',
-    name: 'POLLERA DE BRONCE',
+    name: 'PANTALONES DE BRONCE',
     rarity: Rarity.common,
     slot: EquipmentSlot.legs,
     cooldownHours: 24,
@@ -825,7 +798,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'faja_bronce',
-    name: 'FAJA DE BRONCE',
+    name: 'CINTURON DE BRONCE',
     rarity: Rarity.common,
     slot: EquipmentSlot.belt,
     cooldownHours: 24,
@@ -905,7 +878,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'capucha_sabio',
-    name: 'CAPUCHA DEL SABIO',
+    name: 'CASCO DEL SABIO',
     rarity: Rarity.rare,
     slot: EquipmentSlot.head,
     cooldownHours: 36,
@@ -951,7 +924,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'tunica_sabio',
-    name: 'TÚNICA DEL SABIO',
+    name: 'PECHERA DEL SABIO',
     rarity: Rarity.rare,
     slot: EquipmentSlot.chest,
     cooldownHours: 36,
@@ -997,7 +970,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'manto_sabio',
-    name: 'MANTO DEL SABIO',
+    name: 'HOMBRERAS DEL SABIO',
     rarity: Rarity.rare,
     slot: EquipmentSlot.shoulders,
     cooldownHours: 36,
@@ -1135,7 +1108,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'grebas_sabio',
-    name: 'GREBAS DEL SABIO',
+    name: 'BOTAS DEL SABIO',
     rarity: Rarity.rare,
     slot: EquipmentSlot.legs,
     cooldownHours: 36,
@@ -1277,7 +1250,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'coraza_atlas',
-    name: 'CORAZA DE ATLAS',
+    name: 'PECHERA DE ATLAS',
     rarity: Rarity.rare,
     slot: EquipmentSlot.chest,
     cooldownHours: 36,
@@ -1330,7 +1303,7 @@ final List<EquipmentItem> equipmentItems = [
         'strength': 80,
         'endurance': 30,
       },
-      classes: {PlayerClass.powerLifter},
+      classes: {PlayerClass.powerLifter, PlayerClass.athlete},
     ),
 
     equipRequirements: Requirement(
@@ -1409,7 +1382,7 @@ final List<EquipmentItem> equipmentItems = [
         'endurance': 80,
         'strength': 30,
       },
-      classes: {PlayerClass.bodybuilder},
+      classes: {PlayerClass.bodybuilder, PlayerClass.athlete},
     ),
 
     equipRequirements: Requirement(
@@ -1488,7 +1461,7 @@ final List<EquipmentItem> equipmentItems = [
         'energy': 80,
         'stamina': 30,
       },
-      classes: {PlayerClass.gymnast},
+      classes: {PlayerClass.gymnast, PlayerClass.athlete},
     ),
 
     equipRequirements: Requirement(
@@ -1514,7 +1487,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'corona_atalanta',
-    name: 'CORONA DE ATALANTA',
+    name: 'CASCO DE ATALANTA',
     rarity: Rarity.rare,
     slot: EquipmentSlot.head,
     cooldownHours: 36,
@@ -1567,7 +1540,7 @@ final List<EquipmentItem> equipmentItems = [
         'energy': 30,
         'stamina': 80,
       },
-      classes: {PlayerClass.runner},
+      classes: {PlayerClass.runner, PlayerClass.athlete},
     ),
 
     equipRequirements: Requirement(

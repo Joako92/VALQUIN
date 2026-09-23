@@ -7,7 +7,7 @@ import 'data/training_plan.dart';
 
 import 'database/app_database.dart';
 import 'database/seed/database_seeder.dart';
-// import 'package:solo_training_001/database/admin/database_admin.dart';
+import 'package:valquin/database/admin/database_admin.dart';
 
 import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
@@ -17,8 +17,16 @@ import 'persistence/app_settings_storage.dart';
 import 'persistence/player_storage.dart';
 import 'persistence/training_plan_storage.dart';
 
-Future<void> main() async {
+Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // --------------------------------------------------
+  // COMMAND LINE MODES
+  // --------------------------------------------------
+
+  final seederMode = args.contains('--seeder');
+  final deleteMode = args.contains('--deletemode');
+  final debugMode = args.contains('--debugmode');
 
   // --------------------------------------------------
   // DATABASE
@@ -27,28 +35,37 @@ Future<void> main() async {
   final database = AppDatabase();
 
   // Fill database from seeder
-  await DatabaseSeeder.seed(database);
+  if (seederMode) {
+    await DatabaseSeeder.seed(database);
+  }
 
   // --------------------------------------------------
   // DATABASE CLEANUP
   // --------------------------------------------------
 
-  // Exercises to remove
+  if (deleteMode) {
+    
+    // Example:
+    
+    // await database.deleteExerciseCompletely(
+    //   'carameloraro',
+    // );
 
-  // await database.deleteExerciseCompletely(
-  //   'carameloraro',
-  // );
+    // await database.deleteEquipmentItemCompletely(
+    //   'vincha_cuero',
+    // );
+  }
 
-  // // Equipment items to remove
+  // --------------------------------------------------
+  // DATABASE DEBUG
+  // --------------------------------------------------
 
-  // await database.deleteEquipmentItemCompletely(
-  //   'casco_mejorado',
-  // );
-
-  // await DatabaseAdmin.printExercises(database);
-  // await DatabaseAdmin.debugEquipmentDatabase(database);
-  // await DatabaseAdmin.debugExerciseDatabase(database);
-
+  if (debugMode) {
+    await DatabaseAdmin.printExercises(database);
+    await DatabaseAdmin.debugEquipmentDatabase(database);
+    await DatabaseAdmin.debugExerciseDatabase(database);
+  }
+  
   // --------------------------------------------------
   // APP SETTINGS
   // --------------------------------------------------

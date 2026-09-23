@@ -17,9 +17,6 @@ class AppColors {
 
   // ACCENT
   static const Color accent = Color(0xFFE10600);
-  // static const Color accent = Color(0xFF2979FF);
-  // static const Color accentLight = Color(0xFFFF2A23);
-  // static const Color accentDark = Color(0xFF9E0000);
 
   // TEXT
   static const Color textPrimary = Color(0xFFFFFFFF);
@@ -35,11 +32,11 @@ class AppColors {
 
   // COMMON
   static const Color common = Color(0xFFD0D0D0);
-  static const Color commonGlow = Color(0xFF0213FA);
+  static const Color commonGlow = Color.fromARGB(255, 114, 114, 117);
 
   // RARE
   static const Color rare = Color(0xFF2E9E4F);
-  static const Color rareGlow = Color(0xFF247BFF);
+  static const Color rareGlow = Color.fromARGB(255, 76, 36, 255);
 
   // LEGENDARY
   static const Color legendary = Color(0xFF6A35A8);
