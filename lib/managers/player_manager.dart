@@ -34,9 +34,11 @@ class PlayerManager {
 
   Future<void> createPlayer({
     required String name,
+    required String avatarId,
   }) async {
     final newPlayer = Player(
       name: name,
+      avatarId: avatarId,
       playerClass: PlayerClass.novice,
       stats: PlayerStats(),
     );
@@ -94,9 +96,11 @@ class PlayerManager {
     }
 
     final playerName = _player!.name;
+    final playerAvatarId = _player!.avatarId;
 
     _player = Player(
       name: playerName,
+      avatarId: playerAvatarId,
       playerClass: PlayerClass.novice,
       stats: PlayerStats(),
     );

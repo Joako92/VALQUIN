@@ -17,6 +17,7 @@ class PlayerStorage {
 
     final playerData = {
       'name': player.name,
+      'avatarId': player.avatarId,
       'playerClass': player.playerClass.name,
       'stats': {
         'strength': player.stats.strength,
@@ -68,8 +69,12 @@ class PlayerStorage {
           value.name == playerData['playerClass'],
     );
 
+    final avatarId =
+        playerData['avatarId'] as String? ?? 'male_01';
+
     return Player(
       name: playerData['name'] as String,
+      avatarId: avatarId,
       playerClass: playerClass,
       stats: stats,
     );

@@ -9,8 +9,8 @@ import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
 import 'managers/class_manager.dart';
 
-import 'screens/create_player_screen.dart';
 import 'screens/main_screen.dart';
+import 'screens/welcome_screen.dart';
 
 class SoloTrainingApp extends StatelessWidget {
   final PlayerManager playerManager;
@@ -55,7 +55,7 @@ class SoloTrainingApp extends StatelessWidget {
                   database: database,
                   settings: settings,
                 )
-              : CreatePlayerScreen(
+              : WelcomeScreen(
                   playerManager: playerManager,
                   trainingPlanManager: trainingPlanManager,
                   classManager: classManager,

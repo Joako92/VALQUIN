@@ -83,6 +83,13 @@ class SpanishStrings {
 
   static const noItems = 'SIN OBJETOS';
 
+  // Welcome Screen
+
+  static const String welcomeDisclaimer =
+    'VALQUIN no es una guía de entrenamiento. Es un registro progresivo de entrenamiento basado en la experiencia de un juego RPG.';
+
+  static const String startTraining = 'COMENZAR ENTRENAMIENTO';
+
   // Create Player Screen
 
   static const createYourCharacter = 'CREA TU PERSONAJE';
@@ -91,6 +98,7 @@ class SpanishStrings {
   static const enterYourName = 'Ingresa tu nombre';
   static const creating = 'CREANDO...';
   static const createPlayer = 'CREAR JUGADOR';
+  static const String selectAvatar = 'SELECCIONAR AVATAR';
 
   // Equip Screen
 

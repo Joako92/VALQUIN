@@ -487,6 +487,26 @@ class LanguageStrings {
     }
   }
 
+  // Welcome Screen
+
+  String get welcomeDisclaimer {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.welcomeDisclaimer;
+      case AppLanguage.spanish:
+        return SpanishStrings.welcomeDisclaimer;
+    }
+  }
+
+  String get startTraining {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.startTraining;
+      case AppLanguage.spanish:
+        return SpanishStrings.startTraining;
+    }
+  }
+
   // Create Player Screen
 
   String get createYourCharacter {
@@ -540,6 +560,15 @@ class LanguageStrings {
         return EnglishStrings.createPlayer;
       case AppLanguage.spanish:
         return SpanishStrings.createPlayer;
+    }
+  }
+
+  String get selectAvatar {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.selectAvatar;
+      case AppLanguage.spanish:
+        return SpanishStrings.selectAvatar;
     }
   }
 

@@ -1084,6 +1084,12 @@ class AppDatabase extends _$AppDatabase {
   // ADMIN METHODS
   // --------------------------------------------------
 
+  Future<bool> hasEquipmentItems() async {
+    final items = await select(equipmentItems).get();
+
+    return items.isNotEmpty;
+  }
+
   Future<bool> deleteExerciseCompletely(
     String exerciseId,
   ) async {

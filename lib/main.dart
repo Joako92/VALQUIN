@@ -35,7 +35,10 @@ Future<void> main(List<String> args) async {
   final database = AppDatabase();
 
   // Fill database from seeder
-  if (seederMode) {
+  final databaseNeedsSeed =
+    !(await database.hasEquipmentItems());
+
+  if (databaseNeedsSeed || seederMode) {
     await DatabaseSeeder.seed(database);
   }
 

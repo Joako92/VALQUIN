@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
 import '../config/app_settings.dart';
+import '../config/avatar_config.dart';
 import '../database/app_database.dart';
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
@@ -37,6 +38,8 @@ class _CreatePlayerScreenState
       TextEditingController();
 
   bool isCreating = false;
+
+  String _selectedAvatarId = 'male_01';
 
   // --------------------------------------------------
   // GET MANAGERS
@@ -97,6 +100,7 @@ class _CreatePlayerScreenState
 
     await playerManager.createPlayer(
       name: name,
+      avatarId: _selectedAvatarId,
     );
 
     if (!mounted) {
@@ -111,6 +115,88 @@ class _CreatePlayerScreenState
           classManager: classManager,
           database: database,
           settings: settings,
+        ),
+      ),
+    );
+  }
+
+  // --------------------------------------------------
+  // SELECT AVATAR
+  // --------------------------------------------------
+
+  void selectAvatar(String avatarId) {
+    if (isCreating) {
+      return;
+    }
+
+    setState(() {
+      _selectedAvatarId = avatarId;
+    });
+  }
+
+  // --------------------------------------------------
+  // AVATAR CARD
+  // --------------------------------------------------
+
+  Widget buildAvatarCard(
+    BuildContext context,
+    AvatarDefinition avatar,
+  ) {
+    final isSelected =
+        avatar.id == _selectedAvatarId;
+
+    final primaryColor =
+        Theme.of(context).colorScheme.primary;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => selectAvatar(avatar.id),
+        child: AnimatedContainer(
+          duration:
+              const Duration(milliseconds: 150),
+          margin:
+              const EdgeInsets.symmetric(horizontal: 5),
+          padding:
+              const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? AppColors.surfaceLight
+                : AppColors.surface,
+            borderRadius:
+                BorderRadius.circular(12),
+            border: Border.all(
+              color: isSelected
+                  ? primaryColor
+                  : AppColors.border,
+              width: isSelected ? 2 : 1,
+            ),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Image.asset(
+                  'assets/images/avatar/'
+                  '${avatar.id}_front.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+
+              const SizedBox(height: 4),
+
+              Text(
+                avatar.name,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                  color: isSelected
+                      ? AppColors.textPrimary
+                      : AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -160,7 +246,43 @@ class _CreatePlayerScreenState
                 ),
               ),
 
-              const SizedBox(height: 45),
+              const SizedBox(height: 25),
+
+              // --------------------------------------------------
+              // AVATAR SELECTION
+              // --------------------------------------------------
+
+              Text(
+                settings.strings.selectAvatar,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              Expanded(
+                flex: 2,
+                child: Row(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.stretch,
+                  children: availableAvatars
+                      .map(
+                        (avatar) =>
+                            buildAvatarCard(
+                          context,
+                          avatar,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+
+              const SizedBox(height: 20),
 
               // --------------------------------------------------
               // NAME
@@ -175,45 +297,48 @@ class _CreatePlayerScreenState
                   color: AppColors.textPrimary,
                 ),
                 cursorColor:
-                    Theme.of(context).colorScheme.primary,
+                    Theme.of(context)
+                        .colorScheme
+                        .primary,
                 decoration: InputDecoration(
-                  labelText: settings.strings.playerName,
-                  hintText: settings.strings.enterYourName,
-
+                  labelText:
+                      settings.strings.playerName,
+                  hintText:
+                      settings.strings.enterYourName,
                   labelStyle: const TextStyle(
-                    color: AppColors.textSecondary,
+                    color:
+                        AppColors.textSecondary,
                   ),
-
                   hintStyle: const TextStyle(
                     color: AppColors.textDisabled,
                   ),
-
                   filled: true,
                   fillColor: AppColors.surface,
-
                   prefixIcon: ValquinIcon(
                     AppIcons.status,
                     size: 22,
-                    color: AppColors.textSecondary,
+                    color:
+                        AppColors.textSecondary,
                   ),
-
                   border: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(12),
-                    borderSide: const BorderSide(
+                    borderSide:
+                        const BorderSide(
                       color: AppColors.border,
                     ),
                   ),
-
-                  enabledBorder: OutlineInputBorder(
+                  enabledBorder:
+                      OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(12),
-                    borderSide: const BorderSide(
+                    borderSide:
+                        const BorderSide(
                       color: AppColors.border,
                     ),
                   ),
-
-                  focusedBorder: OutlineInputBorder(
+                  focusedBorder:
+                      OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(12),
                     borderSide: BorderSide(
@@ -224,18 +349,19 @@ class _CreatePlayerScreenState
                       width: 2,
                     ),
                   ),
-
-                  disabledBorder: OutlineInputBorder(
+                  disabledBorder:
+                      OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(12),
-                    borderSide: const BorderSide(
+                    borderSide:
+                        const BorderSide(
                       color: AppColors.border,
                     ),
                   ),
                 ),
               ),
 
-              const Spacer(),
+              const SizedBox(height: 20),
 
               // --------------------------------------------------
               // CREATE
@@ -245,8 +371,9 @@ class _CreatePlayerScreenState
                 height: 55,
                 child: ElevatedButton.icon(
                   onPressed:
-                      isCreating ? null : createPlayer,
-
+                      isCreating
+                          ? null
+                          : createPlayer,
                   icon: isCreating
                       ? const SizedBox(
                           width: 20,
@@ -261,18 +388,22 @@ class _CreatePlayerScreenState
                       : const Icon(
                           AppIcons.experience,
                         ),
-
                   label: Text(
                     isCreating
-                        ? settings.strings.creating
-                        : settings.strings.createPlayer,
-                    style: const TextStyle(
+                        ? settings
+                            .strings
+                            .creating
+                        : settings
+                            .strings
+                            .createPlayer,
+                    style:
+                        const TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontWeight:
+                          FontWeight.bold,
                       letterSpacing: 2,
                     ),
                   ),
-
                   style:
                       ElevatedButton.styleFrom(
                     backgroundColor:

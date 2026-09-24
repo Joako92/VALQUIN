@@ -50,12 +50,14 @@ class PlayerStats {
 
 class Player {
   final String name;
+  final String avatarId;
   PlayerClass playerClass;
 
   final PlayerStats stats;
 
   Player({
     required this.name,
+    required this.avatarId,
     required this.playerClass,
     required this.stats,
   });

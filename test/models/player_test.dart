@@ -17,6 +17,7 @@ void main() {
   }) {
     return Player(
       name: name,
+      avatarId: 'male_01',
       playerClass: playerClass,
       stats: PlayerStats(
         strength: strength,

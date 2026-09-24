@@ -108,7 +108,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
               Expanded(
                 child: PlayerEquipmentView(
                   equipment: equippedItems,
-                  avatarId: 'male_01',
+                  avatarId: player.avatarId,
                 ),
               ),
 

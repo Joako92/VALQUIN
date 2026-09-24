@@ -83,6 +83,13 @@ class EnglishStrings {
 
   static const noItems = 'NO ITEMS';
 
+  // Welcome Screen
+
+  static const String welcomeDisclaimer =
+    'VALQUIN is not a training guide. It is a progressive training log built around an RPG game experience.';
+
+  static const String startTraining = 'START TRAINING';
+
   // Create Player Screen
 
   static const createYourCharacter = 'CREATE YOUR CHARACTER';
@@ -91,6 +98,7 @@ class EnglishStrings {
   static const enterYourName = 'Enter your name';
   static const creating = 'CREATING...';
   static const createPlayer = 'CREATE PLAYER';
+  static const String selectAvatar = 'SELECT AVATAR';
 
   // Equip Screen
 

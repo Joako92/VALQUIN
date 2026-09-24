@@ -47,6 +47,7 @@ void main() {
         () async {
           await playerManager.createPlayer(
             name: 'Test Player',
+            avatarId: 'male_01',
           );
 
           expect(
@@ -77,6 +78,7 @@ void main() {
         () async {
           await playerManager.createPlayer(
             name: 'Test Player',
+            avatarId: 'male_01',
           );
 
           await playerManager.changeClass(
@@ -95,6 +97,7 @@ void main() {
         () async {
           await playerManager.createPlayer(
             name: 'Test Player',
+            avatarId: 'male_01',
           );
 
           await playerManager.changeClass(
@@ -138,6 +141,7 @@ void main() {
         () async {
           await playerManager.createPlayer(
             name: 'Test Player',
+            avatarId: 'male_01',
           );
 
           await playerManager.changeClass(
@@ -162,6 +166,7 @@ void main() {
         () async {
           await playerManager.createPlayer(
             name: 'Test Player',
+            avatarId: 'male_01',
           );
 
           await playerManager.changeClass(
@@ -182,6 +187,7 @@ void main() {
         () async {
           await playerManager.createPlayer(
             name: 'Test Player',
+            avatarId: 'male_01',
           );
 
           await playerManager.changeClass(
@@ -202,6 +208,7 @@ void main() {
         () async {
           await playerManager.createPlayer(
             name: 'Test Player',
+            avatarId: 'male_01',
           );
 
           // Modify the player's stats.
@@ -239,6 +246,7 @@ void main() {
         () async {
           await playerManager.createPlayer(
             name: 'Test Player',
+            avatarId: 'male_01',
           );
 
           playerManager.player!.stats.strength = 100;
@@ -285,6 +293,7 @@ void main() {
         () async {
           await playerManager.createPlayer(
             name: 'Test Player',
+            avatarId: 'male_01',
           );
 
           await playerManager.changeClass(
