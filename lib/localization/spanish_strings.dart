@@ -1,5 +1,6 @@
 class SpanishStrings {
   static const playerNamePlaceholder = 'INGRESE UN NOMBRE DE JUGADOR';
+  static const gotIt = 'ENTENDIDO';
 
   // Player Screen
 
@@ -46,6 +47,13 @@ class SpanishStrings {
   static const playerResetMessage =
       'JUGADOR REINICIADO. TU VIAJE DE ENTRENAMIENTO COMIENZA DE NUEVO.';
   
+  static const statusInfoTitle = 'STATUS';
+
+  static const statusInfoMessage =
+    'Este es tu panel de estado. Acá vas a poder ver el progreso de tu personaje, '
+    'su nivel y sus atributos. Cada entrenamiento que completes te ayudará a crecer '
+    'y desbloquear nuevas posibilidades. Entrená, progresá y forjá tu propio camino.';
+
   // Inventory Screen
 
   static const all = 'TODOS';
@@ -83,6 +91,17 @@ class SpanishStrings {
 
   static const noItems = 'SIN OBJETOS';
 
+  // Inventory Screen Info
+
+  static const inventoryInfoTitle = 'INVENTARIO';
+
+  static const inventoryInfoMessage =
+      'Acá vas a encontrar los elementos de entrenamiento que hayas desbloqueado. '
+      'Cada objeto está asociado a uno o más ejercicios y puede aportar diferentes '
+      'variantes de entrenamiento. Elegí un objeto para ver sus detalles '
+      'y equipalo para incorporarlo a tu plan. '
+      'A medida que progreses, nuevos elementos se irán desbloqueando.';
+
   // Welcome Screen
 
   static const String welcomeDisclaimer =
@@ -106,5 +125,52 @@ class SpanishStrings {
   static const dailyExercises = 'EJERCICIOS DIARIOS';
   static const noTrainingSelected = 'No hay entrenamiento seleccionado.';
   static const trainingExecuted = '¡ENTRENAMIENTO EJECUTADO!';
+
+  static const levelUpTitle = '¡SUBISTE DE NIVEL!';
+
+  static const levelUpMessage =
+      '¡Tu entrenamiento te hizo crecer hasta un nuevo nivel! '
+      'Felicitaciones. Seguí entrenando y forjando tu propio camino.';
+
+  // Equip Screen Info
+
+  static const equipInfoTitle = 'EQUIPAMIENTO';
+
+  static const equipInfoMessage =
+      'Acá podés elegir qué elementos querés entrenar hoy. '
+      'Activá los objetos que quieras incluir en tu plan y seleccioná '
+      'la variante de entrenamiento que prefieras. '
+      'Los ejercicios seleccionados aparecerán en tu plan diario. '
+      'Cuando estés listo, presioná el botón del rayo para ejecutar '
+      'tu entrenamiento.';
+  
+  // Class Change Info
+
+  static const classChangeAcceptedTitle =
+      'NUEVA CLASE ACEPTADA';
+
+  static const classChangePowerLifter =
+      'Ahora estás en camino de convertirte en un Power Lifter. '
+      'Tu fuerza será tu principal herramienta para superar tus límites.';
+
+  static const classChangeRunner =
+      'Ahora estás en camino de convertirte en un Runner. '
+      'Tu velocidad y resistencia te permitirán avanzar cada vez más lejos.';
+
+  static const classChangeBodybuilder =
+      'Ahora estás en camino de convertirte en un Físico Culturista. '
+      'Construí tu fuerza, desarrollá tu físico y llevá tu cuerpo a otro nivel.';
+
+  static const classChangeGymnast =
+      'Ahora estás en camino de convertirte en un Gimnasta. '
+      'Control, equilibrio y dominio corporal serán las claves de tu progreso.';
+
+  static const classChangeAthlete =
+      'Ahora estás en camino de convertirte en un Atleta. '
+      'Desarrollá todas tus capacidades y convertite en un deportista completo.';
+
+  static const classChangeNovice =
+      'Este es el comienzo de tu camino. '
+      'Seguí entrenando y descubrí hasta dónde puede llegar tu potencial.';
 
 }

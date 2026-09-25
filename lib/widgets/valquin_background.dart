@@ -21,7 +21,7 @@ class ValquinBackground extends StatelessWidget {
             accent,
             const Color(0xFF120B0E),
             const Color(0xFF08090B),
-            const Color.fromARGB(255, 0, 0, 0),
+            const Color.fromARGB(255, 05, 06, 06),
           ],
           stops: const [
             0.0,

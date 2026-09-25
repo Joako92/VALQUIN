@@ -8,6 +8,7 @@ import '../managers/player_manager.dart';
 import '../models/player.dart';
 
 import '../widgets/valquin_icon.dart';
+import '../widgets/valquin_info_dialog.dart';
 
 class PlayerClassChangeDialog extends StatelessWidget {
   final PlayerManager playerManager;
@@ -69,7 +70,29 @@ class PlayerClassChangeDialog extends StatelessWidget {
                   );
 
                   onClassChanged();
+
+                  if (!context.mounted) return;
+
+                  await showDialog(
+                    context: context,
+                    builder: (_) {
+                      return ValquinInfoDialog(
+                        title: settings.strings.classChangeAcceptedTitle,
+                        message: _getClassChangeMessage(playerClass),
+                        buttonText: settings.strings.gotIt,
+                      );
+                    },
+                  );
                 },
+                // onTap: () async {
+                //   Navigator.of(context).pop();
+
+                //   await playerManager.changeClass(
+                //     playerClass,
+                //   );
+
+                //   onClassChanged();
+                // },
               );
             },
           ),
@@ -118,4 +141,33 @@ class PlayerClassChangeDialog extends StatelessWidget {
         return settings.strings.classAthlete;
     }
   }
+
+  // --------------------------------------------------
+  // CLASS CHANGE MESSAGE
+  // --------------------------------------------------
+
+  String _getClassChangeMessage(
+    PlayerClass playerClass,
+  ) {
+    switch (playerClass) {
+      case PlayerClass.novice:
+        return settings.strings.classChangeNovice;
+
+      case PlayerClass.powerLifter:
+        return settings.strings.classChangePowerLifter;
+
+      case PlayerClass.runner:
+        return settings.strings.classChangeRunner;
+
+      case PlayerClass.bodybuilder:
+        return settings.strings.classChangeBodybuilder;
+
+      case PlayerClass.gymnast:
+        return settings.strings.classChangeGymnast;
+
+      case PlayerClass.athlete:
+        return settings.strings.classChangeAthlete;
+    }
+  }
+  
 }

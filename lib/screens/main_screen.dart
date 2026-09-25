@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
+import '../config/app_settings.dart';
+
 import '../database/app_database.dart';
+
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../managers/class_manager.dart';
+
 import '../widgets/valquin_icon.dart';
 import '../widgets/valquin_background.dart';
+
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'player_screen.dart';
 import 'inventory_screen.dart';
 import 'equip_screen.dart';
-import '../config/app_settings.dart';
 
 class MainScreen extends StatefulWidget {
   final PlayerManager playerManager;
@@ -61,7 +67,27 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: ValquinBackground(
-        child: screens[currentIndex],
+        child: Stack(
+          children: [
+            // Subtle VALQUIN logo watermark
+            Positioned.fill(
+              child: Center(
+                child: Opacity(
+                  opacity: 0.015,
+                  child: SvgPicture.asset(
+                    'assets/icons/logo.svg',
+                    width: 420,
+                    height: 420,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+
+            // Current screen
+            screens[currentIndex],
+          ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         top: false,

@@ -21,12 +21,13 @@ Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // --------------------------------------------------
-  // COMMAND LINE MODES
+  // COMMAND LINE MODES flutter run --dart-define={MODE}=true
   // --------------------------------------------------
 
-  final seederMode = args.contains('--seeder');
-  final deleteMode = args.contains('--deletemode');
-  final debugMode = args.contains('--debugmode');
+  const seederMode = bool.fromEnvironment('SEEDER');
+  const deleteMode = bool.fromEnvironment('DELETE_MODE');
+  const debugMode = bool.fromEnvironment('DEBUG_MODE');
+  const debugPlayerMode = bool.fromEnvironment('DEBUG_PLAYER');
 
   // --------------------------------------------------
   // DATABASE
@@ -39,6 +40,7 @@ Future<void> main(List<String> args) async {
     !(await database.hasEquipmentItems());
 
   if (databaseNeedsSeed || seederMode) {
+    debugPrint('SEEDER ON');
     await DatabaseSeeder.seed(database);
   }
 
@@ -47,8 +49,9 @@ Future<void> main(List<String> args) async {
   // --------------------------------------------------
 
   if (deleteMode) {
+    debugPrint('DELETE MODE ON');
     
-    // Example:
+    // Examples:
     
     // await database.deleteExerciseCompletely(
     //   'carameloraro',
@@ -64,6 +67,7 @@ Future<void> main(List<String> args) async {
   // --------------------------------------------------
 
   if (debugMode) {
+    debugPrint('DEBUG MODE ON');
     await DatabaseAdmin.printExercises(database);
     await DatabaseAdmin.debugEquipmentDatabase(database);
     await DatabaseAdmin.debugExerciseDatabase(database);
@@ -99,15 +103,15 @@ Future<void> main(List<String> args) async {
   // EDIT PLAYER - DEBUG ONLY
   // --------------------------------------------------
 
-  // await playerManager.loadPlayer();
-
-  // // DEBUG ONLY
-  // await playerManager.applyDebugStats(
-  //   strength: 2500,
-  //   endurance: 2500,
-  //   energy: 2500,
-  //   stamina: 2500,
-  // );
+  if (debugPlayerMode) {
+    debugPrint('DEBUG PLAYER MODE ON');
+    await playerManager.applyDebugStats(
+      strength: 2500,
+      endurance: 2500,
+      energy: 2500,
+      stamina: 2500,
+    );
+  }
 
   // --------------------------------------------------
   // TRAINING PLAN

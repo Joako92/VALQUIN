@@ -14,6 +14,8 @@ import '../widgets/player_equipment_view.dart';
 import '../widgets/player_reset_player_dialog.dart';
 import '../widgets/player_settings_dialog.dart';
 import '../widgets/player_stats_card.dart';
+import '../widgets/valquin_info_dialog.dart';
+// import '../widgets/accessory_animation.dart';
 
 class PlayerScreen extends StatefulWidget {
   final PlayerManager playerManager;
@@ -46,6 +48,42 @@ class _PlayerScreenState extends State<PlayerScreen> {
       widget.trainingPlanManager;
 
   AppSettings get settings => widget.settings;
+
+  // --------------------------------------------------
+  // INIT
+  // --------------------------------------------------
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showPlayerInfoIfNeeded();
+    });
+  }
+
+  // --------------------------------------------------
+  // INFO DIALOG
+  // --------------------------------------------------
+
+  void _showPlayerInfoIfNeeded() {
+    final player = playerManager.player;
+
+    if (!mounted || player == null || player.xp != 0) {
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (_) {
+        return ValquinInfoDialog(
+          title: settings.strings.statusInfoTitle,
+          message: settings.strings.statusInfoMessage,
+          buttonText: settings.strings.gotIt,
+        );
+      },
+    );
+  }
 
   // --------------------------------------------------
   // BUILD

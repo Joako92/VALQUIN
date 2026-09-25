@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../config/app_colors.dart';
 import '../config/app_settings.dart';
@@ -53,8 +54,8 @@ class WelcomeScreen extends StatelessWidget {
                       // LOGO
                       // --------------------------------------------------
 
-                      Image.asset(
-                        'assets/icons/logo.png',
+                      SvgPicture.asset(
+                        'assets/icons/logo.svg',
                         width: 150,
                         height: 150,
                         fit: BoxFit.contain,

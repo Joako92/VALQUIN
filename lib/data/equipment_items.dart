@@ -200,7 +200,7 @@ final List<EquipmentItem> equipmentItems = [
   ),
 
   // ==================================================
-  // SET DE HIERRO
+  // SET DE HIERRO (mínimo en nivel 2)
   // ==================================================
 
   // --------------------------------------------------
@@ -214,7 +214,6 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.head,
     cooldownHours: 24,
 
-    // 1 caminata = +5 stamina +5 energy
     unlockRequirements: Requirement(
       stats: {
         'stamina': 5,
@@ -222,7 +221,6 @@ final List<EquipmentItem> equipmentItems = [
       },
     ),
 
-    // 3 caminatas = +15 stamina +15 energy
     equipRequirements: Requirement(
       stats: {
         'stamina': 15,
@@ -254,19 +252,17 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.shoulders,
     cooldownHours: 24,
 
-    // 1 press militar = +10 strength +10 endurance
     unlockRequirements: Requirement(
-      stats: {
-        'strength': 10,
-        'endurance': 10,
-      },
-    ),
-
-    // 3 press militar = +30 strength +30 endurance
-    equipRequirements: Requirement(
       stats: {
         'strength': 30,
         'endurance': 30,
+      },
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 60,
+        'endurance': 60,
       },
     ),
 
@@ -297,16 +293,16 @@ final List<EquipmentItem> equipmentItems = [
     // 1 sesión de flexiones = +10 strength +10 endurance
     unlockRequirements: Requirement(
       stats: {
-        'strength': 10,
-        'endurance': 10,
+        'strength': 30,
+        'endurance': 30,
       },
     ),
 
     // 3 sesiones de flexiones = +30 strength +30 endurance
     equipRequirements: Requirement(
       stats: {
-        'strength': 30,
-        'endurance': 30,
+        'strength': 60,
+        'endurance': 60,
       },
     ),
 
@@ -337,16 +333,16 @@ final List<EquipmentItem> equipmentItems = [
     // 1 curl de bíceps = +10 strength +10 endurance
     unlockRequirements: Requirement(
       stats: {
-        'strength': 10,
-        'endurance': 10,
+        'strength': 30,
+        'endurance': 30,
       },
     ),
 
     // 3 curls de bíceps = +30 strength +30 endurance
     equipRequirements: Requirement(
       stats: {
-        'strength': 30,
-        'endurance': 30,
+        'strength': 60,
+        'endurance': 60,
       },
     ),
 
@@ -377,16 +373,16 @@ final List<EquipmentItem> equipmentItems = [
     // 1 sentadilla = +10 strength +10 endurance
     unlockRequirements: Requirement(
       stats: {
-        'strength': 10,
-        'endurance': 10,
+        'strength': 30,
+        'endurance': 30,
       },
     ),
 
     // 3 sentadillas = +30 strength +30 endurance
     equipRequirements: Requirement(
       stats: {
-        'strength': 30,
-        'endurance': 30,
+        'strength': 60,
+        'endurance': 60,
       },
     ),
 
@@ -417,16 +413,16 @@ final List<EquipmentItem> equipmentItems = [
     // 1 plancha = +10 strength +10 endurance
     unlockRequirements: Requirement(
       stats: {
-        'strength': 10,
-        'endurance': 10,
+        'strength': 30,
+        'endurance': 30,
       },
     ),
 
     // 3 planchas = +30 strength +30 endurance
     equipRequirements: Requirement(
       stats: {
-        'strength': 30,
-        'endurance': 30,
+        'strength': 60,
+        'endurance': 60,
       },
     ),
 
@@ -457,16 +453,16 @@ final List<EquipmentItem> equipmentItems = [
     // 1 fondo en banco = +10 strength +10 endurance
     unlockRequirements: Requirement(
       stats: {
-        'strength': 10,
-        'endurance': 10,
+        'strength': 30,
+        'endurance': 30,
       },
     ),
 
     // 3 fondos en banco = +30 strength +30 endurance
     equipRequirements: Requirement(
       stats: {
-        'strength': 30,
-        'endurance': 30,
+        'strength': 60,
+        'endurance': 60,
       },
     ),
 
@@ -494,17 +490,18 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.wings,
     cooldownHours: 24,
 
-    // 1 ejercicio que otorga endurance.
     unlockRequirements: Requirement(
       stats: {
-        'endurance': 10,
+        'strength': 30,
+        'endurance': 30,
       },
     ),
 
     // 3 sesiones = +30 endurance
     equipRequirements: Requirement(
       stats: {
-        'endurance': 30,
+        'strength': 60,
+        'endurance': 60,
       },
     ),
 
@@ -532,12 +529,13 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.accessory,
     cooldownHours: 168, // ONE WEEK
 
+    // Desbloqueado al completarse 1 entrenamiento de cada tipo
     unlockRequirements: Requirement(
       stats: {
         'strength': 10,
         'endurance': 10,
-        'energy': 10,
-        'stamina': 10,
+        'energy': 5,
+        'stamina': 5,
       },
     ),
 
@@ -577,15 +575,15 @@ final List<EquipmentItem> equipmentItems = [
 
     unlockRequirements: Requirement(
       stats: {
-        'stamina': 15,
-        'energy': 15,
+        'stamina': 20,
+        'energy': 20,
       },
     ),
 
     equipRequirements: Requirement(
       stats: {
-        'stamina': 30,
-        'energy': 30,
+        'stamina': 50,
+        'energy': 50,
       },
     ),
 
@@ -615,15 +613,15 @@ final List<EquipmentItem> equipmentItems = [
 
     unlockRequirements: Requirement(
       stats: {
-        'strength': 30,
-        'endurance': 30,
+        'strength': 50,
+        'endurance': 50,
       },
     ),
 
     equipRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 80,
+        'endurance': 80,
       },
     ),
 
@@ -653,15 +651,15 @@ final List<EquipmentItem> equipmentItems = [
 
     unlockRequirements: Requirement(
       stats: {
-        'strength': 30,
-        'endurance': 30,
+        'strength': 50,
+        'endurance': 50,
       },
     ),
 
     equipRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 80,
+        'endurance': 80,
       },
     ),
 
@@ -691,15 +689,15 @@ final List<EquipmentItem> equipmentItems = [
 
     unlockRequirements: Requirement(
       stats: {
-        'strength': 30,
-        'endurance': 30,
+        'strength': 50,
+        'endurance': 50,
       },
     ),
 
     equipRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 80,
+        'endurance': 80,
       },
     ),
 
@@ -729,15 +727,15 @@ final List<EquipmentItem> equipmentItems = [
 
     unlockRequirements: Requirement(
       stats: {
-        'strength': 30,
-        'endurance': 30,
+        'strength': 50,
+        'endurance': 50,
       },
     ),
 
     equipRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 80,
+        'endurance': 80,
       },
     ),
 
@@ -767,15 +765,15 @@ final List<EquipmentItem> equipmentItems = [
 
     unlockRequirements: Requirement(
       stats: {
-        'strength': 20,
-        'endurance': 20,
+        'strength': 50,
+        'endurance': 50,
       },
     ),
 
     equipRequirements: Requirement(
       stats: {
-        'strength': 40,
-        'endurance': 40,
+        'strength': 80,
+        'endurance': 80,
       },
     ),
 
@@ -805,15 +803,15 @@ final List<EquipmentItem> equipmentItems = [
 
     unlockRequirements: Requirement(
       stats: {
-        'strength': 30,
-        'endurance': 30,
+        'strength': 50,
+        'endurance': 50,
       },
     ),
 
     equipRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 80,
+        'endurance': 80,
       },
     ),
 
@@ -843,15 +841,15 @@ final List<EquipmentItem> equipmentItems = [
 
     unlockRequirements: Requirement(
       stats: {
-        'strength': 20,
-        'endurance': 20,
+        'strength': 50,
+        'endurance': 50,
       },
     ),
 
     equipRequirements: Requirement(
       stats: {
-        'strength': 40,
-        'endurance': 40,
+        'strength': 80,
+        'endurance': 80,
       },
     ),
 
@@ -883,19 +881,17 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.head,
     cooldownHours: 36,
 
-    // 30 stamina + 30 energy.
     unlockRequirements: Requirement(
       stats: {
-        'stamina': 30,
-        'energy': 30,
+        'stamina': 50,
+        'energy': 50,
       },
     ),
 
-    // 60 stamina + 60 energy.
     equipRequirements: Requirement(
       stats: {
-        'stamina': 60,
-        'energy': 60,
+        'stamina': 80,
+        'energy': 80,
       },
     ),
 
@@ -929,19 +925,17 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.chest,
     cooldownHours: 36,
 
-    // 60 strength + 60 endurance.
     unlockRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 100,
+        'endurance': 100,
       },
     ),
 
-    // 90 strength + 90 endurance.
     equipRequirements: Requirement(
       stats: {
-        'strength': 90,
-        'endurance': 90,
+        'strength': 130,
+        'endurance': 130,
       },
     ),
 
@@ -975,19 +969,17 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.shoulders,
     cooldownHours: 36,
 
-    // 60 strength + 60 endurance.
     unlockRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 100,
+        'endurance': 100,
       },
     ),
 
-    // 90 strength + 90 endurance.
     equipRequirements: Requirement(
       stats: {
-        'strength': 90,
-        'endurance': 90,
+        'strength': 130,
+        'endurance': 130,
       },
     ),
 
@@ -1021,19 +1013,17 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.weapon,
     cooldownHours: 36,
 
-    // 60 strength + 60 endurance.
     unlockRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 100,
+        'endurance': 100,
       },
     ),
 
-    // 90 strength + 90 endurance.
     equipRequirements: Requirement(
       stats: {
-        'strength': 90,
-        'endurance': 90,
+        'strength': 130,
+        'endurance': 130,
       },
     ),
 
@@ -1067,19 +1057,17 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.shield,
     cooldownHours: 36,
 
-    // 60 strength + 60 endurance.
     unlockRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 100,
+        'endurance': 100,
       },
     ),
 
-    // 90 strength + 90 endurance.
     equipRequirements: Requirement(
       stats: {
-        'strength': 90,
-        'endurance': 90,
+        'strength': 130,
+        'endurance': 130,
       },
     ),
 
@@ -1116,16 +1104,16 @@ final List<EquipmentItem> equipmentItems = [
     // 40 strength + 40 endurance.
     unlockRequirements: Requirement(
       stats: {
-        'strength': 40,
-        'endurance': 40,
+        'strength': 100,
+        'endurance': 100,
       },
     ),
 
     // 60 strength + 60 endurance.
     equipRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 130,
+        'endurance': 130,
       },
     ),
 
@@ -1162,16 +1150,16 @@ final List<EquipmentItem> equipmentItems = [
     // 60 strength + 60 endurance.
     unlockRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 100,
+        'endurance': 100,
       },
     ),
 
     // 90 strength + 90 endurance.
     equipRequirements: Requirement(
       stats: {
-        'strength': 90,
-        'endurance': 90,
+        'strength': 130,
+        'endurance': 130,
       },
     ),
 
@@ -1205,19 +1193,17 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.wings,
     cooldownHours: 36,
 
-    // 40 strength + 40 endurance.
     unlockRequirements: Requirement(
       stats: {
-        'strength': 40,
-        'endurance': 40,
+        'strength': 100,
+        'endurance': 100,
       },
     ),
 
-    // 60 strength + 60 endurance.
     equipRequirements: Requirement(
       stats: {
-        'strength': 60,
-        'endurance': 60,
+        'strength': 130,
+        'endurance': 130,
       },
     ),
 
@@ -1293,11 +1279,12 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'guantes_atlas',
-    name: 'GUANTES DE ATLAS',
+    name: 'GUANTE DE ATLAS',
     rarity: Rarity.rare,
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
 
+    // Desbloqueado con cambio de clase a PowerLifter
     unlockRequirements: Requirement(
       stats: {
         'strength': 80,
@@ -1377,6 +1364,7 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
 
+    // Desbloqueado con cambio de clase a BodyBuilder
     unlockRequirements: Requirement(
       stats: {
         'endurance': 80,
@@ -1408,7 +1396,7 @@ final List<EquipmentItem> equipmentItems = [
 
   EquipmentItem(
     id: 'brazales_hermes',
-    name: 'BRAZALES DE HERMES',
+    name: 'BRAZAL DE HERMES',
     rarity: Rarity.rare,
     slot: EquipmentSlot.shield,
     cooldownHours: 36,
@@ -1456,6 +1444,7 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
 
+    // Desbloqueado con cambio de clase a Gymnast
     unlockRequirements: Requirement(
       stats: {
         'energy': 80,

@@ -13,6 +13,7 @@ import '../models/exercise.dart';
 
 import '../widgets/valquin_icon.dart';
 import '../widgets/valquin_icon_glow.dart';
+import '../widgets/valquin_info_dialog.dart';
 
 class EquipScreen extends StatefulWidget {
   final PlayerManager playerManager;
@@ -52,6 +53,10 @@ class _EquipScreenState extends State<EquipScreen> {
 
   AppSettings get settings => widget.settings;
 
+  // --------------------------------------------------
+  // INIT
+  // --------------------------------------------------
+  
   @override
   void initState() {
     super.initState();
@@ -63,6 +68,33 @@ class _EquipScreenState extends State<EquipScreen> {
           _checkCooldowns();
           setState(() {});
         }
+      },
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showEquipInfoIfNeeded();
+    });
+  }
+
+  // --------------------------------------------------
+  // INFO DIALOG
+  // --------------------------------------------------
+
+  void _showEquipInfoIfNeeded() {
+    final player = playerManager.player;
+
+    if (!mounted || player == null || player.xp != 0) {
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (_) {
+        return ValquinInfoDialog(
+          title: settings.strings.equipInfoTitle,
+          message: settings.strings.equipInfoMessage,
+          buttonText: settings.strings.gotIt,
+        );
       },
     );
   }
@@ -637,6 +669,8 @@ class _EquipScreenState extends State<EquipScreen> {
       return;
     }
 
+    final previousLevel = player.level;
+
     final trainingPlan = trainingPlanManager.trainingPlan;
 
     final gainedStats = trainingPlan.execute(player);
@@ -644,6 +678,8 @@ class _EquipScreenState extends State<EquipScreen> {
     if (gainedStats.isEmpty) {
       return;
     }
+
+    final leveledUp = player.level > previousLevel;
 
     await playerManager.savePlayer();
     await trainingPlanManager.saveTrainingPlan();
@@ -674,6 +710,19 @@ class _EquipScreenState extends State<EquipScreen> {
         duration: const Duration(seconds: 2),
       ),
     );
+
+    if (leveledUp) {
+      await showDialog(
+        context: context,
+        builder: (_) {
+          return ValquinInfoDialog(
+            title: settings.strings.levelUpTitle,
+            message: settings.strings.levelUpMessage,
+            buttonText: settings.strings.gotIt,
+          );
+        },
+      );
+    }
   }
 
   // ---------------------------------------------------------------------------

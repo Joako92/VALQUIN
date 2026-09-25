@@ -13,6 +13,7 @@ import '../models/training_plan.dart';
 
 import '../widgets/valquin_icon.dart';
 import '../widgets/valquin_icon_glow.dart';
+import '../widgets/valquin_info_dialog.dart';
 
 enum InventoryFilterType {
   all,
@@ -68,10 +69,42 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   bool isLoading = true;
 
+  // --------------------------------------------------
+  // INIT
+  // --------------------------------------------------
+  
   @override
   void initState() {
     super.initState();
+
     loadEquipmentItems();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showInventoryInfoIfNeeded();
+    });
+  }
+
+  // --------------------------------------------------
+  // INFO DIALOG
+  // --------------------------------------------------
+
+  void _showInventoryInfoIfNeeded() {
+    final player = playerManager.player;
+
+    if (!mounted || player == null || player.xp != 0) {
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (_) {
+        return ValquinInfoDialog(
+          title: settings.strings.inventoryInfoTitle,
+          message: settings.strings.inventoryInfoMessage,
+          buttonText: settings.strings.gotIt,
+        );
+      },
+    );
   }
 
   Future<void> loadEquipmentItems() async {

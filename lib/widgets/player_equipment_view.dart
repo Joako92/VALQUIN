@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import '../config/equipment_visual_config.dart';
 
 import '../models/equipment_slot.dart';
+import '../models/equipment_item.dart';
+
+import '../widgets/accessory_animation.dart';
 
 import '../renderers/avatar_renderer.dart';
 import '../renderers/equipment_renderer.dart';
 
 class PlayerEquipmentView extends StatefulWidget {
-  final List<dynamic> equipment;
+  final List<EquipmentItem> equipment;
   final String avatarId;
 
   const PlayerEquipmentView({
@@ -88,20 +91,30 @@ class _PlayerEquipmentViewState extends State<PlayerEquipmentView> {
     };
 
     final head = equippedBySlot[EquipmentSlot.head];
-    final shoulders =
-        equippedBySlot[EquipmentSlot.shoulders];
+    final shoulders = equippedBySlot[EquipmentSlot.shoulders];
     final chest = equippedBySlot[EquipmentSlot.chest];
     final belt = equippedBySlot[EquipmentSlot.belt];
     final legs = equippedBySlot[EquipmentSlot.legs];
     final weapon = equippedBySlot[EquipmentSlot.weapon];
     final shield = equippedBySlot[EquipmentSlot.shield];
     final wings = equippedBySlot[EquipmentSlot.wings];
+    final accessory = equippedBySlot[EquipmentSlot.accessory];
 
     final hasHelmet = head != null;
 
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
+
+        // --------------------------------------------------
+        // ACCESSORY
+        // --------------------------------------------------
+
+        if (accessory != null)
+          AccessoryAnimation(
+            accessory: accessory,
+          ),
+
         // --------------------------------------------------
         // COLUMN
         // --------------------------------------------------

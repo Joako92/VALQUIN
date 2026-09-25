@@ -3,9 +3,13 @@
 ### Forge Yourself.
 
 <p align="center">
+
   <img src="assets\screenshots\status.png" alt="VALQUIN Status" width="250"/>
+
   <img src="assets\screenshots\inventory.png" alt="VALQUIN Inventory" width="250"/>
+
   <img src="assets\screenshots\equip.png" alt="VALQUIN Equip" width="250"/>
+
 </p>
 
 ---
@@ -44,6 +48,9 @@ The project is designed around a simple principle:
 * Class progression and unlock conditions.
 * Permanent progression milestones.
 * Player reset while preserving unlocked equipment.
+* First-time player onboarding.
+* Player creation.
+* Avatar selection.
 
 ### Avatar System
 
@@ -130,7 +137,7 @@ Rarity is also part of VALQUIN's visual language.
 Each rarity has its own primary color and glow effect:
 
 ```text
-Common      → Light Gray + Blue Glow
+Common      → Light Gray + Gray Glow
 Rare        → Green + Blue Glow
 Legendary   → Violet + Yellow Glow
 Mythic      → Fuchsia + White Glow
@@ -142,9 +149,9 @@ An equipment item can therefore act as both a progression reward and a way of sp
 
 ### Equipment Visualization
 
-VALQUIN now includes the first functional equipment visualization layer.
+VALQUIN includes a functional equipment visualization layer that renders the player's equipped items directly over the selected avatar.
 
-Equipment artwork is rendered directly over the selected avatar and changes according to the avatar's current view.
+Equipment artwork changes according to the avatar's current view.
 
 Current functionality includes:
 
@@ -162,6 +169,10 @@ Current functionality includes:
 * Rear-layer wing rendering.
 * Integration with the Status screen.
 * Visual testing across the available avatar views.
+* Accessory visual assets.
+* Animated accessory assets.
+* Tap-triggered accessory animations.
+* Rarity-based accessory glow.
 
 The equipment renderer uses the avatar as a stable coordinate system so that equipment assets remain aligned with the character across different views.
 
@@ -169,10 +180,15 @@ The current architecture separates:
 
 ```text
 Base Avatar
+
     │
+
     ▼
+
 Equipment Renderer
+
     │
+
     ├── Head
     ├── Shoulders
     ├── Chest
@@ -184,11 +200,83 @@ Equipment Renderer
     └── Accessory
 ```
 
-Most current equipment slots already have production PNG assets.
+Most equipment slots use production PNG assets.
 
-**Accessory visual assets are still pending.**
+Accessories use a different visual approach from body equipment.
 
-The current equipment system therefore represents the first functional vertical slice of the complete character visualization architecture.
+Armor, weapons and other fitted equipment are rendered as layers aligned to the avatar coordinate system.
+
+Accessories are treated as independent visual objects that can occupy their own area around the character and provide animated interactions.
+
+The accessory animation system currently uses four PNG frames:
+
+```text
+Accessory
+
+    │
+    ├── Frame 1
+    ├── Frame 2
+    ├── Frame 3
+    └── Frame 4
+```
+
+A tap triggers the animation sequence:
+
+```text
+1 → 2 → 3 → 4 → 4 → 3 → 2 → 1
+```
+
+After the animation completes, the accessory returns to its default frame.
+
+Accessory assets follow the equipment item ID:
+
+```text
+assets/images/accesory/
+
+    {item_id}_1.png
+    {item_id}_2.png
+    {item_id}_3.png
+    {item_id}_4.png
+```
+
+This allows new accessories to be added without requiring accessory-specific rendering logic in the Player Screen.
+
+Accessories also inherit their visual glow from their equipment rarity:
+
+```text
+Common      → Common Glow
+Rare        → Rare Glow
+Legendary   → Legendary Glow
+Mythic      → Mythic Glow
+```
+
+The accessory animation system is independent from the avatar rotation gesture, allowing the player to interact with an accessory without interfering with character view navigation.
+
+The current visual architecture therefore distinguishes between:
+
+```text
+Avatar
+
+    │
+    ├── Fitted Equipment
+    │
+    │     ├── Head
+    │     ├── Shoulders
+    │     ├── Chest
+    │     ├── Belt
+    │     ├── Legs
+    │     ├── Weapon
+    │     ├── Shield
+    │     └── Wings
+    │
+    └── Independent Accessories
+          │
+          ├── Animated
+          ├── Interactive
+          └── Rarity Glow
+```
+
+The equipment visualization system represents the connection between the player's RPG progression and the visual identity of the character.
 
 ### Inventory
 
@@ -347,23 +435,14 @@ This establishes a visual progression principle:
 
 ```text
 BASE CHARACTER
-
       │
-
       ▼
-
   EQUIPMENT
-
       │
-
       ▼
-
 VISUAL IDENTITY
-
       │
-
       ▼
-
 SPECIALIZATION
 ```
 
@@ -377,11 +456,8 @@ The first avatar implementation uses four dedicated production views:
 
 ```text
 Front
-
 Front 3/4
-
 Side
-
 Back
 ```
 
@@ -424,7 +500,9 @@ The current visual architecture is:
 
 ```text
 Base Avatar
+
     │
+
     ├── Equipment
     │
     ├── Weapons
@@ -432,6 +510,8 @@ Base Avatar
     ├── Shields
     │
     ├── Wings
+    │
+    ├── Accessories
     │
     └── Future Visual Effects
 ```
@@ -444,7 +524,9 @@ Equipment assets are organized around the same four-view structure as the avatar
 
 ```text
 Equipment Item
+
       │
+
       ├── Front
       ├── Front 3/4
       ├── Side
@@ -457,17 +539,29 @@ The resulting presentation is:
 
 ```text
 Avatar View
+
      │
+
      ▼
+
 Equipment View
+
      │
+
      ▼
+
 Position + Scale
+
      │
+
      ▼
+
 Layer Ordering
+
      │
+
      ▼
+
 Rendered Character
 ```
 
@@ -479,22 +573,44 @@ For example:
 
 ```text
 Shield
+
     │
+
     ├── Front      → In front of avatar
     ├── Front 3/4  → In front of avatar
     ├── Side       → Behind avatar
     └── Back       → Behind avatar
 
 Wings
+
     │
+
     └── Always behind avatar
 ```
 
 These rendering rules are handled by the equipment visualization layer.
 
-The result is a more reliable visual representation of equipment without requiring the base avatar assets to change.
+Accessories use a separate presentation model:
 
-The current implementation has been tested with the available avatar views and equipment assets directly in the frontend.
+```text
+Accessory
+
+    │
+
+    ├── Independent visual layer
+    │
+    ├── Four animation frames
+    │
+    ├── Tap interaction
+    │
+    └── Rarity-based glow
+```
+
+This keeps accessory behavior independent from avatar rotation and fitted equipment rendering.
+
+The result is a more flexible visual representation of equipment without requiring the base avatar assets to change.
+
+The current implementation has been tested with the available avatar views, equipment assets and animated accessory assets directly in the frontend.
 
 ### Branding
 
@@ -571,22 +687,31 @@ Equipment rarity is represented not only through color, but also through a local
 
 The glow is applied to the equipment icon itself rather than the surrounding card.
 
+Animated accessories now use the same rarity-driven visual language.
+
 This creates a visual hierarchy where:
 
 ```text
-Card
+Equipment
 
 │
-├── Border → Equipment rarity
+
+├── Rarity
 │
-└── Icon
-     │
-     ├── Color → Equipment rarity
-     │
-     └── Glow → Equipment rarity + active state
+├── Primary Color
+│
+└── Glow
+      │
+      ├── Inventory
+      ├── Equipment
+      └── Accessories
 ```
 
-This keeps the interface restrained while allowing rare equipment to visually stand out.
+For standard equipment icons, the glow remains localized to the icon.
+
+For animated accessories, the glow is applied to the accessory artwork itself and follows the current animation frame.
+
+This keeps the interface restrained while allowing rare equipment and accessories to visually stand out.
 
 ### Color System
 
@@ -704,23 +829,43 @@ Atmosphere
 
 With the v0.7 milestone, the character became the first major world-building element capable of interacting directly with the player's progression.
 
-With v0.7.2, equipment can now participate in that visual layer through dedicated assets and frontend rendering.
+With v0.7.2, equipment can participate in that visual layer through dedicated assets and frontend rendering.
 
-This creates the first complete visual loop between:
+With v0.7.4, accessories extend the visual layer beyond fitted equipment through animated, interactive objects with rarity-driven glow effects.
+
+This creates a stronger visual loop between:
 
 ```text
 Player
+
   │
+
   ▼
+
 Avatar
+
   │
+
   ▼
+
 Equipment
+
   │
+
+  ├── Fitted Equipment
+  │
+  └── Interactive Accessories
+
+  │
+
   ▼
+
 Training
+
   │
+
   ▼
+
 Progression
 ```
 
@@ -765,11 +910,11 @@ The database layer is built around SQLite and Drift, keeping persistent gameplay
 
 ### Current Version
 
-**v0.7.3 — Welcome & Character Creation**
+**v0.7.4 — Accessory Animation**
 
-Version 0.7.3 introduces the initial player onboarding flow and separates the first-time player experience from the main application flow.
+Version 0.7.4 extends the character presentation system with the first functional animated accessory layer.
 
-The application now provides a dedicated entry point for new players before entering the main game interface.
+Accessories are now treated as independent visual objects rather than fitted equipment layers.
 
 The current application includes:
 
@@ -838,7 +983,6 @@ The current application includes:
 * Reactive application theme.
 * Reactive localization updates.
 * Theme-based accent color usage across the UI.
-* Initial male avatar.
 * Dedicated avatar assets.
 * Four avatar production views.
 * Front avatar view.
@@ -859,24 +1003,49 @@ The current application includes:
 * Character creation validation.
 * Avatar selection during character creation.
 * Persistent avatar identity across application restarts.
+* Animated accessory assets.
+* Four-frame accessory animation system.
+* Tap-triggered accessory animation.
+* Independent accessory rendering layer.
+* Accessory assets driven by equipment item IDs.
+* Accessory animation independent from avatar rotation.
+* Rarity-based accessory glow.
+* Common accessory glow.
+* Rare accessory glow.
+* Legendary accessory glow.
+* Mythic accessory glow.
 
 The current first-time player flow is:
 
 ```text
 Application Start
+
        │
+
        ▼
+
    Has Player?
+
     /      \
+
   No        Yes
+
   │          │
+
   ▼          ▼
+
 Welcome     Main
+
   │
+
   ▼
+
 Create Player
+
   │
+
   ▼
+
 Main
 ```
 
@@ -886,20 +1055,35 @@ The Create Player Screen provides the initial character setup:
 
 ```text
 Select Language
+
        │
+
        ▼
+
 Welcome Screen
+
        │
+
        ▼
+
 Select Avatar
+
        │
+
        ▼
+
 Enter Player Name
+
        │
+
        ▼
+
 Create Player
+
        │
+
        ▼
+
 Main Application
 ```
 
@@ -936,9 +1120,13 @@ Avatar Presentation
 
 Equipment Presentation
 
+Accessory Presentation
+
 Layering
 
 Interaction States
+
+Animation
 
 Customization
 
@@ -951,7 +1139,7 @@ The current system intentionally uses four production avatar views.
 
 The next avatar iteration will expand the rotation toward a complete **360-degree view**.
 
-The remaining equipment visualization work includes accessory assets and additional visual content.
+The accessory system now provides the first functional foundation for animated and interactive world-building objects around the character.
 
 ---
 
@@ -1022,12 +1210,13 @@ The v0.7 milestone introduced the first real character presentation system.
 * Base character designed as an equipment-ready RPG avatar.
 * Foundation for future equipment layering.
 
-### v0.7.2 — Mid Version
+### v0.7.2 — Equipment Visualization & Player Screen Modularization
 
-The v0.7.2 creates modularization on Player Screen.
+The v0.7.2 milestone expanded the avatar system into the first functional equipment visualization layer and modularized the Player Screen.
 
 ### Completed
 
+* Player Screen modularization.
 * Production PNG assets for the current equipment catalog.
 * Equipment assets for multiple equipment slots.
 * Four-view equipment assets.
@@ -1047,19 +1236,146 @@ The v0.7.2 creates modularization on Player Screen.
 * Corrections to avatar/equipment rendering layers.
 * Initial vertical slice connecting avatar, equipment and frontend presentation.
 
-Accessory visual assets remain pending.
+### v0.7.3 — Welcome & Character Creation
+
+Version 0.7.3 introduced the first-time player onboarding flow and the dedicated character creation experience.
+
+### Completed
+
+* Welcome Screen.
+* First-time application entry flow.
+* Welcome introduction.
+* Welcome disclaimer.
+* Language selection from the Welcome Screen.
+* English and Spanish language selection.
+* Runtime localization updates.
+* Persistent language selection.
+* Dedicated Create Player Screen.
+* Avatar selection during character creation.
+* Player name input.
+* Player creation validation.
+* Player creation flow.
+* Persistent avatar selection.
+* Persistent player name.
+* Integration between character creation and the existing player system.
+* Automatic transition from character creation into the main application.
+* Correct avatar loading from persisted player data.
+* Complete first-time player flow.
+
+The resulting onboarding flow is:
+
+```text
+Welcome
+
+   │
+
+   ▼
+
+Create Player
+
+   │
+
+   ├── Select Language
+   │
+   ├── Select Avatar
+   │
+   └── Enter Name
+          │
+          ▼
+     Create Player
+          │
+          ▼
+        Main
+```
+
+This version establishes the initial player identity before the player enters the main application.
+
+The selected avatar is now part of the player's persistent identity and is consumed by the existing avatar and equipment visualization system.
+
+### v0.7.4 — Accessory Animation
+
+Version 0.7.4 extends the character presentation system with independent animated accessories.
+
+The first implementation uses the weekly journal accessory as the initial vertical slice.
+
+### Completed
+
+* Accessory equipment slot integration.
+* Accessory assets stored independently from fitted equipment.
+* Four-frame accessory asset structure.
+* Dynamic accessory asset loading from `EquipmentItem.id`.
+* Accessory animation widget.
+* Tap-triggered accessory interaction.
+* Animation sequence:
+
+  * Frame 1.
+  * Frame 2.
+  * Frame 3.
+  * Frame 4.
+  * Frame 4.
+  * Frame 3.
+  * Frame 2.
+  * Frame 1.
+* Automatic return to the default frame.
+* Animation timer lifecycle management.
+* Independent accessory interaction layer.
+* Accessory interaction separated from avatar swipe gestures.
+* Rarity-based accessory glow.
+* Common glow.
+* Rare glow.
+* Legendary glow.
+* Mythic glow.
+* Integration with the existing equipment system.
+* Automatic accessory rendering when equipped.
+* Generic accessory rendering based on equipment item IDs.
+
+The current accessory asset convention is:
+
+```text
+assets/images/accesory/
+
+    {item_id}_1.png
+    {item_id}_2.png
+    {item_id}_3.png
+    {item_id}_4.png
+```
+
+The accessory system is intentionally data-driven.
+
+Once an `EquipmentItem` uses:
+
+```dart
+EquipmentSlot.accessory
+```
+
+and the corresponding four assets exist, the accessory is automatically rendered by the existing visualization system.
+
+The first accessory animation establishes the foundation for future animated objects such as:
+
+```text
+Accessories
+
+    │
+    ├── Animated Objects
+    ├── Companions
+    ├── Cosmetic Items
+    ├── Mythic Effects
+    └── Future Interactive Visuals
+```
 
 ### Next Step
 
-* Complete accessory visual assets.
+* Additional accessory visual assets.
+* Additional accessory animations.
+* More complex accessory interactions.
 * Full 360-degree avatar rotation.
 * Bidirectional continuous rotation.
 * Additional avatar variants.
 * Female avatar variants.
 * Blond and dark-haired variants.
 * Improved avatar transition animations.
-* Avatar selection system.
-* Persistent avatar selection.
+* Expanded avatar customization.
+* Additional equipment visual content.
 
 ### Future Avatar & Equipment Work
 
@@ -1073,6 +1389,7 @@ Accessory visual assets remain pending.
 * Character-specific visual states.
 * Additional equipment visual effects.
 * More complete accessory visualization.
+* Additional interactive visual objects.
 
 ---
 
@@ -1107,6 +1424,8 @@ Accessory visual assets remain pending.
 * Unlock animations.
 * Level-up feedback.
 * Rare equipment effects.
+* Animated accessories.
+* Interactive world-building elements.
 * More immersive RPG screens.
 * Custom VALQUIN visual assets.
 * Dynamic visual states.
@@ -1157,7 +1476,7 @@ REAL TRAINING
 
       ▼
 
-  EQUIPMENT
+   EQUIPMENT
 
       │
 

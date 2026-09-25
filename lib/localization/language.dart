@@ -20,6 +20,15 @@ class LanguageStrings {
     }
   }
 
+  String get gotIt {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.gotIt;
+      case AppLanguage.spanish:
+        return SpanishStrings.gotIt;
+    }
+  }
+
   String get attributeStrength {
     switch (language) {
       case AppLanguage.english:
@@ -119,6 +128,26 @@ class LanguageStrings {
     }
   }
 
+  // Player Screen
+
+  String get statusInfoTitle {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.statusInfoTitle;
+      case AppLanguage.spanish:
+        return SpanishStrings.statusInfoTitle;
+    }
+  }
+
+  String get statusInfoMessage {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.statusInfoMessage;
+      case AppLanguage.spanish:
+        return SpanishStrings.statusInfoMessage;
+    }
+  }
+
   String get newClassAvailable {
     switch (language) {
       case AppLanguage.english:
@@ -208,6 +237,28 @@ class LanguageStrings {
         return SpanishStrings.playerResetMessage;
     }
   }
+
+  // Status dialog
+
+  String get inventoryInfoTitle {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.inventoryInfoTitle;
+      case AppLanguage.spanish:
+        return SpanishStrings.inventoryInfoTitle;
+    }
+  }
+
+  String get inventoryInfoMessage {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.inventoryInfoMessage;
+      case AppLanguage.spanish:
+        return SpanishStrings.inventoryInfoMessage;
+    }
+  }
+
+  // Class
 
   String get classNovice {
     switch (language) {
@@ -607,6 +658,109 @@ class LanguageStrings {
         return EnglishStrings.trainingExecuted;
       case AppLanguage.spanish:
         return SpanishStrings.trainingExecuted;
+    }
+  }
+
+  String get levelUpTitle {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.levelUpTitle;
+      case AppLanguage.spanish:
+        return SpanishStrings.levelUpTitle;
+    }
+  }
+
+  String get levelUpMessage {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.levelUpMessage;
+      case AppLanguage.spanish:
+        return SpanishStrings.levelUpMessage;
+    }
+  }
+
+  // Equip Screen Info
+
+  String get equipInfoTitle {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.equipInfoTitle;
+      case AppLanguage.spanish:
+        return SpanishStrings.equipInfoTitle;
+    }
+  }
+
+  String get equipInfoMessage {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.equipInfoMessage;
+      case AppLanguage.spanish:
+        return SpanishStrings.equipInfoMessage;
+    }
+  }
+
+  // Class Change Info
+
+  String get classChangeAcceptedTitle {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.classChangeAcceptedTitle;
+      case AppLanguage.spanish:
+        return SpanishStrings.classChangeAcceptedTitle;
+    }
+  }
+
+  String get classChangePowerLifter {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.classChangePowerLifter;
+      case AppLanguage.spanish:
+        return SpanishStrings.classChangePowerLifter;
+    }
+  }
+
+  String get classChangeRunner {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.classChangeRunner;
+      case AppLanguage.spanish:
+        return SpanishStrings.classChangeRunner;
+    }
+  }
+
+  String get classChangeBodybuilder {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.classChangeBodybuilder;
+      case AppLanguage.spanish:
+        return SpanishStrings.classChangeBodybuilder;
+    }
+  }
+
+  String get classChangeGymnast {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.classChangeGymnast;
+      case AppLanguage.spanish:
+        return SpanishStrings.classChangeGymnast;
+    }
+  }
+
+  String get classChangeAthlete {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.classChangeAthlete;
+      case AppLanguage.spanish:
+        return SpanishStrings.classChangeAthlete;
+    }
+  }
+
+  String get classChangeNovice {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.classChangeNovice;
+      case AppLanguage.spanish:
+        return SpanishStrings.classChangeNovice;
     }
   }
 
