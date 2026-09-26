@@ -585,7 +585,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         color: AppColors.textSecondary,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
+                        letterSpacing: 0.2,
                       ),
                     ),
 

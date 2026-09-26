@@ -14,8 +14,8 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'gorra_cuero',
-    name: 'GORRA DE CUERO',
+    id: 'casco_cuero',
+    name: 'CASCO DE CUERO',
     rarity: Rarity.common,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
@@ -200,7 +200,7 @@ final List<EquipmentItem> equipmentItems = [
   ),
 
   // ==================================================
-  // SET DE HIERRO (mínimo en nivel 2)
+  // SET DE HIERRO
   // ==================================================
 
   // --------------------------------------------------
@@ -246,8 +246,8 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'hombrera_hierro',
-    name: 'HOMBRERA DE HIERRO',
+    id: 'hombreras_hierro',
+    name: 'HOMBRERAS DE HIERRO',
     rarity: Rarity.common,
     slot: EquipmentSlot.shoulders,
     cooldownHours: 24,
@@ -364,7 +364,7 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'pantalones_cota',
+    id: 'pantalones_hierro',
     name: 'PANTALONES DE HIERRO',
     rarity: Rarity.common,
     slot: EquipmentSlot.legs,
@@ -404,7 +404,7 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'cinturon_reforzado',
+    id: 'cinturon_hierro',
     name: 'CINTURÓN HIERRO',
     rarity: Rarity.common,
     slot: EquipmentSlot.belt,
@@ -497,7 +497,6 @@ final List<EquipmentItem> equipmentItems = [
       },
     ),
 
-    // 3 sesiones = +30 endurance
     equipRequirements: Requirement(
       stats: {
         'strength': 60,
@@ -527,9 +526,8 @@ final List<EquipmentItem> equipmentItems = [
     name: 'BITÁCORA SEMANAL',
     rarity: Rarity.common,
     slot: EquipmentSlot.accessory,
-    cooldownHours: 168, // ONE WEEK
+    cooldownHours: 168,
 
-    // Desbloqueado al completarse 1 entrenamiento de cada tipo
     unlockRequirements: Requirement(
       stats: {
         'strength': 10,
@@ -567,7 +565,7 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'visera_bronce',
+    id: 'casco_bronce',
     name: 'CASCO DE BRONCE',
     rarity: Rarity.common,
     slot: EquipmentSlot.head,
@@ -605,7 +603,7 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'pectoral_bronce',
+    id: 'pechera_bronce',
     name: 'PECHERA DE BRONCE',
     rarity: Rarity.common,
     slot: EquipmentSlot.chest,
@@ -757,7 +755,7 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'pollera_bronce',
+    id: 'pantalones_bronce',
     name: 'PANTALONES DE BRONCE',
     rarity: Rarity.common,
     slot: EquipmentSlot.legs,
@@ -795,8 +793,8 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'faja_bronce',
-    name: 'CINTURON DE BRONCE',
+    id: 'cinturon_bronce',
+    name: 'CINTURÓN DE BRONCE',
     rarity: Rarity.common,
     slot: EquipmentSlot.belt,
     cooldownHours: 24,
@@ -875,7 +873,7 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'capucha_sabio',
+    id: 'casco_sabio',
     name: 'CASCO DEL SABIO',
     rarity: Rarity.rare,
     slot: EquipmentSlot.head,
@@ -919,7 +917,7 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'tunica_sabio',
+    id: 'pechera_sabio',
     name: 'PECHERA DEL SABIO',
     rarity: Rarity.rare,
     slot: EquipmentSlot.chest,
@@ -963,7 +961,7 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'manto_sabio',
+    id: 'hombreras_sabio',
     name: 'HOMBRERAS DEL SABIO',
     rarity: Rarity.rare,
     slot: EquipmentSlot.shoulders,
@@ -1095,13 +1093,12 @@ final List<EquipmentItem> equipmentItems = [
   // --------------------------------------------------
 
   EquipmentItem(
-    id: 'grebas_sabio',
+    id: 'pantalones_sabio',
     name: 'BOTAS DEL SABIO',
     rarity: Rarity.rare,
     slot: EquipmentSlot.legs,
     cooldownHours: 36,
 
-    // 40 strength + 40 endurance.
     unlockRequirements: Requirement(
       stats: {
         'strength': 100,
@@ -1109,7 +1106,6 @@ final List<EquipmentItem> equipmentItems = [
       },
     ),
 
-    // 60 strength + 60 endurance.
     equipRequirements: Requirement(
       stats: {
         'strength': 130,
@@ -1147,7 +1143,6 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.belt,
     cooldownHours: 36,
 
-    // 60 strength + 60 endurance.
     unlockRequirements: Requirement(
       stats: {
         'strength': 100,
@@ -1155,7 +1150,6 @@ final List<EquipmentItem> equipmentItems = [
       },
     ),
 
-    // 90 strength + 90 endurance.
     equipRequirements: Requirement(
       stats: {
         'strength': 130,
@@ -1235,7 +1229,7 @@ final List<EquipmentItem> equipmentItems = [
   // ==================================================
 
   EquipmentItem(
-    id: 'coraza_atlas',
+    id: 'pechera_atlas',
     name: 'PECHERA DE ATLAS',
     rarity: Rarity.rare,
     slot: EquipmentSlot.chest,
@@ -1245,7 +1239,11 @@ final List<EquipmentItem> equipmentItems = [
       stats: {
         'strength': 100,
       },
-      classes: {PlayerClass.powerLifter, PlayerClass.bodybuilder, PlayerClass.athlete},
+      classes: {
+        PlayerClass.powerLifter,
+        PlayerClass.bodybuilder,
+        PlayerClass.athlete,
+      },
     ),
 
     equipRequirements: Requirement(
@@ -1284,13 +1282,15 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
 
-    // Desbloqueado con cambio de clase a PowerLifter
     unlockRequirements: Requirement(
       stats: {
         'strength': 80,
         'endurance': 30,
       },
-      classes: {PlayerClass.powerLifter, PlayerClass.athlete},
+      classes: {
+        PlayerClass.powerLifter,
+        PlayerClass.athlete,
+      },
     ),
 
     equipRequirements: Requirement(
@@ -1325,7 +1325,11 @@ final List<EquipmentItem> equipmentItems = [
       stats: {
         'endurance': 100,
       },
-      classes: {PlayerClass.powerLifter, PlayerClass.bodybuilder, PlayerClass.athlete},
+      classes: {
+        PlayerClass.powerLifter,
+        PlayerClass.bodybuilder,
+        PlayerClass.athlete,
+      },
     ),
 
     equipRequirements: Requirement(
@@ -1364,13 +1368,15 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
 
-    // Desbloqueado con cambio de clase a BodyBuilder
     unlockRequirements: Requirement(
       stats: {
         'endurance': 80,
         'strength': 30,
       },
-      classes: {PlayerClass.bodybuilder, PlayerClass.athlete},
+      classes: {
+        PlayerClass.bodybuilder,
+        PlayerClass.athlete,
+      },
     ),
 
     equipRequirements: Requirement(
@@ -1405,7 +1411,12 @@ final List<EquipmentItem> equipmentItems = [
       stats: {
         'energy': 100,
       },
-      classes: {PlayerClass.powerLifter, PlayerClass.bodybuilder, PlayerClass.athlete, PlayerClass.gymnast},
+      classes: {
+        PlayerClass.powerLifter,
+        PlayerClass.bodybuilder,
+        PlayerClass.athlete,
+        PlayerClass.gymnast,
+      },
     ),
 
     equipRequirements: Requirement(
@@ -1444,13 +1455,15 @@ final List<EquipmentItem> equipmentItems = [
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
 
-    // Desbloqueado con cambio de clase a Gymnast
     unlockRequirements: Requirement(
       stats: {
         'energy': 80,
         'stamina': 30,
       },
-      classes: {PlayerClass.gymnast, PlayerClass.athlete},
+      classes: {
+        PlayerClass.gymnast,
+        PlayerClass.athlete,
+      },
     ),
 
     equipRequirements: Requirement(
@@ -1475,7 +1488,7 @@ final List<EquipmentItem> equipmentItems = [
   // ==================================================
 
   EquipmentItem(
-    id: 'corona_atalanta',
+    id: 'casco_atalanta',
     name: 'CASCO DE ATALANTA',
     rarity: Rarity.rare,
     slot: EquipmentSlot.head,
@@ -1485,7 +1498,11 @@ final List<EquipmentItem> equipmentItems = [
       stats: {
         'stamina': 100,
       },
-      classes: {PlayerClass.runner, PlayerClass.gymnast, PlayerClass.athlete},
+      classes: {
+        PlayerClass.runner,
+        PlayerClass.gymnast,
+        PlayerClass.athlete,
+      },
     ),
 
     equipRequirements: Requirement(
@@ -1529,7 +1546,10 @@ final List<EquipmentItem> equipmentItems = [
         'energy': 30,
         'stamina': 80,
       },
-      classes: {PlayerClass.runner, PlayerClass.athlete},
+      classes: {
+        PlayerClass.runner,
+        PlayerClass.athlete,
+      },
     ),
 
     equipRequirements: Requirement(
@@ -1554,8 +1574,8 @@ final List<EquipmentItem> equipmentItems = [
   // ==================================================
 
   EquipmentItem(
-    id: 'manto_campeon',
-    name: 'MANTO DEL CAMPEÓN',
+    id: 'capa_campeon',
+    name: 'CAPA DEL CAMPEÓN',
     rarity: Rarity.rare,
     slot: EquipmentSlot.wings,
     cooldownHours: 36,
@@ -1567,7 +1587,11 @@ final List<EquipmentItem> equipmentItems = [
         'energy': 40,
         'stamina': 40,
       },
-      classes: {PlayerClass.powerLifter, PlayerClass.bodybuilder, PlayerClass.athlete},
+      classes: {
+        PlayerClass.powerLifter,
+        PlayerClass.bodybuilder,
+        PlayerClass.athlete,
+      },
     ),
 
     equipRequirements: Requirement(
@@ -1616,7 +1640,9 @@ final List<EquipmentItem> equipmentItems = [
         'energy': 60,
         'stamina': 60,
       },
-      classes: {PlayerClass.athlete},
+      classes: {
+        PlayerClass.athlete,
+      },
     ),
 
     equipRequirements: Requirement(
@@ -1637,4 +1663,312 @@ final List<EquipmentItem> equipmentItems = [
 
     exercises: [],
   ),
+
+  // ==================================================
+  // Alas Angel
+  // ==================================================
+
+  EquipmentItem(
+    id: 'alas_angel',
+    name: 'ALAS DE ANGEL',
+    rarity: Rarity.legendary,
+    slot: EquipmentSlot.wings,
+    cooldownHours: 1,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'strength': 1000,
+        'endurance': 1000,
+        'energy': 500,
+        'stamina': 500,
+      },
+      classes: {
+        PlayerClass.athlete,
+      },
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 1000,
+        'endurance': 1000,
+        'energy': 500,
+        'stamina': 500,
+      },
+    ),
+
+    stats: {
+      'strength': 100,
+      'endurance': 100,
+      'energy': 100,
+      'stamina': 100,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'remo_sentado',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'polea_pecho',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'remo_barra',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'dominadas',
+        maxVariant: 4,
+      ),
+    ],
+  ),
+
+  // ==================================================
+  // DRAGON SET
+  // ==================================================
+
+  // --------------------------------------------------
+  // HEAD
+  // --------------------------------------------------
+
+  EquipmentItem(
+    id: 'casco_dragon',
+    name: 'CASCO DEL DRAGÓN',
+    rarity: Rarity.mythic,
+    slot: EquipmentSlot.head,
+    cooldownHours: 1,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'stamina': 2000,
+        'energy': 2000,
+      },
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'stamina': 2000,
+        'energy': 2000,
+      },
+    ),
+
+    stats: {
+      'strength': 200,
+      'endurance': 200,
+      'energy': 100,
+      'stamina': 100,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'trote',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'ciclismo',
+        maxVariant: 4,
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // CHEST
+  // --------------------------------------------------
+
+  EquipmentItem(
+    id: 'pechera_dragon',
+    name: 'PECHERA DEL DRAGÓN',
+    rarity: Rarity.mythic,
+    slot: EquipmentSlot.chest,
+    cooldownHours: 1,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'strength': 2000,
+        'endurance': 2000,
+      },
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 2000,
+        'endurance': 2000,
+      },
+    ),
+
+    stats: {
+      'strength': 200,
+      'endurance': 200,
+      'energy': 100,
+      'stamina': 100,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'press_banca',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'press_declinado',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'aperturas_mancuernas',
+        maxVariant: 4,
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // SHOULDERS
+  // --------------------------------------------------
+
+  EquipmentItem(
+    id: 'hombreras_dragon',
+    name: 'HOMBRERAS DEL DRAGÓN',
+    rarity: Rarity.mythic,
+    slot: EquipmentSlot.shoulders,
+    cooldownHours: 1,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'strength': 2000,
+        'endurance': 2000,
+      },
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 2000,
+        'endurance': 2000,
+      },
+    ),
+
+    stats: {
+      'strength': 200,
+      'endurance': 200,
+      'energy': 100,
+      'stamina': 100,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'press_arnold',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'vuelo_frontal',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'vuelo_lateral',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'vuelo_posterior',
+        maxVariant: 4,
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // LEGS
+  // --------------------------------------------------
+
+  EquipmentItem(
+    id: 'pantalones_dragon',
+    name: 'BOTAS DEL DRAGÓN',
+    rarity: Rarity.mythic,
+    slot: EquipmentSlot.legs,
+    cooldownHours: 1,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'strength': 2000,
+        'endurance': 2000,
+      },
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 2000,
+        'endurance': 2000,
+      },
+    ),
+
+    stats: {
+      'strength': 200,
+      'endurance': 200,
+      'energy': 100,
+      'stamina': 100,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'prensa_piernas',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'sentadilla_carga',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'sentadilla_bulgara',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'peso_muerto',
+        maxVariant: 4,
+      ),
+    ],
+  ),
+
+  // --------------------------------------------------
+  // BELT
+  // --------------------------------------------------
+
+  EquipmentItem(
+    id: 'cinturon_dragon',
+    name: 'CINTURÓN DEL DRAGÓN',
+    rarity: Rarity.mythic,
+    slot: EquipmentSlot.belt,
+    cooldownHours: 1,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'strength': 2000,
+        'endurance': 2000,
+      },
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 2000,
+        'endurance': 2000,
+      },
+    ),
+
+    stats: {
+      'strength': 200,
+      'endurance': 200,
+      'energy': 100,
+      'stamina': 100,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'v_ups',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'crunches',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'crunches_rotacion',
+        maxVariant: 4,
+      ),
+    ],
+  ),
+
 ];

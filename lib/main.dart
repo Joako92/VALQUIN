@@ -50,16 +50,26 @@ Future<void> main(List<String> args) async {
 
   if (deleteMode) {
     debugPrint('DELETE MODE ON');
-    
-    // Examples:
-    
-    // await database.deleteExerciseCompletely(
-    //   'carameloraro',
-    // );
 
-    // await database.deleteEquipmentItemCompletely(
-    //   'vincha_cuero',
-    // );
+    await database.deleteEquipmentItemsCompletely([
+      'cinturon_reforzado',
+      'faja_bronce',
+      'gorra_cuero',
+      'hombrera_hierro',
+      'pantalones_cota',
+      'visera_bronce',
+      'pectoral_bronce',
+      'pollera_bronce',
+      'capucha_sabio',
+      'tunica_sabio',
+      'manto_sabio',
+      'grebas_sabio',
+      'coraza_atlas',
+      'manto_campeon',
+      'corona_atalanta',
+    ]);
+
+    debugPrint('Equipment cleanup completed.');
   }
 
   // --------------------------------------------------

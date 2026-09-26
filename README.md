@@ -5,9 +5,7 @@
 <p align="center">
 
   <img src="assets\screenshots\status.png" alt="VALQUIN Status" width="250"/>
-
   <img src="assets\screenshots\inventory.png" alt="VALQUIN Inventory" width="250"/>
-
   <img src="assets\screenshots\equip.png" alt="VALQUIN Equip" width="250"/>
 
 </p>
@@ -49,7 +47,6 @@ The project is designed around a simple principle:
 * Permanent progression milestones.
 * Player reset while preserving unlocked equipment.
 * First-time player onboarding.
-* Player creation.
 * Avatar selection.
 
 ### Avatar System
@@ -77,14 +74,23 @@ The current rotation flow is:
 
 ```text
 Front
+
   │
+
   ▼
+
 Front 3/4
+
   │
+
   ▼
+
 Side
+
   │
+
   ▼
+
 Back
 ```
 
@@ -173,6 +179,10 @@ Current functionality includes:
 * Animated accessory assets.
 * Tap-triggered accessory animations.
 * Rarity-based accessory glow.
+* Multiple equipment sets and individual equipment pieces.
+* Visual refinement of equipment assets.
+* Legendary equipment content.
+* Mythic equipment sets.
 
 The equipment renderer uses the avatar as a stable coordinate system so that equipment assets remain aligned with the character across different views.
 
@@ -190,13 +200,21 @@ Equipment Renderer
     │
 
     ├── Head
+
     ├── Shoulders
+
     ├── Chest
+
     ├── Belt
+
     ├── Legs
+
     ├── Weapon
+
     ├── Shield
+
     ├── Wings
+
     └── Accessory
 ```
 
@@ -214,9 +232,13 @@ The accessory animation system currently uses four PNG frames:
 Accessory
 
     │
+
     ├── Frame 1
+
     ├── Frame 2
+
     ├── Frame 3
+
     └── Frame 4
 ```
 
@@ -234,8 +256,11 @@ Accessory assets follow the equipment item ID:
 assets/images/accesory/
 
     {item_id}_1.png
+
     {item_id}_2.png
+
     {item_id}_3.png
+
     {item_id}_4.png
 ```
 
@@ -245,8 +270,11 @@ Accessories also inherit their visual glow from their equipment rarity:
 
 ```text
 Common      → Common Glow
+
 Rare        → Rare Glow
+
 Legendary   → Legendary Glow
+
 Mythic      → Mythic Glow
 ```
 
@@ -258,7 +286,9 @@ The current visual architecture therefore distinguishes between:
 Avatar
 
     │
+
     ├── Fitted Equipment
+
     │
     │     ├── Head
     │     ├── Shoulders
@@ -270,7 +300,9 @@ Avatar
     │     └── Wings
     │
     └── Independent Accessories
+
           │
+
           ├── Animated
           ├── Interactive
           └── Rarity Glow
@@ -317,26 +349,47 @@ The daily training flow is intentionally simple:
 
 ```text
 Select Equipment
+
        │
+
        ▼
+
 Activate Equipment
+
        │
+
        ▼
+
 Select Variants
+
        │
+
        ▼
+
 Generate Daily Plan
+
        │
+
        ▼
+
 Review Exercises
+
        │
+
        ▼
+
 Execute Training
+
        │
+
        ▼
+
 Equipment Cooldown
+
        │
+
        ▼
+
 Recover & Train Again
 ```
 
@@ -371,15 +424,25 @@ The settings architecture follows:
 
 ```text
 AppSettings
+
     │
+
     ├── Accent Color
+
     │
+
     └── Language
+
            │
+
            ▼
+
     AppSettingsStorage
+
            │
+
            ▼
+
          SQLite
 ```
 
@@ -435,14 +498,23 @@ This establishes a visual progression principle:
 
 ```text
 BASE CHARACTER
+
       │
+
       ▼
+
   EQUIPMENT
+
       │
+
       ▼
+
 VISUAL IDENTITY
+
       │
+
       ▼
+
 SPECIALIZATION
 ```
 
@@ -456,8 +528,11 @@ The first avatar implementation uses four dedicated production views:
 
 ```text
 Front
+
 Front 3/4
+
 Side
+
 Back
 ```
 
@@ -528,8 +603,11 @@ Equipment Item
       │
 
       ├── Front
+
       ├── Front 3/4
+
       ├── Side
+
       └── Back
 ```
 
@@ -577,8 +655,11 @@ Shield
     │
 
     ├── Front      → In front of avatar
+
     ├── Front 3/4  → In front of avatar
+
     ├── Side       → Behind avatar
+
     └── Back       → Behind avatar
 
 Wings
@@ -598,11 +679,11 @@ Accessory
     │
 
     ├── Independent visual layer
-    │
+
     ├── Four animation frames
-    │
+
     ├── Tap interaction
-    │
+
     └── Rarity-based glow
 ```
 
@@ -687,7 +768,7 @@ Equipment rarity is represented not only through color, but also through a local
 
 The glow is applied to the equipment icon itself rather than the surrounding card.
 
-Animated accessories now use the same rarity-driven visual language.
+Animated accessories use the same rarity-driven visual language.
 
 This creates a visual hierarchy where:
 
@@ -697,13 +778,21 @@ Equipment
 │
 
 ├── Rarity
+
 │
+
 ├── Primary Color
+
 │
+
 └── Glow
+
       │
+
       ├── Inventory
+
       ├── Equipment
+
       └── Accessories
 ```
 
@@ -833,6 +922,8 @@ With v0.7.2, equipment can participate in that visual layer through dedicated as
 
 With v0.7.4, accessories extend the visual layer beyond fitted equipment through animated, interactive objects with rarity-driven glow effects.
 
+With v0.7.5, the equipment catalog received a final visual refinement pass, including updated equipment artwork, corrected naming and additional high-rarity content.
+
 This creates a stronger visual loop between:
 
 ```text
@@ -853,7 +944,9 @@ Equipment
   │
 
   ├── Fitted Equipment
+
   │
+
   └── Interactive Accessories
 
   │
@@ -882,7 +975,7 @@ The application includes database seeders for initializing the local game databa
 Seeder execution can be explicitly requested through a command-line argument:
 
 ```bash
-flutter run -- --seeder
+flutter run --dart-define=SEEDER=true
 ```
 
 This keeps database initialization separate from the normal application startup flow.
@@ -910,11 +1003,21 @@ The database layer is built around SQLite and Drift, keeping persistent gameplay
 
 ### Current Version
 
-**v0.7.4 — Accessory Animation**
+**v0.7.5 — Equipment Visual Polish & Content Expansion**
 
-Version 0.7.4 extends the character presentation system with the first functional animated accessory layer.
+Version 0.7.5 focuses on the final refinement of the current equipment catalog before the first external beta build.
 
-Accessories are now treated as independent visual objects rather than fitted equipment layers.
+This version is primarily a visual and content refinement milestone rather than a new system milestone.
+
+The equipment catalog received a final polish pass including:
+
+* Corrected equipment names and identifiers.
+* Updated equipment artwork.
+* Refined visual consistency across equipment sets.
+* Additional Legendary equipment content.
+* Introduction of a complete Mythic equipment set.
+* Continued alignment of equipment artwork across the four avatar views.
+* Final refinement of the current equipment visual catalog.
 
 The current application includes:
 
@@ -1014,6 +1117,12 @@ The current application includes:
 * Rare accessory glow.
 * Legendary accessory glow.
 * Mythic accessory glow.
+* Integration with the existing equipment system.
+* Generic accessory rendering based on equipment item IDs.
+* Refined equipment names and visual assets.
+* Additional Legendary equipment content.
+* Complete Mythic equipment set.
+* Final equipment visual polish for the current beta catalog.
 
 The current first-time player flow is:
 
@@ -1024,11 +1133,11 @@ Application Start
 
        ▼
 
-   Has Player?
+  Has Player?
 
-    /      \
+   /       \
 
-  No        Yes
+  No       Yes
 
   │          │
 
@@ -1139,7 +1248,9 @@ The current system intentionally uses four production avatar views.
 
 The next avatar iteration will expand the rotation toward a complete **360-degree view**.
 
-The accessory system now provides the first functional foundation for animated and interactive world-building objects around the character.
+The accessory system provides the first functional foundation for animated and interactive world-building objects around the character.
+
+The equipment catalog has now received a visual refinement pass and includes content across the Common, Rare, Legendary and Mythic rarity tiers.
 
 ---
 
@@ -1232,7 +1343,7 @@ The v0.7.2 milestone expanded the avatar system into the first functional equipm
 * Frontend testing with the available avatar views.
 * Integration between avatar and equipment visualization.
 * Seeder execution arguments.
-* Explicit database seeder execution through `--seeder`.
+* Explicit database seeder execution through `--dart-define=SEEDER=true`.
 * Corrections to avatar/equipment rendering layers.
 * Initial vertical slice connecting avatar, equipment and frontend presentation.
 
@@ -1335,8 +1446,11 @@ The current accessory asset convention is:
 assets/images/accesory/
 
     {item_id}_1.png
+
     {item_id}_2.png
+
     {item_id}_3.png
+
     {item_id}_4.png
 ```
 
@@ -1356,40 +1470,76 @@ The first accessory animation establishes the foundation for future animated obj
 Accessories
 
     │
+
     ├── Animated Objects
+
     ├── Companions
+
     ├── Cosmetic Items
+
     ├── Mythic Effects
+
     └── Future Interactive Visuals
 ```
 
+### v0.7.5 — Equipment Visual Polish & Content Expansion
+
+Version 0.7.5 focuses on refining the current equipment catalog and preparing the application for its first external beta testing phase.
+
+### Completed
+
+* Final equipment naming pass.
+* Corrections to equipment names and IDs.
+* Updated equipment artwork.
+* Refinement of existing equipment sets.
+* Visual consistency pass across equipment views.
+* Additional Legendary equipment content.
+* Complete Mythic equipment set.
+* Integration of the new Legendary equipment into the existing equipment system.
+* Integration of the Mythic equipment set into the existing equipment system.
+* Rarity-based visual presentation for the new equipment.
+* Final refinement of the current equipment catalog.
+* Validation of equipment assets across the available avatar views.
+* Final content pass before beta distribution.
+
+The current equipment catalog now represents the first complete progression of equipment rarities:
+
+```text
+Common
+
+   │
+
+   ▼
+
+Rare
+
+   │
+
+   ▼
+
+Legendary
+
+   │
+
+   ▼
+
+Mythic
+```
+
+The visual equipment system is now sufficiently established to support continued content expansion without requiring changes to the core rendering architecture.
+
 ### Next Step
 
-* Additional accessory visual assets.
-* Additional accessory animations.
-* More complex accessory interactions.
-* Full 360-degree avatar rotation.
+* Beta APK distribution.
+* External beta testing.
+* Bug collection and stability fixes.
+* User feedback collection.
+* Final polish based on beta testing.
+* Complete 360-degree avatar rotation.
 * Bidirectional continuous rotation.
 * Additional avatar variants.
 * Female avatar variants.
-* Blond and dark-haired variants.
-* Improved avatar transition animations.
-* Expanded avatar customization.
 * Additional equipment visual content.
-
-### Future Avatar & Equipment Work
-
-* Complete equipment visual layering.
-* Weapon visualization expansion.
-* Armor visualization expansion.
-* Hair variations.
-* Character customization.
-* Dynamic equipment appearance.
-* Visual progression based on player equipment.
-* Character-specific visual states.
-* Additional equipment visual effects.
-* More complete accessory visualization.
-* Additional interactive visual objects.
 
 ---
 

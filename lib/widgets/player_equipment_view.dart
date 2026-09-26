@@ -151,6 +151,17 @@ class _PlayerEquipmentViewState extends State<PlayerEquipmentView> {
             child: Stack(
               alignment: Alignment.center,
               children: [
+                
+                // --------------------------------------------------
+                // BASE AVATAR
+                // --------------------------------------------------
+
+                AvatarRenderer(
+                  avatarId: widget.avatarId,
+                  viewIndex: _avatarViewIndex,
+                  hasHelmet: hasHelmet,
+                ),
+
                 // --------------------------------------------------
                 // SHIELD - BEHIND
                 // --------------------------------------------------
@@ -161,16 +172,6 @@ class _PlayerEquipmentViewState extends State<PlayerEquipmentView> {
                     item: shield,
                     view: _equipmentView,
                   ),
-
-                // --------------------------------------------------
-                // BASE AVATAR
-                // --------------------------------------------------
-
-                AvatarRenderer(
-                  avatarId: widget.avatarId,
-                  viewIndex: _avatarViewIndex,
-                  hasHelmet: hasHelmet,
-                ),
 
                 // --------------------------------------------------
                 // WINGS - BEHIND

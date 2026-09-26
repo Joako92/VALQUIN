@@ -1136,48 +1136,74 @@ class AppDatabase extends _$AppDatabase {
     String equipmentItemId,
   ) async {
     return transaction(() async {
-      // 1. Eliminar relaciones EquipmentItem -> Exercise
-      await (delete(equipmentItemExercises)
-            ..where(
-              (table) =>
-                  table.equipmentItemId.equals(equipmentItemId),
-            ))
-          .go();
-
-      // 2. Eliminar stats
-      await (delete(equipmentItemStats)
-            ..where(
-              (table) =>
-                  table.equipmentItemId.equals(equipmentItemId),
-            ))
-          .go();
-
-      // 3. Eliminar unlock requirements
-      await (delete(equipmentItemUnlockRequirements)
-            ..where(
-              (table) =>
-                  table.equipmentItemId.equals(equipmentItemId),
-            ))
-          .go();
-
-      // 4. Eliminar equip requirements
-      await (delete(equipmentItemEquipRequirements)
-            ..where(
-              (table) =>
-                  table.equipmentItemId.equals(equipmentItemId),
-            ))
-          .go();
-
-      // 5. Finalmente eliminar el equipment item
-      final deletedRows =
-          await (delete(equipmentItems)
-                ..where(
-                  (table) =>
-                      table.id.equals(equipmentItemId),
-                ))
-              .go();
-
-      return deletedRows > 0;
+      return _deleteEquipmentItemCompletelyInternal(equipmentItemId);
     });
+  }
+
+  Future<bool> deleteEquipmentItemsCompletely(
+    List<String> equipmentItemIds,
+  ) async {
+    return transaction(() async {
+      var allDeleted = true;
+
+      for (final equipmentItemId in equipmentItemIds) {
+        final deleted = await _deleteEquipmentItemCompletelyInternal(
+          equipmentItemId,
+        );
+
+        if (!deleted) {
+          allDeleted = false;
+        }
+      }
+
+      return allDeleted;
+    });
+  }
+
+  Future<bool> _deleteEquipmentItemCompletelyInternal(
+    String equipmentItemId,
+  ) async {
+    // 1. Delete EquipmentItem -> Exercise relationships
+    await (delete(equipmentItemExercises)
+          ..where(
+            (table) =>
+                table.equipmentItemId.equals(equipmentItemId),
+          ))
+        .go();
+
+    // 2. Delete stats
+    await (delete(equipmentItemStats)
+          ..where(
+            (table) =>
+                table.equipmentItemId.equals(equipmentItemId),
+          ))
+        .go();
+
+    // 3. Delete unlock requirements
+    await (delete(equipmentItemUnlockRequirements)
+          ..where(
+            (table) =>
+                table.equipmentItemId.equals(equipmentItemId),
+          ))
+        .go();
+
+    // 4. Delete equip requirements
+    await (delete(equipmentItemEquipRequirements)
+          ..where(
+            (table) =>
+                table.equipmentItemId.equals(equipmentItemId),
+          ))
+        .go();
+
+    // 5. Finally delete the equipment item
+    final deletedRows =
+        await (delete(equipmentItems)
+              ..where(
+                (table) =>
+                    table.id.equals(equipmentItemId),
+              ))
+            .go();
+
+    return deletedRows > 0;
   }
 }
