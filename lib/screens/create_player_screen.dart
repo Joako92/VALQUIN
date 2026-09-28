@@ -107,7 +107,7 @@ class _CreatePlayerScreenState
       return;
     }
 
-    Navigator.of(context).pushReplacement(
+    Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (_) => MainScreen(
           playerManager: playerManager,
@@ -117,6 +117,7 @@ class _CreatePlayerScreenState
           settings: settings,
         ),
       ),
+      (route) => false,
     );
   }
 

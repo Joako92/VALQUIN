@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../models/equipment_slot.dart';
+import '../models/rarity.dart';
+
 import 'app_colors.dart';
+import 'app_icons.dart';
 
 enum EquipmentView {
   front,
@@ -23,20 +27,66 @@ class EquipmentVisualConfig {
   }
 }
 
-Color rarityGlowColor(String rarity) {
-  switch (rarity.toLowerCase()) {
-    case 'rare':
+Color rarityColor(Rarity rarity) {
+  switch (rarity) {
+    case Rarity.rare:
+      return AppColors.rare;
+
+    case Rarity.legendary:
+      return AppColors.legendary;
+
+    case Rarity.mythic:
+      return AppColors.mythic;
+
+    case Rarity.common:
+      return AppColors.common;
+  }
+}
+
+Color rarityGlowColor(Rarity rarity) {
+  switch (rarity) {
+    case Rarity.rare:
       return AppColors.rareGlow;
 
-    case 'legendary':
+    case Rarity.legendary:
       return AppColors.legendaryGlow;
 
-    case 'mythic':
+    case Rarity.mythic:
       return AppColors.mythicGlow;
 
-    case 'common':
-    default:
+    case Rarity.common:
       return AppColors.commonGlow;
+  }
+}
+
+String equipmentSlotIcon(EquipmentSlot slot) {
+  switch (slot) {
+    case EquipmentSlot.shoulders:
+      return AppIcons.shoulders;
+
+    case EquipmentSlot.head:
+      return AppIcons.head;
+
+    case EquipmentSlot.wings:
+      return AppIcons.wings;
+
+    case EquipmentSlot.weapon:
+      return AppIcons.weapon;
+
+    case EquipmentSlot.chest:
+      return AppIcons.chest;
+
+    case EquipmentSlot.shield:
+      return AppIcons.shield;
+
+    case EquipmentSlot.accessory:
+      return AppIcons.accessory;
+
+    case EquipmentSlot.legs:
+      return AppIcons.legs;
+
+    case EquipmentSlot.belt:
+      return AppIcons.belt;
   }
 }
 

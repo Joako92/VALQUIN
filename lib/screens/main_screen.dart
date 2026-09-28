@@ -64,118 +64,130 @@ class _MainScreenState extends State<MainScreen> {
       ),
     ];
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: ValquinBackground(
-        child: Stack(
-          children: [
-            // Subtle VALQUIN logo watermark
-            Positioned.fill(
-              child: Center(
-                child: Opacity(
-                  opacity: 0.015,
-                  child: SvgPicture.asset(
-                    'assets/icons/logo.svg',
-                    width: 420,
-                    height: 420,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
+    return PopScope(
+      canPop: currentIndex == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
 
-            // Current screen
-            screens[currentIndex],
-          ],
-        ),
-      ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: 125,
+        if (currentIndex != 0) {
+          setState(() {
+            currentIndex = 0;
+          });
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: ValquinBackground(
           child: Stack(
-            alignment: Alignment.center,
             children: [
-              // Decorative stone navigation plate
+              // Subtle VALQUIN logo watermark
               Positioned.fill(
-                child: Image.asset(
-                  'assets/images/Nav.png',
-                  fit: BoxFit.fill,
-                ),
-              ),
-
-              // Navigation icons
-              Positioned(
-                left: 45,
-                right: 45,
-                bottom: 0,
-                height: 105,
-                child: NavigationBarTheme(
-                  data: NavigationBarThemeData(
-                    backgroundColor: Colors.transparent,
-                    indicatorColor: Colors.transparent,
-                    labelTextStyle:
-                        const WidgetStatePropertyAll<TextStyle>(
-                      TextStyle(
-                        fontSize: 0,
-                        color: Colors.transparent,
-                      ),
+                child: Center(
+                  child: Opacity(
+                    opacity: 0.015,
+                    child: SvgPicture.asset(
+                      'assets/icons/logo.svg',
+                      width: 420,
+                      height: 420,
+                      fit: BoxFit.contain,
                     ),
                   ),
-                  child: NavigationBar(
-                    height: 85,
-                    backgroundColor: Colors.transparent,
-                    selectedIndex: currentIndex,
-                    onDestinationSelected: (index) {
-                      setState(() {
-                        currentIndex = index;
-                      });
-                    },
-                    destinations: [
-                      NavigationDestination(
-                        icon: ValquinIcon(
-                          AppIcons.status,
-                          size: 60,
-                          color: AppColors.textSecondary,
-                        ),
-                        selectedIcon: ValquinIcon(
-                          AppIcons.status,
-                          size: 70,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        label: '',
-                      ),
-                      NavigationDestination(
-                        icon: ValquinIcon(
-                          AppIcons.inventory,
-                          size: 60,
-                          color: AppColors.textSecondary,
-                        ),
-                        selectedIcon: ValquinIcon(
-                          AppIcons.inventory,
-                          size: 70,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        label: '',
-                      ),
-                      NavigationDestination(
-                        icon: ValquinIcon(
-                          AppIcons.equipment,
-                          size: 60,
-                          color: AppColors.textSecondary,
-                        ),
-                        selectedIcon: ValquinIcon(
-                          AppIcons.equipment,
-                          size: 70,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        label: '',
-                      ),
-                    ],
-                  ),
                 ),
               ),
+
+              // Current screen
+              screens[currentIndex],
             ],
+          ),
+        ),
+        bottomNavigationBar: SafeArea(
+          top: false,
+          child: SizedBox(
+            height: 125,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Decorative stone navigation plate
+                Positioned.fill(
+                  child: Image.asset(
+                    'assets/images/Nav.png',
+                    fit: BoxFit.fill,
+                  ),
+                ),
+
+                // Navigation icons
+                Positioned(
+                  left: 45,
+                  right: 45,
+                  bottom: 0,
+                  height: 105,
+                  child: NavigationBarTheme(
+                    data: NavigationBarThemeData(
+                      backgroundColor: Colors.transparent,
+                      indicatorColor: Colors.transparent,
+                      labelTextStyle:
+                          const WidgetStatePropertyAll<TextStyle>(
+                        TextStyle(
+                          fontSize: 0,
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                    child: NavigationBar(
+                      height: 85,
+                      backgroundColor: Colors.transparent,
+                      selectedIndex: currentIndex,
+                      onDestinationSelected: (index) {
+                        setState(() {
+                          currentIndex = index;
+                        });
+                      },
+                      destinations: [
+                        NavigationDestination(
+                          icon: ValquinIcon(
+                            AppIcons.status,
+                            size: 60,
+                            color: AppColors.textSecondary,
+                          ),
+                          selectedIcon: ValquinIcon(
+                            AppIcons.status,
+                            size: 70,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          label: '',
+                        ),
+                        NavigationDestination(
+                          icon: ValquinIcon(
+                            AppIcons.inventory,
+                            size: 60,
+                            color: AppColors.textSecondary,
+                          ),
+                          selectedIcon: ValquinIcon(
+                            AppIcons.inventory,
+                            size: 70,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          label: '',
+                        ),
+                        NavigationDestination(
+                          icon: ValquinIcon(
+                            AppIcons.equipment,
+                            size: 60,
+                            color: AppColors.textSecondary,
+                          ),
+                          selectedIcon: ValquinIcon(
+                            AppIcons.equipment,
+                            size: 70,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          label: '',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

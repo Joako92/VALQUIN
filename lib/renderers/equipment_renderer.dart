@@ -44,7 +44,7 @@ class EquipmentRenderer extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final glowColor = rarityGlowColor(item.rarity.name);
+    final glowColor = rarityGlowColor(item.rarity);
 
     return Transform.translate(
       offset: config.offsetFor(view),

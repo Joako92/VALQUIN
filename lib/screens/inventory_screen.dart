@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
@@ -11,15 +13,11 @@ import '../models/equipment_slot.dart';
 import '../models/exercise.dart';
 import '../models/training_plan.dart';
 
-import '../widgets/valquin_icon.dart';
-import '../widgets/valquin_icon_glow.dart';
 import '../widgets/valquin_info_dialog.dart';
 
-enum InventoryFilterType {
-  all,
-  equipped,
-  slot,
-}
+import '../widgets/inventory/inventory_filter_bar.dart';
+import '../widgets/inventory/inventory_item_grid.dart';
+import '../widgets/inventory/inventory_item_detail.dart';
 
 class InventoryScreen extends StatefulWidget {
   final PlayerManager playerManager;
@@ -32,7 +30,7 @@ class InventoryScreen extends StatefulWidget {
     required this.playerManager,
     required this.trainingPlanManager,
     required this.database,
-    required this.settings, 
+    required this.settings,
   });
 
   @override
@@ -69,19 +67,36 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   bool isLoading = true;
 
+  Timer? _cooldownTimer;
+
   // --------------------------------------------------
   // INIT
   // --------------------------------------------------
-  
+
   @override
   void initState() {
     super.initState();
 
     loadEquipmentItems();
 
+    _cooldownTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (_) {
+        if (mounted) {
+          setState(() {});
+        }
+      },
+    );
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showInventoryInfoIfNeeded();
     });
+  }
+
+  @override
+  void dispose() {
+    _cooldownTimer?.cancel();
+    super.dispose();
   }
 
   // --------------------------------------------------
@@ -107,12 +122,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
+  // --------------------------------------------------
+  // DATA
+  // --------------------------------------------------
+
   Future<void> loadEquipmentItems() async {
     final items = await database.getEquipmentItemsWithAllData();
 
     final exercises = await database.getExercisesWithVariants();
 
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
 
     setState(() {
       equipmentItems = items;
@@ -129,9 +150,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
   // FILTERING
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
 
   List<EquipmentItem> get unlockedItems {
     final player = playerManager.player;
@@ -192,94 +213,23 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
-  // ─────────────────────────────────────────────
-  // RARITY
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
+  // COOLDOWN
+  // --------------------------------------------------
 
-  Color rarityColor(EquipmentItem item) {
-    switch (item.rarity.name.toLowerCase()) {
-      case 'rare':
-        return AppColors.rare;
-
-      case 'legendary':
-        return AppColors.legendary;
-
-      case 'mythic':
-        return AppColors.mythic;
-
-      case 'common':
-      default:
-        return AppColors.common;
-    }
+  bool isOnCooldown(EquipmentItem item) {
+    return trainingPlanManager.trainingPlan.isOnCooldown(item);
   }
 
-  Color rarityGlowColor(EquipmentItem item) {
-    switch (item.rarity.name.toLowerCase()) {
-      case 'rare':
-        return AppColors.rareGlow;
-
-      case 'legendary':
-        return AppColors.legendaryGlow;
-
-      case 'mythic':
-        return AppColors.mythicGlow;
-
-      case 'common':
-      default:
-        return AppColors.commonGlow;
-    }
+  Duration? cooldownRemaining(EquipmentItem item) {
+    return trainingPlanManager.trainingPlan
+        .cooldownUntil(item)
+        ?.difference(DateTime.now());
   }
 
-  // ─────────────────────────────────────────────
-  // ICONS
-  // ─────────────────────────────────────────────
-
-  String slotIconAsset(EquipmentSlot slot) {
-    switch (slot) {
-      case EquipmentSlot.shoulders:
-        return AppIcons.shoulders;
-
-      case EquipmentSlot.head:
-        return AppIcons.head;
-
-      case EquipmentSlot.wings:
-        return AppIcons.wings;
-
-      case EquipmentSlot.weapon:
-        return AppIcons.weapon;
-
-      case EquipmentSlot.chest:
-        return AppIcons.chest;
-
-      case EquipmentSlot.shield:
-        return AppIcons.shield;
-
-      case EquipmentSlot.accessory:
-        return AppIcons.accessory;
-
-      case EquipmentSlot.legs:
-        return AppIcons.legs;
-
-      case EquipmentSlot.belt:
-        return AppIcons.belt;
-    }
-  }
-
-  Widget slotIcon(
-    EquipmentSlot slot, {
-    double size = 30,
-    Color? color,
-  }) {
-    return ValquinIcon(
-      slotIconAsset(slot),
-      size: size,
-      color: color,
-    );
-  }
-
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
   // FORMATTING
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
 
   String formatAmount(double amount) {
     if (amount == amount.roundToDouble()) {
@@ -323,9 +273,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
     }
   }
 
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
   // VARIANTS
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
 
   int selectedVariantFor(EquipmentItem item) {
     return selectedVariants[item.id] ?? 0;
@@ -348,50 +298,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
-  Widget buildVariantSelector(EquipmentItem item) {
-    final selectedVariant = selectedVariantFor(item);
-    final variantCount = availableVariantCount(item);
+  // --------------------------------------------------
+  // EXERCISE DATA
+  // --------------------------------------------------
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (int variantIndex = 0;
-            variantIndex < variantCount;
-            variantIndex++)
-          GestureDetector(
-            onTap: () {
-              selectVariant(
-                item,
-                variantIndex,
-              );
-            },
-            child: SizedBox(
-              width: 36,
-              height: 36,
-              child: Center(
-                child: Text(
-                  variantIndex == selectedVariant
-                      ? '[${variantIndex + 1}]'
-                      : '${variantIndex + 1}',
-                  style: TextStyle(
-                    color: variantIndex == selectedVariant
-                        ? AppColors.textPrimary
-                        : AppColors.textSecondary,
-                    fontSize: 16,
-                    fontWeight:
-                        variantIndex == selectedVariant
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                  ),
-                ),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget buildExerciseRow(
+  String exerciseDetail(
     EquipmentItem item,
     int index,
   ) {
@@ -401,16 +312,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         exercisesById[equipmentExercise.exerciseId];
 
     if (exercise == null) {
-      return Padding(
-        padding: EdgeInsets.only(bottom: 5),
-        child: Text(
-          settings.strings.unknownExercise,
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 11,
-          ),
-        ),
-      );
+      return settings.strings.unknownExercise;
     }
 
     final selectedVariant = selectedVariantFor(item);
@@ -426,231 +328,25 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
     final amount = formatAmount(variant.amount);
 
-    final detail = variant.sets != null
-        ? '${variant.sets} x $amount ${variant.unit}'
-        : '$amount ${variant.unit}';
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5),
-      child: Text(
-        '- ${exercise.name} → $detail',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: 14,
-        ),
-      ),
-    );
+    return variant.sets != null
+        ? '${exercise.name} → '
+            '${variant.sets} x $amount ${variant.unit}'
+        : '${exercise.name} → '
+            '$amount ${variant.unit}';
   }
 
-  // ─────────────────────────────────────────────
-  // ITEM DETAIL
-  // ─────────────────────────────────────────────
-
-  Widget buildItemDetail(
-    BuildContext context,
-    EquipmentItem item,
-  ) {
-    final player = playerManager.player;
-    final trainingPlan = trainingPlanManager.trainingPlan;
-
-    final rarity = rarityColor(item);
-    final glow = rarityGlowColor(item);
-
-    final isEquipped = trainingPlan.containsItem(item);
-
-    final canEquip = player != null &&
-        trainingPlan.canEquipItem(
-          item,
-          player,
-        );
-
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.border,
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ─────────────────────────────────────
-          // ITEM ICON + EQUIP BUTTON
-          // ─────────────────────────────────────
-
-          Column(
-            children: [
-              Container(
-                width: 90,
-                height: 90,
-                decoration: BoxDecoration(
-                  color: AppColors.background,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: rarity.withValues(alpha: 0.7),
-                  ),
-                ),
-                child: Center(
-                  child: ValquinIconGlow(
-                    asset: slotIconAsset(item.slot),
-                    size: 90,
-                    color: rarity,
-                    glowColor: glow,
-                    glowOpacity: 0.75,
-                    blur: 8,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              SizedBox(
-                width: 90,
-                height: 34,
-                child: ElevatedButton(
-                  onPressed: canEquip || isEquipped
-                      ? () => handleEquip(item)
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: rarity,
-                    foregroundColor: AppColors.background,
-                    disabledBackgroundColor:
-                        AppColors.surfaceLight,
-                    disabledForegroundColor:
-                        AppColors.textDisabled,
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Text(
-                    isEquipped
-                        ? settings.strings.unequip
-                        : settings.strings.equip,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(width: 16),
-
-          // ─────────────────────────────────────
-          // ITEM INFORMATION
-          // ─────────────────────────────────────
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ITEM NAME
-                Text(
-                  item.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 4),
-
-                // RARITY 
-                Text(
-                  item.rarity.name.toUpperCase(),
-                  style: TextStyle(
-                    color: rarity,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-
-                const SizedBox(height: 4),
-
-                // EXERCISES + VARIANT SELECTOR
-                Row(
-                  children: [
-                    Text(
-                      settings.strings.exercises,
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-
-                    const SizedBox(width: 10),
-
-                    buildVariantSelector(item),
-                  ],
-                ),
-                
-
-                const SizedBox(height: 4),
-
-                ...List.generate(
-                  item.exercises.length,
-                  (index) => buildExerciseRow(
-                    item,
-                    index,
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                // REQUIREMENTS
-                Text(
-                  settings.strings.requirements,
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-
-                const SizedBox(height: 3),
-
-                Text(
-                  formatEquipRequirement(item),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 8,
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
   // EQUIP / UNEQUIP
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
 
   Future<void> handleEquip(
     EquipmentItem item,
   ) async {
     final player = playerManager.player;
 
-    if (player == null) return;
+    if (player == null) {
+      return;
+    }
 
     final trainingPlan = trainingPlanManager.trainingPlan;
 
@@ -660,10 +356,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
       final removed = trainingPlan.removeItem(item);
 
       if (!removed) {
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
 
         showMessage(
-          '${item.name} ${settings.strings.isOnCooldown}'
+          '${item.name} ${settings.strings.isOnCooldown}',
         );
 
         return;
@@ -671,12 +369,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
       await trainingPlanManager.saveTrainingPlan();
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       setState(() {});
 
       showMessage(
-        '${settings.strings.unequipped} ${item.name}'
+        '${settings.strings.unequipped} ${item.name}',
       );
 
       return;
@@ -691,12 +391,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
       case EquipResultType.equipped:
         await trainingPlanManager.saveTrainingPlan();
 
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
 
         setState(() {});
 
         showMessage(
-          '${settings.strings.equippedMessage} ${item.name}'
+          '${settings.strings.equippedMessage} ${item.name}',
         );
 
         break;
@@ -704,20 +406,24 @@ class _InventoryScreenState extends State<InventoryScreen> {
       case EquipResultType.replaced:
         await trainingPlanManager.saveTrainingPlan();
 
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
 
         setState(() {});
 
         showMessage(
           '${settings.strings.replaced} '
           '${result.item!.name} '
-          '→ ${item.name}'
+          '→ ${item.name}',
         );
 
         break;
 
       case EquipResultType.blockedByCooldown:
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
 
         showMessage(
           '${result.item!.name} ${settings.strings.isOnCooldown}',
@@ -726,21 +432,25 @@ class _InventoryScreenState extends State<InventoryScreen> {
         break;
 
       case EquipResultType.blockedByUnlockRequirement:
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
 
         showMessage(
           '${item.name}: '
-          '${settings.strings.unlockRequirementsNotMet}'
+          '${settings.strings.unlockRequirementsNotMet}',
         );
 
         break;
 
       case EquipResultType.blockedByEquipRequirement:
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
 
         showMessage(
           '${item.name}: '
-          '${settings.strings.equipRequirementsNotMet}'
+          '${settings.strings.equipRequirementsNotMet}',
         );
 
         break;
@@ -764,302 +474,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
       );
   }
 
-  // ─────────────────────────────────────────────
-  // ITEM GRID
-  // ─────────────────────────────────────────────
-
-  Widget buildItemGrid() {
-    final items = filteredItems;
-    final trainingPlan = trainingPlanManager.trainingPlan;
-
-    if (items.isEmpty) {
-      return Center(
-        child: Text(
-          settings.strings.noItems,
-          style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 13,
-          ),
-        ),
-      );
-    }
-
-    return GridView.builder(
-      padding: const EdgeInsets.fromLTRB(
-        16,
-        8,
-        16,
-        8,
-      ),
-      gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-        childAspectRatio: 0.82,
-      ),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        final item = items[index];
-
-        final rarity = rarityColor(item);
-        final glow = rarityGlowColor(item);
-
-        final isSelected = selectedItem == item;
-        final isEquipped =
-            trainingPlan.containsItem(item);
-
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              selectedItem = item;
-            });
-          },
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: isSelected
-                          ? rarity
-                          : AppColors.border,
-                      width: isSelected ? 2 : 1,
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: ValquinIconGlow(
-                          asset: slotIconAsset(item.slot),
-                          size: 90,
-                          color: rarity,
-                          glowColor: glow,
-                          glowOpacity:
-                              isSelected ? 0.8 : 0.35,
-                          blur: isSelected ? 10 : 7,
-                        ),
-                      ),
-
-                      if (isEquipped)
-                        Positioned(
-                          top: 5,
-                          right: 5,
-                          child: Icon(
-                            AppIcons.selected,
-                            size: 15,
-                            color: rarity,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 4),
-
-              Text(
-                item.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: isSelected
-                      ? AppColors.textPrimary
-                      : AppColors.textSecondary,
-                  fontSize: 10,
-                  fontWeight: isSelected
-                      ? FontWeight.bold
-                      : FontWeight.normal,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // ─────────────────────────────────────────────
-  // FILTER BAR
-  // ─────────────────────────────────────────────
-
-  Widget buildFilterBar() {
-    return SizedBox(
-      height: 52,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-        ),
-        children: [
-          buildFilter(
-            label: settings.strings.all,
-            selected:
-                selectedFilter == InventoryFilterType.all,
-            onTap: selectAll,
-          ),
-          buildFilter(
-            label: settings.strings.equipped,
-            selected:
-                selectedFilter ==
-                    InventoryFilterType.equipped,
-            onTap: selectEquipped,
-          ),
-          buildFilter(
-            label: settings.strings.shoulders,
-            selected:
-                selectedFilter ==
-                        InventoryFilterType.slot &&
-                    selectedSlot ==
-                        EquipmentSlot.shoulders,
-            onTap: () => selectSlot(
-              EquipmentSlot.shoulders,
-            ),
-          ),
-          buildFilter(
-            label: settings.strings.head,
-            selected:
-                selectedFilter ==
-                        InventoryFilterType.slot &&
-                    selectedSlot ==
-                        EquipmentSlot.head,
-            onTap: () => selectSlot(
-              EquipmentSlot.head,
-            ),
-          ),
-          buildFilter(
-            label: settings.strings.wings,
-            selected:
-                selectedFilter ==
-                        InventoryFilterType.slot &&
-                    selectedSlot ==
-                        EquipmentSlot.wings,
-            onTap: () => selectSlot(
-              EquipmentSlot.wings,
-            ),
-          ),
-          buildFilter(
-            label: settings.strings.weapon,
-            selected:
-                selectedFilter ==
-                        InventoryFilterType.slot &&
-                    selectedSlot ==
-                        EquipmentSlot.weapon,
-            onTap: () => selectSlot(
-              EquipmentSlot.weapon,
-            ),
-          ),
-          buildFilter(
-            label: settings.strings.chest,
-            selected:
-                selectedFilter ==
-                        InventoryFilterType.slot &&
-                    selectedSlot ==
-                        EquipmentSlot.chest,
-            onTap: () => selectSlot(
-              EquipmentSlot.chest,
-            ),
-          ),
-          buildFilter(
-            label: settings.strings.shield,
-            selected:
-                selectedFilter ==
-                        InventoryFilterType.slot &&
-                    selectedSlot ==
-                        EquipmentSlot.shield,
-            onTap: () => selectSlot(
-              EquipmentSlot.shield,
-            ),
-          ),
-          buildFilter(
-            label: settings.strings.accessory,
-            selected:
-                selectedFilter ==
-                        InventoryFilterType.slot &&
-                    selectedSlot ==
-                        EquipmentSlot.accessory,
-            onTap: () => selectSlot(
-              EquipmentSlot.accessory,
-            ),
-          ),
-          buildFilter(
-            label: settings.strings.legs,
-            selected:
-                selectedFilter ==
-                        InventoryFilterType.slot &&
-                    selectedSlot ==
-                        EquipmentSlot.legs,
-            onTap: () => selectSlot(
-              EquipmentSlot.legs,
-            ),
-          ),
-          buildFilter(
-            label: settings.strings.belt,
-            selected:
-                selectedFilter ==
-                        InventoryFilterType.slot &&
-                    selectedSlot ==
-                        EquipmentSlot.belt,
-            onTap: () => selectSlot(
-              EquipmentSlot.belt,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildFilter({
-    required String label,
-    required bool selected,
-    required VoidCallback onTap,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 4,
-        vertical: 8,
-      ),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 14,
-          ),
-          decoration: BoxDecoration(
-            color: selected
-                ? AppColors.surfaceLight
-                : AppColors.surface,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: selected
-                  ? AppColors.textPrimary
-                  : AppColors.border,
-            ),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            label,
-            style: TextStyle(
-              color: selected
-                  ? AppColors.textPrimary
-                  : AppColors.textSecondary,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.8,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
   // BUILD
-  // ─────────────────────────────────────────────
+  // --------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -1081,20 +498,47 @@ class _InventoryScreenState extends State<InventoryScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // SELECTED ITEM
             if (selectedItem != null)
-              buildItemDetail(
-                context,
-                selectedItem!,
+              InventoryItemDetail(
+                item: selectedItem!,
+                playerManager: playerManager,
+                trainingPlanManager: trainingPlanManager,
+                settings: settings,
+                selectedVariantFor: selectedVariantFor,
+                availableVariantCount: availableVariantCount,
+                onVariantSelected: selectVariant,
+                exerciseDetail: exerciseDetail,
+                formatEquipRequirement: formatEquipRequirement,
+                cooldownRemaining: cooldownRemaining,
+                isOnCooldown: isOnCooldown,
+                onEquip: handleEquip,
               ),
 
-            // INVENTORY GRID
             Expanded(
-              child: buildItemGrid(),
+              child: InventoryItemGrid(
+                items: filteredItems,
+                trainingPlanManager: trainingPlanManager,
+                selectedItem: selectedItem,
+                settings: settings,
+                cooldownRemaining: cooldownRemaining,
+                isOnCooldown: isOnCooldown,
+                cooldownLabel: settings.strings.cooldown,
+                onItemSelected: (item) {
+                  setState(() {
+                    selectedItem = item;
+                  });
+                },
+              ),
             ),
 
-            // FILTERS
-            buildFilterBar(),
+            InventoryFilterBar(
+              selectedFilter: selectedFilter,
+              selectedSlot: selectedSlot,
+              settings: settings,
+              onSelectAll: selectAll,
+              onSelectEquipped: selectEquipped,
+              onSelectSlot: selectSlot,
+            ),
           ],
         ),
       ),

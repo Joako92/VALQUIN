@@ -5,7 +5,9 @@
 <p align="center">
 
   <img src="assets\screenshots\status.png" alt="VALQUIN Status" width="250"/>
+
   <img src="assets\screenshots\inventory.png" alt="VALQUIN Inventory" width="250"/>
+
   <img src="assets\screenshots\equip.png" alt="VALQUIN Equip" width="250"/>
 
 </p>
@@ -270,11 +272,8 @@ Accessories also inherit their visual glow from their equipment rarity:
 
 ```text
 Common      → Common Glow
-
 Rare        → Rare Glow
-
 Legendary   → Legendary Glow
-
 Mythic      → Mythic Glow
 ```
 
@@ -289,7 +288,6 @@ Avatar
 
     ├── Fitted Equipment
 
-    │
     │     ├── Head
     │     ├── Shoulders
     │     ├── Chest
@@ -298,7 +296,9 @@ Avatar
     │     ├── Weapon
     │     ├── Shield
     │     └── Wings
+
     │
+
     └── Independent Accessories
 
           │
@@ -329,6 +329,45 @@ Current functionality includes:
 * Slot-based filtering.
 * Custom equipment slot iconography.
 * Rarity-based icon glow.
+* Equipment cooldown visualization.
+* Modular inventory widgets.
+* Centralized equipment visual configuration.
+
+The Inventory screen follows an orchestrator architecture in which gameplay state and coordination remain inside the screen while reusable visual components are separated into dedicated widgets.
+
+The current structure includes:
+
+```text
+InventoryScreen
+
+    │
+
+    ├── InventoryItemDetail
+    │
+    ├── InventoryItemGrid
+    │     └── InventoryGridItem
+    │
+    ├── InventoryFilterBar
+    │
+    ├── InventoryVariantSelector
+    │
+    └── InventoryCooldownOverlay
+```
+
+Equipment visual mappings are centralized through the equipment visual configuration layer:
+
+```text
+EquipmentVisualConfig
+
+    │
+
+    ├── Rarity Colors
+    ├── Rarity Glow
+    ├── Equipment Slot Icons
+    └── Equipment Positioning
+```
+
+This keeps equipment visual rules independent from the inventory state-management logic and prevents duplicate rarity and icon mappings across screens.
 
 ### Equipment & Daily Training
 
@@ -528,11 +567,8 @@ The first avatar implementation uses four dedicated production views:
 
 ```text
 Front
-
 Front 3/4
-
 Side
-
 Back
 ```
 
@@ -579,15 +615,10 @@ Base Avatar
     │
 
     ├── Equipment
-    │
     ├── Weapons
-    │
     ├── Shields
-    │
     ├── Wings
-    │
     ├── Accessories
-    │
     └── Future Visual Effects
 ```
 
@@ -603,11 +634,8 @@ Equipment Item
       │
 
       ├── Front
-
       ├── Front 3/4
-
       ├── Side
-
       └── Back
 ```
 
@@ -655,11 +683,8 @@ Shield
     │
 
     ├── Front      → In front of avatar
-
     ├── Front 3/4  → In front of avatar
-
     ├── Side       → Behind avatar
-
     └── Back       → Behind avatar
 
 Wings
@@ -679,11 +704,8 @@ Accessory
     │
 
     ├── Independent visual layer
-
     ├── Four animation frames
-
     ├── Tap interaction
-
     └── Rarity-based glow
 ```
 
@@ -778,21 +800,15 @@ Equipment
 │
 
 ├── Rarity
-
 │
-
 ├── Primary Color
-
 │
-
 └── Glow
 
       │
 
       ├── Inventory
-
       ├── Equipment
-
       └── Accessories
 ```
 
@@ -894,11 +910,8 @@ The UI provides:
 
 ```text
 Structure
-
 Hierarchy
-
 Interaction
-
 Information
 ```
 
@@ -906,13 +919,9 @@ While visual assets provide:
 
 ```text
 Character Identity
-
 Equipment Identity
-
 Fantasy
-
 Mythology
-
 Atmosphere
 ```
 
@@ -924,7 +933,9 @@ With v0.7.4, accessories extend the visual layer beyond fitted equipment through
 
 With v0.7.5, the equipment catalog received a final visual refinement pass, including updated equipment artwork, corrected naming and additional high-rarity content.
 
-This creates a stronger visual loop between:
+With v0.7.6, the Inventory architecture was further modularized so that visual components and equipment visual mappings are separated from the screen-level coordination logic.
+
+This creates a stronger visual and architectural loop between:
 
 ```text
 Player
@@ -944,9 +955,7 @@ Equipment
   │
 
   ├── Fitted Equipment
-
   │
-
   └── Interactive Accessories
 
   │
@@ -1003,26 +1012,69 @@ The database layer is built around SQLite and Drift, keeping persistent gameplay
 
 ### Current Version
 
-**v0.7.5 — Equipment Visual Polish & Content Expansion**
+**v0.7.6 — Welcome Fix & Inventory Modularization**
 
-Version 0.7.5 focuses on the final refinement of the current equipment catalog before the first external beta build.
+Version 0.7.6 focuses on two areas of refinement: correcting a first-time onboarding issue in the Welcome Screen and continuing the architectural modularization of the Inventory system.
 
-This version is primarily a visual and content refinement milestone rather than a new system milestone.
+This version is primarily a bug-fix and architecture milestone rather than a new gameplay-system milestone.
 
-The equipment catalog received a final polish pass including:
+The Welcome Screen received a bug fix affecting the first-time application flow.
 
-* Corrected equipment names and identifiers.
-* Updated equipment artwork.
-* Refined visual consistency across equipment sets.
-* Additional Legendary equipment content.
-* Introduction of a complete Mythic equipment set.
-* Continued alignment of equipment artwork across the four avatar views.
-* Final refinement of the current equipment visual catalog.
+The Inventory system received a structural refactor that separates reusable visual components from screen-level state and coordination.
+
+The current Inventory architecture now includes:
+
+* Dedicated inventory filter widget.
+* Dedicated inventory item grid.
+* Dedicated inventory grid item.
+* Dedicated inventory item detail.
+* Dedicated inventory variant selector.
+* Dedicated inventory cooldown overlay.
+* Centralized equipment visual configuration.
+* Centralized rarity color mapping.
+* Centralized rarity glow mapping.
+* Centralized equipment slot icon mapping.
+* Inventory screen retained as the main state and interaction coordinator.
+
+The current Inventory structure is:
+
+```text
+InventoryScreen
+
+    │
+    ├── InventoryItemDetail
+    │
+    ├── InventoryItemGrid
+    │     └── InventoryGridItem
+    │
+    ├── InventoryFilterBar
+    │
+    ├── InventoryVariantSelector
+    │
+    └── InventoryCooldownOverlay
+```
+
+Equipment visual configuration is centralized through:
+
+```text
+EquipmentVisualConfig
+
+    │
+
+    ├── Equipment Positioning
+    ├── Equipment Scale
+    ├── Rarity Colors
+    ├── Rarity Glow
+    └── Equipment Slot Icons
+```
+
+This reduces duplication between the Inventory and Equipment rendering systems and keeps domain models independent from UI-specific visual configuration.
 
 The current application includes:
 
 * Welcome screen.
 * First-time player onboarding.
+* Welcome Screen bug fix.
 * Language selection before character creation.
 * English and Spanish localization.
 * Runtime language switching.
@@ -1042,6 +1094,8 @@ The current application includes:
 * SQLite persistence.
 * Equipment system.
 * Inventory.
+* Modular Inventory widgets.
+* Centralized Inventory visual configuration.
 * Equipment slots.
 * Equipment rarity.
 * Rarity-based visual styling.
@@ -1123,6 +1177,9 @@ The current application includes:
 * Additional Legendary equipment content.
 * Complete Mythic equipment set.
 * Final equipment visual polish for the current beta catalog.
+* Inventory modularization.
+* Centralized equipment visual configuration.
+* Welcome Screen bug fix.
 
 The current first-time player flow is:
 
@@ -1133,27 +1190,27 @@ Application Start
 
        ▼
 
-  Has Player?
+ Has Player?
 
-   /       \
+  /       \
 
-  No       Yes
+ No       Yes
 
-  │          │
+ │          │
 
-  ▼          ▼
+ ▼          ▼
 
-Welcome     Main
+Welcome    Main
 
-  │
+ │
 
-  ▼
+ ▼
 
 Create Player
 
-  │
+ │
 
-  ▼
+ ▼
 
 Main
 ```
@@ -1201,6 +1258,8 @@ The selected language, player name and avatar identity are persisted locally.
 The avatar selected during character creation is now used throughout the player presentation system instead of relying on a hardcoded default avatar.
 
 The current character system therefore has a complete first-time setup flow from application launch to the main gameplay interface.
+
+The Inventory system now follows the same modular architecture established in the Player Screen, with the main screen responsible for state and coordination while reusable visual elements live in dedicated widgets.
 
 The core database and domain architecture remain established.
 
@@ -1472,13 +1531,9 @@ Accessories
     │
 
     ├── Animated Objects
-
     ├── Companions
-
     ├── Cosmetic Items
-
     ├── Mythic Effects
-
     └── Future Interactive Visuals
 ```
 
@@ -1527,6 +1582,74 @@ Mythic
 ```
 
 The visual equipment system is now sufficiently established to support continued content expansion without requiring changes to the core rendering architecture.
+
+### v0.7.6 — Welcome Fix & Inventory Modularization
+
+Version 0.7.6 focuses on bug fixing and architectural refinement.
+
+### Completed
+
+* Fixed a bug affecting the Welcome Screen and first-time application flow.
+* Continued modularization of the Inventory screen.
+* Extracted `InventoryFilterBar`.
+* Extracted `InventoryItemGrid`.
+* Extracted `InventoryGridItem`.
+* Extracted `InventoryItemDetail`.
+* Extracted `InventoryVariantSelector`.
+* Extracted `InventoryCooldownOverlay`.
+* Reduced the responsibility of `InventoryScreen` to state management and interaction coordination.
+* Centralized equipment rarity color mapping.
+* Centralized equipment rarity glow mapping.
+* Centralized equipment slot icon mapping.
+* Integrated `EquipmentVisualConfig` with Inventory visual components.
+* Removed duplicated rarity visual logic from `InventoryScreen`.
+* Removed duplicated equipment slot icon mapping from `InventoryScreen`.
+* Kept domain models independent from UI-specific visual configuration.
+* Preserved equipment rendering configuration for scale and positioning.
+* Validated the refactored architecture with `flutter analyze`.
+
+The resulting Inventory architecture is:
+
+```text
+InventoryScreen
+
+    │
+    ├── State
+    ├── Filtering
+    ├── Variant Selection
+    ├── Exercise Data
+    ├── Cooldown Coordination
+    └── Equip / Unequip Coordination
+
+              │
+
+              ▼
+
+      Inventory Widgets
+
+    ├── Item Detail
+    ├── Item Grid
+    ├── Grid Item
+    ├── Filter Bar
+    ├── Variant Selector
+    └── Cooldown Overlay
+
+              │
+
+              ▼
+
+   EquipmentVisualConfig
+
+    ├── Rarity Color
+    ├── Rarity Glow
+    ├── Slot Icon
+    ├── Scale
+    └── Positioning
+```
+
+The refactor follows the same architectural direction established during the Player Screen modularization.
+
+The screen remains responsible for gameplay state and coordination, while reusable presentation elements are isolated into dedicated widgets.
 
 ### Next Step
 

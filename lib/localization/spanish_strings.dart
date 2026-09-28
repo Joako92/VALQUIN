@@ -77,7 +77,7 @@ class SpanishStrings {
 
   static const none = 'NINGUNO';
   static const unknownExercise = 'EJERCICIO DESCONOCIDO';
-  static const isOnCooldown = 'ESTÁ EN COOLDOWN';
+  static const isOnCooldown = 'ESTÁ EN DESCANSO';
 
   static const unequipped = 'DESEQUIPADO';
   static const equippedMessage = 'EQUIPADO';
