@@ -225,16 +225,6 @@ class _PlayerEquipmentViewState extends State<PlayerEquipmentView> {
                   ),
 
                 // --------------------------------------------------
-                // WEAPON
-                // --------------------------------------------------
-
-                if (weapon != null)
-                  EquipmentRenderer(
-                    item: weapon,
-                    view: _equipmentView,
-                  ),
-
-                // --------------------------------------------------
                 // WINGS - FRONT
                 // --------------------------------------------------
 
@@ -252,6 +242,16 @@ class _PlayerEquipmentViewState extends State<PlayerEquipmentView> {
                 if (shoulders != null)
                   EquipmentRenderer(
                     item: shoulders,
+                    view: _equipmentView,
+                  ),
+
+                // --------------------------------------------------
+                // WEAPON
+                // --------------------------------------------------
+
+                if (weapon != null)
+                  EquipmentRenderer(
+                    item: weapon,
                     view: _equipmentView,
                   ),
 

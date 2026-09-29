@@ -22,42 +22,61 @@ class InventoryVariantSelector extends StatelessWidget {
     final selectedVariant = selectedVariantFor(item);
     final variantCount = availableVariantCount(item);
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (int variantIndex = 0;
-            variantIndex < variantCount;
-            variantIndex++)
-          GestureDetector(
-            onTap: () {
-              onVariantSelected(
-                item,
-                variantIndex,
-              );
-            },
-            child: SizedBox(
-              width: 36,
-              height: 36,
-              child: Center(
-                child: Text(
-                  variantIndex == selectedVariant
-                      ? '[${variantIndex + 1}]'
-                      : '${variantIndex + 1}',
-                  style: TextStyle(
-                    color: variantIndex == selectedVariant
-                        ? AppColors.textPrimary
-                        : AppColors.textSecondary,
-                    fontSize: 16,
-                    fontWeight:
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final hasFiniteWidth = constraints.maxWidth.isFinite;
+
+        // When the selector is inside a layout with a finite width
+        // (such as EquipScreen), distribute the available space.
+        //
+        // When the width is unbounded (such as InventoryScreen),
+        // keep a compact fixed width so the Row can shrink-wrap safely.
+        final itemWidth = hasFiniteWidth
+            ? constraints.maxWidth / variantCount
+            : 30.0;
+
+        return Row(
+          mainAxisSize:
+              hasFiniteWidth ? MainAxisSize.max : MainAxisSize.min,
+          children: [
+            for (int variantIndex = 0;
+                variantIndex < variantCount;
+                variantIndex++)
+              GestureDetector(
+                onTap: () {
+                  onVariantSelected(
+                    item,
+                    variantIndex,
+                  );
+                },
+                child: SizedBox(
+                  width: itemWidth,
+                  height: 30,
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
                         variantIndex == selectedVariant
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                            ? '[${variantIndex + 1}]'
+                            : '${variantIndex + 1}',
+                        style: TextStyle(
+                          color: variantIndex == selectedVariant
+                              ? AppColors.textPrimary
+                              : AppColors.textSecondary,
+                          fontSize: 16,
+                          fontWeight:
+                              variantIndex == selectedVariant
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-      ],
+          ],
+        );
+      },
     );
   }
 }

@@ -623,6 +623,80 @@ class LanguageStrings {
     }
   }
 
+  // Muscle Groups
+
+  String get muscleGroupShoulders {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.muscleGroupShoulders;
+      case AppLanguage.spanish:
+        return SpanishStrings.muscleGroupShoulders;
+    }
+  }
+
+  String get muscleGroupCardio {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.muscleGroupCardio;
+      case AppLanguage.spanish:
+        return SpanishStrings.muscleGroupCardio;
+    }
+  }
+
+  String get muscleGroupBack {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.muscleGroupBack;
+      case AppLanguage.spanish:
+        return SpanishStrings.muscleGroupBack;
+    }
+  }
+
+  String get muscleGroupBiceps {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.muscleGroupBiceps;
+      case AppLanguage.spanish:
+        return SpanishStrings.muscleGroupBiceps;
+    }
+  }
+
+  String get muscleGroupChest {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.muscleGroupChest;
+      case AppLanguage.spanish:
+        return SpanishStrings.muscleGroupChest;
+    }
+  }
+
+  String get muscleGroupTriceps {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.muscleGroupTriceps;
+      case AppLanguage.spanish:
+        return SpanishStrings.muscleGroupTriceps;
+    }
+  }
+
+  String get muscleGroupLegs {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.muscleGroupLegs;
+      case AppLanguage.spanish:
+        return SpanishStrings.muscleGroupLegs;
+    }
+  }
+
+  String get muscleGroupCore {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.muscleGroupCore;
+      case AppLanguage.spanish:
+        return SpanishStrings.muscleGroupCore;
+    }
+  }
+
   // Equip Screen
 
   String get cooldown {
@@ -634,12 +708,12 @@ class LanguageStrings {
     }
   }
 
-  String get dailyExercises {
+  String get dailyMission {
     switch (language) {
       case AppLanguage.english:
-        return EnglishStrings.dailyExercises;
+        return EnglishStrings.dailyMission;
       case AppLanguage.spanish:
-        return SpanishStrings.dailyExercises;
+        return SpanishStrings.dailyMission;
     }
   }
 
@@ -676,6 +750,15 @@ class LanguageStrings {
         return EnglishStrings.levelUpMessage;
       case AppLanguage.spanish:
         return SpanishStrings.levelUpMessage;
+    }
+  }
+
+  String get execute {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.execute;
+      case AppLanguage.spanish:
+        return SpanishStrings.execute;
     }
   }
 

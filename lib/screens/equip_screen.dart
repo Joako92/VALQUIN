@@ -10,10 +10,12 @@ import '../managers/training_plan_manager.dart';
 import '../models/equipment_item.dart';
 import '../models/equipment_slot.dart' as model;
 import '../models/exercise.dart';
+import '../models/muscle_group.dart';
 
 import '../widgets/valquin_icon.dart';
 import '../widgets/valquin_icon_glow.dart';
 import '../widgets/valquin_info_dialog.dart';
+import '../widgets/inventory/inventory_variant_selector.dart';
 
 class EquipScreen extends StatefulWidget {
   final PlayerManager playerManager;
@@ -207,50 +209,11 @@ class _EquipScreenState extends State<EquipScreen> {
     return '$amount ${variant.unit}';
   }
 
-  Widget buildVariantSelector(EquipmentItem item) {
-    final selectedVariant = selectedVariantFor(item);
-    final variantCount = availableVariantCount(item);
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (int variantIndex = 0;
-            variantIndex < variantCount;
-            variantIndex++)
-          GestureDetector(
-            onTap: () {
-              selectVariant(item, variantIndex);
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 3,
-              ),
-              child: Text(
-                variantIndex == selectedVariant
-                    ? '[${variantIndex + 1}]'
-                    : '${variantIndex + 1}',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight:
-                      variantIndex == selectedVariant
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                  color: variantIndex == selectedVariant
-                      ? AppColors.textPrimary
-                      : AppColors.textSecondary,
-                ),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
   // ---------------------------------------------------------------------------
   // DAILY PLAN
   // ---------------------------------------------------------------------------
 
-  Future<List<String>> getDailyExercises() async {
+  Future<Map<MuscleGroup, List<String>>> getDailyExercises() async {
     final exercises = await database.getExercisesWithVariants();
     final trainingPlan = trainingPlanManager.trainingPlan;
 
@@ -258,9 +221,17 @@ class _EquipScreenState extends State<EquipScreen> {
       trainingPlan.isSlotActive,
     );
 
-    final dailyExercises = <String>[];
+    final dailyExercises = <MuscleGroup, List<String>>{};
 
     for (final slot in activeSlots) {
+      final muscleGroup = MuscleGroup.fromSlot(slot);
+
+      // Slots without a muscle group do not contribute
+      // exercises to the daily mission.
+      if (muscleGroup == null) {
+        continue;
+      }
+
       final items = trainingPlan.itemsForSlot(slot);
 
       if (items.isEmpty) {
@@ -290,7 +261,12 @@ class _EquipScreenState extends State<EquipScreen> {
           variantIndex,
         );
 
-        dailyExercises.add(
+        dailyExercises.putIfAbsent(
+          muscleGroup,
+          () => [],
+        );
+
+        dailyExercises[muscleGroup]!.add(
           '${exercise.name} — ${formatVariant(variant)}',
         );
       }
@@ -298,6 +274,7 @@ class _EquipScreenState extends State<EquipScreen> {
 
     return dailyExercises;
   }
+
 
   // ---------------------------------------------------------------------------
   // COLORS / ICONS
@@ -411,6 +388,35 @@ class _EquipScreenState extends State<EquipScreen> {
     }
   }
 
+  String muscleGroupLabel(MuscleGroup group) {
+    switch (group) {
+      case MuscleGroup.shoulders:
+        return settings.strings.muscleGroupShoulders;
+
+      case MuscleGroup.cardio:
+        return settings.strings.muscleGroupCardio;
+
+      case MuscleGroup.back:
+        return settings.strings.muscleGroupBack;
+
+      case MuscleGroup.biceps:
+        return settings.strings.muscleGroupBiceps;
+
+      case MuscleGroup.chest:
+        return settings.strings.muscleGroupChest;
+
+      case MuscleGroup.triceps:
+        return settings.strings.muscleGroupTriceps;
+
+      case MuscleGroup.legs:
+        return settings.strings.muscleGroupLegs;
+
+      case MuscleGroup.core:
+        return settings.strings.muscleGroupCore;
+    }
+  }
+
+
   // ---------------------------------------------------------------------------
   // EQUIPMENT CARD
   // ---------------------------------------------------------------------------
@@ -468,7 +474,7 @@ class _EquipScreenState extends State<EquipScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 5,
-                  vertical: 8,
+                  vertical: 4,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -478,20 +484,20 @@ class _EquipScreenState extends State<EquipScreen> {
                     if (item == null)
                       slotIcon(
                         slot,
-                        size: 60,
+                        size: 42,
                         color: AppColors.textDisabled,
                       )
                     else
                       ValquinIconGlow(
                         asset: slotIconAsset(slot),
-                        size: 60,
+                        size: 42,
                         color: rarityColorValue,
                         glowColor: rarityGlow,
                         glowOpacity: isActive ? 0.8 : 0.0,
                         blur: 8,
                       ),
 
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 3),
 
                     // ITEM NAME / SLOT NAME
 
@@ -514,7 +520,12 @@ class _EquipScreenState extends State<EquipScreen> {
 
                     if (item != null) ...[
                       const SizedBox(height: 2),
-                      buildVariantSelector(item),
+                      InventoryVariantSelector(
+                        item: item,
+                        selectedVariantFor: selectedVariantFor,
+                        availableVariantCount: availableVariantCount,
+                        onVariantSelected: selectVariant,
+                      ),
                     ],
                   ],
                 ),
@@ -580,83 +591,112 @@ class _EquipScreenState extends State<EquipScreen> {
   // ---------------------------------------------------------------------------
 
   Widget dailyPlan() {
-    return FutureBuilder<List<String>>(
+    return FutureBuilder<Map<MuscleGroup, List<String>>>(
       future: getDailyExercises(),
       builder: (context, snapshot) {
-        final exercises = snapshot.data ?? [];
+        final exerciseGroups = snapshot.data ?? {};
 
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(
-              color: AppColors.border,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                settings.strings.dailyExercises,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                  color: AppColors.textSecondary,
-                ),
+          return Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(
+                color: AppColors.border,
               ),
-
-              const SizedBox(height: 12),
-
-              if (exercises.isEmpty)
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
-                  settings.strings.noTrainingSelected,
+                  settings.strings.dailyMission,
                   style: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textDisabled,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    color: AppColors.textSecondary,
                   ),
-                )
-              else
-                ...exercises.map(
-                  (exercise) => Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 7,
+                ),
+
+                const SizedBox(height: 12),
+
+                if (exerciseGroups.isEmpty)
+                  Text(
+                    settings.strings.noTrainingSelected,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: AppColors.textDisabled,
                     ),
-                    child: Row(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          '•',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-
-                        const SizedBox(width: 8),
-
-                        Expanded(
-                          child: Text(
-                            exercise,
+                  )
+                else
+                  ...exerciseGroups.entries.map(
+                    (group) => Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 12,
+                      ),
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${muscleGroupLabel(group.key)}:',
                             style: const TextStyle(
                               fontSize: 14,
-                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              color: AppColors.textSecondary,
                             ),
                           ),
-                        ),
-                      ],
+
+                          const SizedBox(height: 5),
+
+                          ...group.value.map(
+                            (exercise) => Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 4,
+                              ),
+                              child: Row(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    '•',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color:
+                                          AppColors.textSecondary,
+                                    ),
+                                  ),
+
+                                  const SizedBox(width: 8),
+
+                                  Expanded(
+                                    child: Text(
+                                      exercise,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        color:
+                                            AppColors.textPrimary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+              ],
+            ),
+          );
+        },
+      );
+
+    }
+
 
   // ---------------------------------------------------------------------------
   // EXECUTE
@@ -804,7 +844,7 @@ class _EquipScreenState extends State<EquipScreen> {
                   const SizedBox(height: 15),
 
                   // -----------------------------------------------------------
-                  // DAILY EXERCISES
+                  // DAILY MISSION
                   // -----------------------------------------------------------
 
                   dailyPlan(),
@@ -819,15 +859,22 @@ class _EquipScreenState extends State<EquipScreen> {
             Positioned(
               right: 18,
               bottom: 18,
-              child: FloatingActionButton(
+              child: FloatingActionButton.extended(
                 heroTag: 'executeTraining',
                 onPressed: executeTraining,
                 backgroundColor:
                     Theme.of(context).colorScheme.primary,
                 foregroundColor: AppColors.textPrimary,
-                child: const Icon(
+                label: Text(
+                  settings.strings.execute,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
+                ),
+                icon: const Icon(
                   AppIcons.experience,
-                  size: 28,
+                  size: 24,
                 ),
               ),
             ),

@@ -119,10 +119,21 @@ class EnglishStrings {
   static const createPlayer = 'CREATE PLAYER';
   static const String selectAvatar = 'SELECT AVATAR';
 
+  // Muscle Group
+
+  static const muscleGroupShoulders = 'Shoulders';
+  static const muscleGroupCardio = 'Cardio';
+  static const muscleGroupBack = 'Back';
+  static const muscleGroupBiceps = 'Biceps';
+  static const muscleGroupChest = 'Chest';
+  static const muscleGroupTriceps = 'Triceps';
+  static const muscleGroupLegs = 'Legs';
+  static const muscleGroupCore = 'Core';
+
   // Equip Screen
 
   static const cooldown = 'COOLDOWN';
-  static const dailyExercises = 'DAILY EXERCISES';
+  static const dailyMission = 'DAILY MISSION';
   static const noTrainingSelected = 'No training selected.';
   static const trainingExecuted = 'TRAINING EXECUTED!';
 
@@ -131,6 +142,8 @@ class EnglishStrings {
   static const levelUpMessage =
       'Your training has helped you grow to a new level! '
       'Congratulations. Keep training and forge your own path.';
+
+  static const execute = 'EXECUTE';
 
   // Equip Screen Info
 

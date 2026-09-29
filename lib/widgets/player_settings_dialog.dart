@@ -56,7 +56,7 @@ class PlayerSettingsDialog extends StatelessWidget {
                   _buildAccentOption(Colors.pink),
                   _buildAccentOption(Colors.deepPurple),
                   _buildAccentOption(Colors.yellow),
-                  _buildAccentOption(Colors.white),
+                  _buildAccentOption(Colors.grey),
                 ],
               ),
 

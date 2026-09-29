@@ -119,10 +119,21 @@ class SpanishStrings {
   static const createPlayer = 'CREAR JUGADOR';
   static const String selectAvatar = 'SELECCIONAR AVATAR';
 
+  // Muscle Group
+
+  static const muscleGroupShoulders = 'Hombros';
+  static const muscleGroupCardio = 'Cardio';
+  static const muscleGroupBack = 'Espalda';
+  static const muscleGroupBiceps = 'Bíceps';
+  static const muscleGroupChest = 'Pecho';
+  static const muscleGroupTriceps = 'Tríceps';
+  static const muscleGroupLegs = 'Piernas';
+  static const muscleGroupCore = 'Core';
+
   // Equip Screen
 
   static const cooldown = 'DESCANSO';
-  static const dailyExercises = 'EJERCICIOS DIARIOS';
+  static const dailyMission = 'MISIÓN DEL DÍA';
   static const noTrainingSelected = 'No hay entrenamiento seleccionado.';
   static const trainingExecuted = '¡ENTRENAMIENTO EJECUTADO!';
 
@@ -131,6 +142,8 @@ class SpanishStrings {
   static const levelUpMessage =
       '¡Tu entrenamiento te hizo crecer hasta un nuevo nivel! '
       'Felicitaciones. Seguí entrenando y forjando tu propio camino.';
+
+  static const execute = 'EJECUTAR';
 
   // Equip Screen Info
 
