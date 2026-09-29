@@ -1,6 +1,9 @@
 class EnglishStrings {
   static const playerNamePlaceholder = 'ENTER A PLAYER NAME';
   static const gotIt = 'GOT IT';
+  static const theme = 'THEME';
+  static const dark = 'DARK';
+  static const light = 'LIGHT';
 
   // Player Screen
 

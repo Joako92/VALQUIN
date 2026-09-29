@@ -53,7 +53,7 @@ class AppDatabase extends _$AppDatabase {
         );
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -63,6 +63,17 @@ class AppDatabase extends _$AppDatabase {
     onUpgrade: (Migrator m, int from, int to) async {
       if (from < 2) {
         await m.createTable(appSettings);
+      }
+
+      if (from < 3) {
+        await m.addColumn(
+          appSettings,
+          appSettings.theme,
+        );
+
+        await customStatement(
+          "UPDATE app_settings SET theme = 'dark' WHERE theme IS NULL",
+        );
       }
     },
   );

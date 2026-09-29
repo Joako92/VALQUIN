@@ -7,6 +7,10 @@ class AppSettings extends Table {
 
   TextColumn get language => text()();
 
+  TextColumn get theme => text().withDefault(
+    const Constant('dark'),
+  )();
+
   @override
   Set<Column> get primaryKey => {id};
 }

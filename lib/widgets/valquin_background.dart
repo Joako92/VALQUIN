@@ -11,18 +11,26 @@ class ValquinBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accent = Theme.of(context).colorScheme.primary;
+    final isLight = Theme.of(context).brightness == Brightness.light;
 
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            accent,
-            const Color(0xFF120B0E),
-            const Color(0xFF08090B),
-            const Color.fromARGB(255, 05, 06, 06),
-          ],
+          colors: isLight
+              ? [
+                  accent,
+                const Color(0xFFB8D4E8),
+                const Color(0xFF8FB5D0),
+                const Color.fromARGB(255, 255, 255, 255),
+                ]
+              : [
+                  accent,
+                  const Color(0xFF120B0E),
+                  const Color(0xFF08090B),
+                  const Color.fromARGB(255, 0, 0, 0),
+                ],
           stops: const [
             0.0,
             0.25,

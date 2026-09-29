@@ -208,7 +208,7 @@ const Map<String, EquipmentVisualConfig> equipmentVisualConfigs = {
   'escudo_madera': EquipmentVisualConfig(
     offsets: {
       EquipmentView.front: Offset(22, 0),
-      EquipmentView.back: Offset(-26, 0),
+      EquipmentView.back: Offset(-28, 0),
     },
   ),
 

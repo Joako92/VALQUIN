@@ -3,6 +3,7 @@ import 'package:valquin/localization/language.dart';
 
 import '../config/app_config.dart';
 import '../config/app_settings.dart';
+import '../config/app_theme.dart';
 
 class PlayerSettingsDialog extends StatelessWidget {
   final AppSettings settings;
@@ -59,6 +60,34 @@ class PlayerSettingsDialog extends StatelessWidget {
                   _buildAccentOption(Colors.grey),
                 ],
               ),
+
+              const SizedBox(height: 24),
+
+              Text(
+                settings.strings.theme,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              _buildThemeOption(
+                context,
+                AppTheme.dark,
+                settings.strings.dark,
+              ),
+
+              _buildThemeOption(
+                context,
+                AppTheme.light,
+                settings.strings.light,
+              ),
+
+              const SizedBox(height: 24),
 
               const SizedBox(height: 24),
 
@@ -130,6 +159,75 @@ class PlayerSettingsDialog extends StatelessWidget {
                 : Colors.transparent,
             width: 3,
           ),
+        ),
+      ),
+    );
+  }
+
+  // --------------------------------------------------
+  // THEME OPTION
+  // --------------------------------------------------
+
+  Widget _buildThemeOption(
+    BuildContext context,
+    AppTheme theme,
+    String label,
+  ) {
+    final isSelected = settings.theme == theme;
+
+    return GestureDetector(
+      onTap: () {
+        settings.setTheme(theme);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 6,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected
+                      ? Theme.of(context)
+                          .colorScheme
+                          .primary
+                      : AppColors.textSecondary,
+                  width: 2,
+                ),
+              ),
+              child: isSelected
+                  ? Center(
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary,
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected
+                    ? AppColors.textPrimary
+                    : AppColors.textSecondary,
+                fontSize: 14,
+                fontWeight: isSelected
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+              ),
+            ),
+          ],
         ),
       ),
     );

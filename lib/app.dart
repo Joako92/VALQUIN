@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'config/app_config.dart';
 import 'config/app_settings.dart';
+import 'config/app_theme.dart';
 
 import 'database/app_database.dart';
 
@@ -39,6 +40,15 @@ class SoloTrainingApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
 
           theme: ThemeData(
+            brightness: Brightness.light,
+            scaffoldBackgroundColor: Colors.white,
+            colorScheme: ColorScheme.light(
+              primary: settings.accentColor,
+              secondary: settings.accentColor,
+            ),
+          ),
+
+          darkTheme: ThemeData(
             brightness: Brightness.dark,
             scaffoldBackgroundColor: AppColors.background,
             colorScheme: ColorScheme.dark(
@@ -46,6 +56,10 @@ class SoloTrainingApp extends StatelessWidget {
               secondary: settings.accentColor,
             ),
           ),
+
+          themeMode: settings.theme == AppTheme.light
+              ? ThemeMode.light
+              : ThemeMode.dark,
 
           home: hasPlayer
               ? MainScreen(

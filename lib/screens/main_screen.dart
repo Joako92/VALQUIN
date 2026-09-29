@@ -76,6 +76,7 @@ class _MainScreenState extends State<MainScreen> {
         }
       },
       child: Scaffold(
+        extendBody: true,
         backgroundColor: Colors.transparent,
         body: ValquinBackground(
           child: Stack(
@@ -84,7 +85,7 @@ class _MainScreenState extends State<MainScreen> {
               Positioned.fill(
                 child: Center(
                   child: Opacity(
-                    opacity: 0.015,
+                    opacity: 0.25,
                     child: SvgPicture.asset(
                       'assets/icons/logo.svg',
                       width: 420,

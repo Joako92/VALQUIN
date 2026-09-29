@@ -2707,8 +2707,18 @@ class $AppSettingsTable extends AppSettings
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _themeMeta = const VerificationMeta('theme');
   @override
-  List<GeneratedColumn> get $columns => [id, accentColor, language];
+  late final GeneratedColumn<String> theme = GeneratedColumn<String>(
+    'theme',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('dark'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, accentColor, language, theme];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2743,6 +2753,12 @@ class $AppSettingsTable extends AppSettings
     } else if (isInserting) {
       context.missing(_languageMeta);
     }
+    if (data.containsKey('theme')) {
+      context.handle(
+        _themeMeta,
+        theme.isAcceptableOrUnknown(data['theme']!, _themeMeta),
+      );
+    }
     return context;
   }
 
@@ -2764,6 +2780,10 @@ class $AppSettingsTable extends AppSettings
         DriftSqlType.string,
         data['${effectivePrefix}language'],
       )!,
+      theme: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}theme'],
+      )!,
     );
   }
 
@@ -2777,10 +2797,12 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
   final int id;
   final int accentColor;
   final String language;
+  final String theme;
   const AppSetting({
     required this.id,
     required this.accentColor,
     required this.language,
+    required this.theme,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2788,6 +2810,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     map['id'] = Variable<int>(id);
     map['accent_color'] = Variable<int>(accentColor);
     map['language'] = Variable<String>(language);
+    map['theme'] = Variable<String>(theme);
     return map;
   }
 
@@ -2796,6 +2819,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       id: Value(id),
       accentColor: Value(accentColor),
       language: Value(language),
+      theme: Value(theme),
     );
   }
 
@@ -2808,6 +2832,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       id: serializer.fromJson<int>(json['id']),
       accentColor: serializer.fromJson<int>(json['accentColor']),
       language: serializer.fromJson<String>(json['language']),
+      theme: serializer.fromJson<String>(json['theme']),
     );
   }
   @override
@@ -2817,15 +2842,21 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       'id': serializer.toJson<int>(id),
       'accentColor': serializer.toJson<int>(accentColor),
       'language': serializer.toJson<String>(language),
+      'theme': serializer.toJson<String>(theme),
     };
   }
 
-  AppSetting copyWith({int? id, int? accentColor, String? language}) =>
-      AppSetting(
-        id: id ?? this.id,
-        accentColor: accentColor ?? this.accentColor,
-        language: language ?? this.language,
-      );
+  AppSetting copyWith({
+    int? id,
+    int? accentColor,
+    String? language,
+    String? theme,
+  }) => AppSetting(
+    id: id ?? this.id,
+    accentColor: accentColor ?? this.accentColor,
+    language: language ?? this.language,
+    theme: theme ?? this.theme,
+  );
   AppSetting copyWithCompanion(AppSettingsCompanion data) {
     return AppSetting(
       id: data.id.present ? data.id.value : this.id,
@@ -2833,6 +2864,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
           ? data.accentColor.value
           : this.accentColor,
       language: data.language.present ? data.language.value : this.language,
+      theme: data.theme.present ? data.theme.value : this.theme,
     );
   }
 
@@ -2841,46 +2873,53 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     return (StringBuffer('AppSetting(')
           ..write('id: $id, ')
           ..write('accentColor: $accentColor, ')
-          ..write('language: $language')
+          ..write('language: $language, ')
+          ..write('theme: $theme')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, accentColor, language);
+  int get hashCode => Object.hash(id, accentColor, language, theme);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AppSetting &&
           other.id == this.id &&
           other.accentColor == this.accentColor &&
-          other.language == this.language);
+          other.language == this.language &&
+          other.theme == this.theme);
 }
 
 class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
   final Value<int> id;
   final Value<int> accentColor;
   final Value<String> language;
+  final Value<String> theme;
   const AppSettingsCompanion({
     this.id = const Value.absent(),
     this.accentColor = const Value.absent(),
     this.language = const Value.absent(),
+    this.theme = const Value.absent(),
   });
   AppSettingsCompanion.insert({
     this.id = const Value.absent(),
     required int accentColor,
     required String language,
+    this.theme = const Value.absent(),
   }) : accentColor = Value(accentColor),
        language = Value(language);
   static Insertable<AppSetting> custom({
     Expression<int>? id,
     Expression<int>? accentColor,
     Expression<String>? language,
+    Expression<String>? theme,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (accentColor != null) 'accent_color': accentColor,
       if (language != null) 'language': language,
+      if (theme != null) 'theme': theme,
     });
   }
 
@@ -2888,11 +2927,13 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     Value<int>? id,
     Value<int>? accentColor,
     Value<String>? language,
+    Value<String>? theme,
   }) {
     return AppSettingsCompanion(
       id: id ?? this.id,
       accentColor: accentColor ?? this.accentColor,
       language: language ?? this.language,
+      theme: theme ?? this.theme,
     );
   }
 
@@ -2908,6 +2949,9 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     if (language.present) {
       map['language'] = Variable<String>(language.value);
     }
+    if (theme.present) {
+      map['theme'] = Variable<String>(theme.value);
+    }
     return map;
   }
 
@@ -2916,7 +2960,8 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     return (StringBuffer('AppSettingsCompanion(')
           ..write('id: $id, ')
           ..write('accentColor: $accentColor, ')
-          ..write('language: $language')
+          ..write('language: $language, ')
+          ..write('theme: $theme')
           ..write(')'))
         .toString();
   }
@@ -5122,12 +5167,14 @@ typedef $$AppSettingsTableCreateCompanionBuilder =
       Value<int> id,
       required int accentColor,
       required String language,
+      Value<String> theme,
     });
 typedef $$AppSettingsTableUpdateCompanionBuilder =
     AppSettingsCompanion Function({
       Value<int> id,
       Value<int> accentColor,
       Value<String> language,
+      Value<String> theme,
     });
 
 class $$AppSettingsTableFilterComposer
@@ -5151,6 +5198,11 @@ class $$AppSettingsTableFilterComposer
 
   ColumnFilters<String> get language => $composableBuilder(
     column: $table.language,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get theme => $composableBuilder(
+    column: $table.theme,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5178,6 +5230,11 @@ class $$AppSettingsTableOrderingComposer
     column: $table.language,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get theme => $composableBuilder(
+    column: $table.theme,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AppSettingsTableAnnotationComposer
@@ -5199,6 +5256,9 @@ class $$AppSettingsTableAnnotationComposer
 
   GeneratedColumn<String> get language =>
       $composableBuilder(column: $table.language, builder: (column) => column);
+
+  GeneratedColumn<String> get theme =>
+      $composableBuilder(column: $table.theme, builder: (column) => column);
 }
 
 class $$AppSettingsTableTableManager
@@ -5235,20 +5295,24 @@ class $$AppSettingsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<int> accentColor = const Value.absent(),
                 Value<String> language = const Value.absent(),
+                Value<String> theme = const Value.absent(),
               }) => AppSettingsCompanion(
                 id: id,
                 accentColor: accentColor,
                 language: language,
+                theme: theme,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required int accentColor,
                 required String language,
+                Value<String> theme = const Value.absent(),
               }) => AppSettingsCompanion.insert(
                 id: id,
                 accentColor: accentColor,
                 language: language,
+                theme: theme,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

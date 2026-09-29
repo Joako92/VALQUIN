@@ -1,6 +1,9 @@
 class SpanishStrings {
   static const playerNamePlaceholder = 'INGRESE UN NOMBRE DE JUGADOR';
   static const gotIt = 'ENTENDIDO';
+  static const theme = 'TEMA';
+  static const dark = 'OSCURO';
+  static const light = 'CLARO';
 
   // Player Screen
 

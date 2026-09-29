@@ -26,72 +26,44 @@ The visual direction follows a **dark mythic minimalism** approach:
 
 ## Current Version
 
-**v0.7.7 — Daily Mission & Equipment Training Flow**
+**v0.7.8 — Hades & Olympus Theme System**
 
-The current development cycle focuses on improving the Equipment training flow and making the player's daily training objective clearer and more game-like.
+The current development cycle introduces a persistent visual theme system, allowing the player to switch between the dark world of **Hades** and the light world of **Olympus**.
 
-### v0.7.7 Highlights
+### v0.7.8 Highlights
 
-* Introduced the **Daily Mission** system in the Equipment screen.
+* Added selectable **Dark / Light themes**.
 
-* Daily exercises are now grouped by **muscle group**.
+* Dark theme represents **Hades**, preserving VALQUIN's original dark visual identity.
 
-* Centralized the relationship between equipment slots and muscle groups through the `MuscleGroup` domain model.
+* Light theme represents **Olympus**, using a muted sky-blue palette instead of a bright white interface.
 
-* Added localized muscle group labels in English and Spanish.
+* Theme selection is persisted through the application settings system.
 
-* Accessory equipment is excluded from the Daily Mission because it does not represent a training muscle group.
+* Existing users default to the **Dark** theme after database migration.
 
-* Daily Mission exercises automatically reflect the selected exercise variant for each equipped item.
+* Added localized **Theme / Tema**, **Dark / Oscuro**, and **Light / Claro** settings.
 
-* Added localized **Execute / Ejecutar** action text to the training button.
+* Added database migration for persistent theme storage.
 
-* Improved the Equipment screen presentation to make the selected training easier to understand before execution.
+* Updated the application theme configuration to react dynamically to theme changes.
 
-### Muscle Groups
+* Added an Olympus-specific background palette.
 
-Equipment slots are mapped to training muscle groups through the `MuscleGroup` model:
+* Added an Olympus-specific character environment with a light mythological column and vegetation.
 
-| Equipment Slot | Muscle Group |
-| -------------- | ------------ |
-| Shoulders      | Shoulders    |
-| Head           | Cardio       |
-| Wings          | Back         |
-| Weapon         | Biceps       |
-| Chest          | Chest        |
-| Shield         | Triceps      |
-| Legs           | Legs         |
-| Belt           | Core         |
-| Accessory      | —            |
+* Updated the main screen layout so the visual background extends correctly behind the bottom navigation area.
 
-This keeps the relationship between equipment and training centralized in the domain layer instead of scattering slot-specific logic throughout the UI.
+### Hades & Olympus
 
-### Daily Mission
+The two themes represent different visual environments within the VALQUIN world:
 
-The Equipment screen now presents the selected training as a structured daily objective:
+| Theme | World   | Visual Direction                                   |
+| ----- | ------- | -------------------------------------------------- |
+| Dark  | Hades   | Black, dark red and shadow tones                   |
+| Light | Olympus | Muted sky blue, light stone and natural vegetation |
 
-```text
-DAILY MISSION
-
-Shoulders:
-• Military Press — 3 x 10 reps
-• Lateral Raises — 3 x 10 reps
-
-Chest:
-• Push-ups — 3 x 10 reps
-• Dips — 3 x 10 reps
-```
-
-The mission is generated dynamically from:
-
-* Active equipment slots.
-* Equipped items.
-* Selected exercise variants.
-* Equipment exercise definitions.
-* Muscle group mappings.
-* Cooldown state.
-
-Exercises belonging to the same muscle group are grouped together automatically.
+The themes change the atmosphere of the world without changing the underlying gameplay systems, equipment data or progression mechanics.
 
 ---
 
@@ -234,6 +206,13 @@ The goal is not to reproduce a specific existing game, but to create an original
 * Strong visual assets.
 * Subtle effects and animations.
 
+The visual theme system expands this direction into two complementary environments:
+
+* **Hades** — dark, imposing and shadow-focused.
+* **Olympus** — open, celestial and sky-focused.
+
+The underlying interface remains consistent while the world surrounding the player changes.
+
 ---
 
 ## Technical Architecture
@@ -273,6 +252,21 @@ This allows gameplay data to remain independent from visual presentation.
 
 The `MuscleGroup` model follows the same principle by keeping training-domain relationships separate from screen presentation.
 
+Application settings are persisted through the database and currently include:
+
+* Accent color.
+* Language.
+* Theme.
+
+The theme system uses the `AppTheme` domain enum with:
+
+```text
+dark
+light
+```
+
+Existing database records are migrated to the Dark theme by default.
+
 ---
 
 ## Project Structure
@@ -297,6 +291,22 @@ The architecture is being refined incrementally through vertical slices, keeping
 ---
 
 ## Development Milestones
+
+### v0.7.8
+
+**Hades & Olympus Theme System**
+
+* Selectable Dark / Light themes.
+* Hades dark visual environment.
+* Olympus sky-blue visual environment.
+* Persistent theme preference.
+* Database migration for theme settings.
+* English / Spanish theme localization.
+* Dynamic Material theme switching.
+* Olympus-specific background.
+* Olympus-specific character environment.
+* Bottom navigation background integration.
+* Existing users default to Dark after migration.
 
 ### v0.7.7
 

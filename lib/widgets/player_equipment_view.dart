@@ -99,6 +99,7 @@ class _PlayerEquipmentViewState extends State<PlayerEquipmentView> {
     final shield = equippedBySlot[EquipmentSlot.shield];
     final wings = equippedBySlot[EquipmentSlot.wings];
     final accessory = equippedBySlot[EquipmentSlot.accessory];
+    final isLight = Theme.of(context).brightness == Brightness.light;
 
     final hasHelmet = head != null;
 
@@ -125,7 +126,9 @@ class _PlayerEquipmentViewState extends State<PlayerEquipmentView> {
             scaleX: 1.2,
             scaleY: 0.7,
             child: Image.asset(
-              'assets/images/valquin_column.png',
+              isLight
+                  ? 'assets/images/valquin_column_olympus.png'
+                  : 'assets/images/valquin_column.png',
               fit: BoxFit.contain,
             ),
           ),
@@ -224,16 +227,7 @@ class _PlayerEquipmentViewState extends State<PlayerEquipmentView> {
                     view: _equipmentView,
                   ),
 
-                // --------------------------------------------------
-                // WINGS - FRONT
-                // --------------------------------------------------
-
-                if (wings != null &&
-                    !_shouldRenderWingsBehind())
-                  EquipmentRenderer(
-                    item: wings,
-                    view: _equipmentView,
-                  ),
+                
 
                 // --------------------------------------------------
                 // SHOULDERS
@@ -242,6 +236,17 @@ class _PlayerEquipmentViewState extends State<PlayerEquipmentView> {
                 if (shoulders != null)
                   EquipmentRenderer(
                     item: shoulders,
+                    view: _equipmentView,
+                  ),
+
+                // --------------------------------------------------
+                // WINGS - FRONT
+                // --------------------------------------------------
+
+                if (wings != null &&
+                    !_shouldRenderWingsBehind())
+                  EquipmentRenderer(
+                    item: wings,
                     view: _equipmentView,
                   ),
 

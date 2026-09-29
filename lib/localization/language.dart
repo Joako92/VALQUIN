@@ -29,6 +29,37 @@ class LanguageStrings {
     }
   }
 
+  // Theme
+
+  String get theme {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.theme;
+      case AppLanguage.spanish:
+        return SpanishStrings.theme;
+    }
+  }
+
+  String get dark {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.dark;
+      case AppLanguage.spanish:
+        return SpanishStrings.dark;
+    }
+  }
+
+  String get light {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.light;
+      case AppLanguage.spanish:
+        return SpanishStrings.light;
+    }
+  }
+
+  // Stats
+
   String get attributeStrength {
     switch (language) {
       case AppLanguage.english:
