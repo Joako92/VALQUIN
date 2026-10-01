@@ -22,24 +22,30 @@ The visual direction follows a **dark mythic minimalism** approach:
 
 ## Current Version
 
-**v0.8.0 — Training History**
+**v0.9.0 — Exercise Guide**
 
-This release introduces a persistent training history system, allowing players to review their completed training sessions, the exercises performed, the selected exercise variants and the XP gained from each session.
+This release introduces an exercise visualization and guidance system, allowing players to access exercise instructions directly from equipment in the Inventory.
 
-### v0.8.0 Highlights
+Exercise guidance is provided through the WGER API while VALQUIN remains the source of truth for its own exercise definitions, names, variants and gameplay data.
 
-* Added persistent training session records.
-* Added a training history system backed by SQLite and Drift.
-* Added a `TrainingHistoryManager` to retrieve recent training records.
-* Added a Training History dialog accessible from the player status card.
-* Added an expandable list of the 10 most recent training sessions.
-* Each session displays its completion date and total XP gained.
-* Expanded sessions display the exercises performed and their recorded sets, repetitions or other measured amounts.
-* Stored exercise IDs, selected variant indices and exercise details in the history.
-* Recorded exercise details as snapshots so historical results remain independent of subsequent exercise definition changes.
-* Recorded Strength, Endurance, Energy and Stamina gains for each completed session.
-* Added a database migration for training history tables.
-* Integrated training history recording into the training execution flow.
+### v0.9.0 Highlights
+
+* Added an Exercise Guide accessible from Inventory equipment.
+* Added exercise selection for equipment containing multiple exercises.
+* Added localized exercise guidance in English and Spanish.
+* Added localized exercise names from WGER inside the guide.
+* Added exercise descriptions from WGER.
+* Added exercise images when available.
+* Added a loading state while exercise information is retrieved.
+* Added an unavailable state when guide information cannot be retrieved.
+* Added WGER exercise ID mapping for all 58 VALQUIN exercises.
+* Added an `ExerciseGuideService` responsible for WGER communication.
+* Added language-aware guide retrieval.
+* Added in-memory caching for repeated exercise guide requests.
+* Added tests covering all 58 mapped exercises.
+* Added representative English guide tests.
+* Added service caching tests.
+* Kept WGER data isolated from VALQUIN's exercise and database models.
 
 ---
 
@@ -70,7 +76,7 @@ The main character screen displays:
 * Avatar.
 * Equipment visual layers.
 * Access to application settings.
-* Access to the training history.
+* Access to training history.
 
 The avatar supports four views:
 
@@ -94,6 +100,27 @@ The Inventory provides:
 * Equipment statistics.
 * Cooldown information.
 * Equipment activation.
+* Exercise Guide access.
+
+The Exercise Guide is opened from an equipment item's `?` action.
+
+The guide flow is:
+
+```text
+Inventory
+    ↓
+Equipment Item
+    ↓
+Exercise Guide
+    ↓
+Exercise Selection
+    ↓
+Exercise Information
+    ↓
+Image + Description
+```
+
+WGER information is only used inside the Exercise Guide. VALQUIN's own exercise names, variants and gameplay data remain unchanged throughout the rest of the application.
 
 Equipment is organized by slots:
 
@@ -151,6 +178,51 @@ Each training record includes the XP gained in the four progression attributes:
 Exercise details are saved as historical snapshots. This preserves the recorded training results even if exercise definitions or available variants change in the future.
 
 The history is stored locally in the application's SQLite database.
+
+---
+
+## Exercise Guide
+
+The Exercise Guide provides educational information for exercises directly from the Inventory.
+
+Each equipment item can expose one or more exercises. Selecting the `?` action opens the guide and allows the player to choose an exercise.
+
+The guide can display:
+
+* Localized exercise name.
+* Exercise description.
+* Exercise image.
+* Loading state.
+* Unavailable state.
+
+### WGER Integration
+
+WGER is used as an external educational content source for exercise guidance.
+
+VALQUIN maintains an explicit mapping between its own exercise IDs and WGER exercise IDs.
+
+All 58 current VALQUIN exercises have been mapped and validated.
+
+The integration supports:
+
+* English.
+* Spanish.
+* Exercise descriptions.
+* Exercise images when available.
+* In-memory request caching.
+
+WGER data is intentionally **not stored in the VALQUIN database**.
+
+The application continues to use its own exercise models and definitions for:
+
+* Exercise names.
+* Exercise IDs.
+* Exercise variants.
+* Training plans.
+* Training execution.
+* Training history.
+
+WGER is only queried when the player requests exercise guidance.
 
 ---
 
@@ -226,7 +298,7 @@ VALQUIN is built with:
 * **Drift**
 * **Riverpod**
 
-The project is progressively moving toward a modular architecture where:
+The project is progressively moving toward a modular architecture:
 
 ```text
 Screens
@@ -262,7 +334,7 @@ Application settings are persisted through the database and currently include:
 * Language.
 * Theme.
 
-The theme system uses the `AppTheme` domain enum with:
+The theme system uses the `AppTheme` domain enum:
 
 ```text
 dark
@@ -283,9 +355,44 @@ Training history is implemented through dedicated models, database tables and a 
 
 A completed training session is stored as one training record, with its exercises stored as associated detail records.
 
-The session record stores the completion timestamp and the XP gained in each attribute. Exercise records store the exercise ID, selected variant index, sets, amount and unit.
+The session record stores the completion timestamp and the XP gained in each attribute.
+
+Exercise records store:
+
+* Exercise ID.
+* Selected variant index.
+* Sets.
+* Amount.
+* Unit.
 
 Historical exercise details are stored independently of the current exercise definitions, avoiding changes to previous records when exercise data evolves.
+
+### Exercise Guide Architecture
+
+Exercise guidance is implemented through dedicated mapping, model and service layers:
+
+* `wger_exercise_ids.dart`
+* `ExerciseGuide`
+* `ExerciseGuideService`
+* `ExerciseHelpDialog`
+
+The architecture separates VALQUIN exercise data from external educational content:
+
+```text
+VALQUIN Exercise ID
+        ↓
+WGER Exercise ID Mapping
+        ↓
+ExerciseGuideService
+        ↓
+WGER API
+        ↓
+ExerciseGuide
+        ↓
+ExerciseHelpDialog
+```
+
+The guide service also caches previously retrieved exercise/language combinations during the application session.
 
 ---
 
@@ -295,12 +402,16 @@ The application is organized around several main areas:
 
 ```text
 lib/
+
 ├── config/
+├── data/
 ├── database/
+├── localization/
 ├── managers/
 ├── models/
 ├── persistence/
 ├── screens/
+├── services/
 ├── widgets/
 └── ...
 ```
@@ -310,6 +421,26 @@ The architecture is being refined incrementally through vertical slices, keeping
 ---
 
 ## Development Milestones
+
+### v0.9.0
+
+**Exercise Guide**
+
+* Exercise Guide accessible from Inventory.
+* Exercise selection for equipment items.
+* English / Spanish guide localization.
+* WGER exercise ID mapping for all 58 exercises.
+* WGER exercise descriptions.
+* WGER exercise images when available.
+* Localized WGER exercise names inside the guide.
+* `ExerciseGuideService`.
+* Exercise guide request caching.
+* Exercise guide loading and unavailable states.
+* `ExerciseHelpDialog`.
+* Tests for all 58 exercises.
+* English guide validation.
+* Service cache validation.
+* WGER integration isolated from VALQUIN gameplay data.
 
 ### v0.8.0
 

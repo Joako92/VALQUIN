@@ -569,6 +569,35 @@ class LanguageStrings {
     }
   }
 
+  // Inventory Exercise Guide
+
+  String get exerciseGuide {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.exerciseGuide;
+      case AppLanguage.spanish:
+        return SpanishStrings.exerciseGuide;
+    }
+  }
+
+  String get exerciseGuideUnavailable {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.exerciseGuideUnavailable;
+      case AppLanguage.spanish:
+        return SpanishStrings.exerciseGuideUnavailable;
+    }
+  }
+
+  String get exerciseGuideLoading {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.exerciseGuideLoading;
+      case AppLanguage.spanish:
+        return SpanishStrings.exerciseGuideLoading;
+    }
+  }
+
   // Welcome Screen
 
   String get welcomeDisclaimer {

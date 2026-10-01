@@ -2012,7 +2012,7 @@ final List<EquipmentItem> equipmentItems = [
 
     exercises: [
       EquipmentExercise(
-        exerciseId: 'cominadas',
+        exerciseId: 'dominadas',
         maxVariant: 4,
       ),
       EquipmentExercise(

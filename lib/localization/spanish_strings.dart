@@ -105,6 +105,12 @@ class SpanishStrings {
       'y equipalo para incorporarlo a tu plan. '
       'A medida que progreses, nuevos elementos se irán desbloqueando.';
 
+  // Inventory Excercise Guide
+
+  static const String exerciseGuide = 'GUÍA DEL EJERCICIO';
+  static const String exerciseGuideUnavailable = 'No hay información disponible para este ejercicio.';
+  static const String exerciseGuideLoading = 'Cargando...';
+
   // Welcome Screen
 
   static const String welcomeDisclaimer =

@@ -10,6 +10,7 @@ import '../../managers/training_plan_manager.dart';
 import '../../models/equipment_item.dart';
 
 import '../valquin_icon_glow.dart';
+import 'exercise_help_dialog.dart';
 import 'inventory_cooldown_overlay.dart';
 import 'inventory_variant_selector.dart';
 
@@ -87,7 +88,7 @@ class InventoryItemDetail extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: _buildItemInformation(),
+            child: _buildItemInformation(context),
           ),
         ],
       ),
@@ -167,19 +168,28 @@ class InventoryItemDetail extends StatelessWidget {
     );
   }
 
-  Widget _buildItemInformation() {
+  Widget _buildItemInformation(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          item.name,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                item.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            _buildHelpButton(context),
+          ],
         ),
         const SizedBox(height: 4),
         Text(
@@ -196,7 +206,7 @@ class InventoryItemDetail extends StatelessWidget {
           children: [
             Text(
               settings.strings.exercises,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -231,7 +241,7 @@ class InventoryItemDetail extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           settings.strings.requirements,
-          style: TextStyle(
+          style: const TextStyle(
             color: AppColors.textSecondary,
             fontSize: 10,
             fontWeight: FontWeight.bold,
@@ -250,6 +260,31 @@ class InventoryItemDetail extends StatelessWidget {
         ),
         const SizedBox(height: 10),
       ],
+    );
+  }
+
+  Widget _buildHelpButton(BuildContext context) {
+    return SizedBox(
+      width: 30,
+      height: 30,
+      child: IconButton(
+        onPressed: () {
+          showDialog<void>(
+            context: context,
+            builder: (_) => ExerciseHelpDialog(
+              item: item,
+              settings: settings,
+            ),
+          );
+        },
+        padding: EdgeInsets.zero,
+        tooltip: settings.strings.exerciseGuide,
+        icon: const Icon(
+          Icons.help_outline,
+          color: AppColors.textSecondary,
+          size: 20,
+        ),
+      ),
     );
   }
 }

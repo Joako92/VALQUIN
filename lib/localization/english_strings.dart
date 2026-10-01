@@ -105,6 +105,12 @@ class EnglishStrings {
       'and equip it to add it to your training plan. '
       'As you progress, new items will become available.';
 
+  // Inventory Exercise Guide
+
+  static const String exerciseGuide = 'EXERCISE GUIDE';
+  static const String exerciseGuideUnavailable = 'No exercise information is available.';
+  static const String exerciseGuideLoading = 'Loading...';
+
   // Welcome Screen
 
   static const String welcomeDisclaimer =
