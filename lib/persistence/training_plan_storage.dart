@@ -9,6 +9,9 @@ class TrainingPlanStorage {
 
   static const String _cooldownsKey =
       'training_plan_cooldowns';
+  
+  static const String _selectedVariantsKey =
+    'training_plan_selected_variants';
 
   // --------------------------------------------------
   // SAVE
@@ -18,6 +21,7 @@ class TrainingPlanStorage {
     required List<String> equipmentIds,
     required List<String> activeSlots,
     required Map<String, DateTime> cooldowns,
+    required Map<String, int> selectedVariants,
   }) async {
     final preferences =
         await SharedPreferences.getInstance();
@@ -55,6 +59,22 @@ class TrainingPlanStorage {
       _cooldownsKey,
       _encodeMap(cooldownData),
     );
+
+    // --------------------------------------------------
+    // VARIANTS
+    // --------------------------------------------------
+
+    final selectedVariantData = selectedVariants.map(
+      (id, variantIndex) => MapEntry(
+        id,
+        variantIndex.toString(),
+      ),
+    );
+
+    await preferences.setString(
+      _selectedVariantsKey,
+      _encodeMap(selectedVariantData),
+    );
   }
 
   // --------------------------------------------------
@@ -82,10 +102,16 @@ class TrainingPlanStorage {
       _cooldownsKey,
     );
 
+    final selectedVariantData =
+        preferences.getString(
+      _selectedVariantsKey,
+    );
+
     return {
       'equipmentIds': equipmentIds,
       'activeSlots': activeSlots,
       'cooldowns': _decodeMap(cooldownData),
+      'selectedVariants': _decodeMap(selectedVariantData),
     };
   }
 

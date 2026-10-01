@@ -6,8 +6,10 @@ import '../config/app_settings.dart';
 import '../managers/player_manager.dart';
 import '../managers/class_manager.dart';
 import '../managers/training_plan_manager.dart';
+import '../managers/training_history_manager.dart';
 
 import '../models/player.dart';
+import '../models/training_record.dart';
 
 import '../widgets/player_class_change_dialog.dart';
 import '../widgets/player_equipment_view.dart';
@@ -15,12 +17,13 @@ import '../widgets/player_reset_player_dialog.dart';
 import '../widgets/player_settings_dialog.dart';
 import '../widgets/player_stats_card.dart';
 import '../widgets/valquin_info_dialog.dart';
-// import '../widgets/accessory_animation.dart';
+import '../widgets/player_training_history_dialog.dart';
 
 class PlayerScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final ClassManager classManager;
   final TrainingPlanManager trainingPlanManager;
+  final TrainingHistoryManager trainingHistoryManager;
   final AppSettings settings;
 
   const PlayerScreen({
@@ -28,6 +31,7 @@ class PlayerScreen extends StatefulWidget {
     required this.playerManager,
     required this.classManager,
     required this.trainingPlanManager,
+    required this.trainingHistoryManager,
     required this.settings,
   });
 
@@ -37,6 +41,12 @@ class PlayerScreen extends StatefulWidget {
 
 class _PlayerScreenState extends State<PlayerScreen> {
   // --------------------------------------------------
+  // TRAINING HISTORY
+  // --------------------------------------------------
+
+  List<TrainingRecord> trainingHistory = [];
+
+  // --------------------------------------------------
   // MANAGERS
   // --------------------------------------------------
 
@@ -45,7 +55,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
   ClassManager get classManager => widget.classManager;
 
   TrainingPlanManager get trainingPlanManager =>
-      widget.trainingPlanManager;
+    widget.trainingPlanManager;
+
+  TrainingHistoryManager get trainingHistoryManager =>
+    widget.trainingHistoryManager;
 
   AppSettings get settings => widget.settings;
 
@@ -59,6 +72,23 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showPlayerInfoIfNeeded();
+    });
+
+    _loadTrainingHistory();
+  }
+
+  Future<void> _loadTrainingHistory() async {
+    final history =
+        await trainingHistoryManager.getRecentHistory(
+      limit: 10,
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      trainingHistory = history;
     });
   }
 
@@ -136,6 +166,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 },
                 onSettings: () {
                   _showSettingsDialog(context);
+                },
+                onTrainingHistory: () {
+                  _showTrainingHistoryDialog(context);
                 },
               ),
 
@@ -234,6 +267,23 @@ class _PlayerScreenState extends State<PlayerScreen> {
       builder: (_) {
         return PlayerSettingsDialog(
           settings: settings,
+        );
+      },
+    );
+  }
+
+  // 
+  // HISTORY DIALOG
+  //
+
+  void _showTrainingHistoryDialog(
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return PlayerTrainingHistoryDialog(
+          trainingHistory: trainingHistory,
         );
       },
     );

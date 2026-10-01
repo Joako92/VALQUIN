@@ -11,6 +11,7 @@ import '../models/equipment_item.dart';
 import '../models/equipment_slot.dart' as model;
 import '../models/exercise.dart';
 import '../models/muscle_group.dart';
+import '../models/training_record_exercise.dart';
 
 import '../widgets/valquin_icon.dart';
 import '../widgets/valquin_icon_glow.dart';
@@ -37,14 +38,6 @@ class EquipScreen extends StatefulWidget {
 
 class _EquipScreenState extends State<EquipScreen> {
   Timer? _cooldownTimer;
-
-  /// Selected variant for each equipped item.
-  ///
-  /// The value is zero-based:
-  /// 0 = variant 1
-  /// 1 = variant 2
-  /// 2 = variant 3
-  final Map<String, int> selectedVariants = {};
 
   PlayerManager get playerManager => widget.playerManager;
 
@@ -161,7 +154,8 @@ class _EquipScreenState extends State<EquipScreen> {
   // ---------------------------------------------------------------------------
 
   int selectedVariantFor(EquipmentItem item) {
-    return selectedVariants[item.id] ?? 0;
+    return trainingPlanManager.trainingPlan
+        .selectedVariantFor(item);
   }
 
   void selectVariant(
@@ -169,7 +163,10 @@ class _EquipScreenState extends State<EquipScreen> {
     int variantIndex,
   ) {
     setState(() {
-      selectedVariants[item.id] = variantIndex;
+      trainingPlanManager.trainingPlan.selectVariant(
+        item,
+        variantIndex,
+      );
     });
   }
 
@@ -713,11 +710,57 @@ class _EquipScreenState extends State<EquipScreen> {
 
     final trainingPlan = trainingPlanManager.trainingPlan;
 
+    final readyItems = trainingPlan.readyItems();
+
     final gainedStats = trainingPlan.execute(player);
 
     if (gainedStats.isEmpty) {
       return;
     }
+
+    final exercises =
+        await database.getExercisesWithVariants();
+
+    final recordExercises = <TrainingRecordExercise>[];
+
+    for (final item in readyItems) {
+      for (final equipmentExercise in item.exercises) {
+        final exercise = exercises.firstWhere(
+          (exercise) =>
+              exercise.id == equipmentExercise.exerciseId,
+        );
+
+        final variantIndex =
+            trainingPlan.resolvedVariantFor(
+          item,
+          equipmentExercise.maxVariant,
+        );
+
+        final variant = exercise.getVariant(
+          variantIndex,
+        );
+
+        recordExercises.add(
+          TrainingRecordExercise(
+            trainingRecordId: 0,
+            exerciseId: exercise.id,
+            variantIndex: variant.index,
+            sets: variant.sets,
+            amount: variant.amount,
+            unit: variant.unit,
+          ),
+        );
+      }
+    }
+
+    await database.insertTrainingRecord(
+      completedAt: DateTime.now(),
+      strengthGained: gainedStats['strength'] ?? 0,
+      enduranceGained: gainedStats['endurance'] ?? 0,
+      energyGained: gainedStats['energy'] ?? 0,
+      staminaGained: gainedStats['stamina'] ?? 0,
+      exercises: recordExercises,
+    );
 
     final leveledUp = player.level > previousLevel;
 

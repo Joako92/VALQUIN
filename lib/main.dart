@@ -12,6 +12,7 @@ import 'package:valquin/database/admin/database_admin.dart';
 import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
 import 'managers/class_manager.dart';
+import 'managers/training_history_manager.dart';
 
 import 'persistence/app_settings_storage.dart';
 import 'persistence/player_storage.dart';
@@ -116,10 +117,10 @@ Future<void> main(List<String> args) async {
   if (debugPlayerMode) {
     debugPrint('DEBUG PLAYER MODE ON');
     await playerManager.applyDebugStats(
-      strength: 2500,
-      endurance: 2500,
-      energy: 2500,
-      stamina: 2500,
+      strength: 9999,
+      endurance: 9999,
+      energy: 9999,
+      stamina: 9999,
     );
   }
 
@@ -143,6 +144,14 @@ Future<void> main(List<String> args) async {
   final classManager = ClassManager();
 
   // --------------------------------------------------
+  // TRAINING HISTORY
+  // --------------------------------------------------
+
+  final trainingHistoryManager = TrainingHistoryManager(
+    database: database,
+  );
+
+  // --------------------------------------------------
   // APP
   // --------------------------------------------------
 
@@ -151,6 +160,7 @@ Future<void> main(List<String> args) async {
       playerManager: playerManager,
       trainingPlanManager: trainingPlanManager,
       classManager: classManager,
+      trainingHistoryManager: trainingHistoryManager,
       database: database,
       settings: settings,
     ),

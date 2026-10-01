@@ -15,6 +15,8 @@ import 'tables/equipment_item_stats.dart';
 import 'tables/equipment_item_unlock_requirements.dart';
 import 'tables/equipment_item_equip_requirements.dart';
 import 'tables/app_settings.dart';
+import 'tables/training_records.dart';
+import 'tables/training_record_exercises.dart';
 
 // --------------------------------------------------
 // DOMAIN MODELS
@@ -26,6 +28,8 @@ import '../models/equipment_slot.dart';
 import '../models/rarity.dart';
 import '../models/requirement.dart';
 import '../models/player_class.dart';
+import '../models/training_record_exercise.dart';
+import '../models/training_record.dart';
 
 part 'app_database.g.dart';
 
@@ -41,6 +45,8 @@ part 'app_database.g.dart';
     EquipmentItemUnlockRequirements,
     EquipmentItemEquipRequirements,
     AppSettings,
+    TrainingRecords,
+    TrainingRecordExercises,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -53,7 +59,7 @@ class AppDatabase extends _$AppDatabase {
         );
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -74,6 +80,11 @@ class AppDatabase extends _$AppDatabase {
         await customStatement(
           "UPDATE app_settings SET theme = 'dark' WHERE theme IS NULL",
         );
+      }
+
+      if (from < 4) {
+        await m.createTable(trainingRecords);
+        await m.createTable(trainingRecordExercises);
       }
     },
   );
@@ -1216,5 +1227,144 @@ class AppDatabase extends _$AppDatabase {
             .go();
 
     return deletedRows > 0;
+  }
+
+  // ==================================================
+  // TRAINING HISTORY
+  // ==================================================
+
+  Future<int> insertTrainingRecord({
+    required DateTime completedAt,
+    required int strengthGained,
+    required int enduranceGained,
+    required int energyGained,
+    required int staminaGained,
+    required List<TrainingRecordExercise> exercises,
+  }) async {
+    return transaction(() async {
+      // --------------------------------------------------
+      // TRAINING RECORD
+      // --------------------------------------------------
+
+      final recordId = await into(trainingRecords).insert(
+        TrainingRecordsCompanion.insert(
+          completedAt: completedAt,
+          strengthGained: Value(strengthGained),
+          enduranceGained: Value(enduranceGained),
+          energyGained: Value(energyGained),
+          staminaGained: Value(staminaGained),
+        ),
+      );
+
+      // --------------------------------------------------
+      // EXERCISES
+      // --------------------------------------------------
+
+      for (final exercise in exercises) {
+        await into(trainingRecordExercises).insert(
+          TrainingRecordExercisesCompanion.insert(
+            trainingRecordId: recordId,
+            exerciseId: exercise.exerciseId,
+            variantIndex: exercise.variantIndex,
+            sets: Value(exercise.sets),
+            amount: exercise.amount,
+            unit: exercise.unit,
+          ),
+        );
+      }
+
+      return recordId;
+    });
+  }
+
+  Future<List<TrainingRecordRow>> getRecentTrainingRecords({
+    int limit = 10,
+  }) {
+    return (select(trainingRecords)
+          ..orderBy([
+            (table) => OrderingTerm(
+                  expression: table.completedAt,
+                  mode: OrderingMode.desc,
+                ),
+          ])
+          ..limit(limit))
+        .get();
+  }
+
+  Future<List<TrainingRecordExerciseRow>>
+      getTrainingRecordExercises(
+    int trainingRecordId,
+  ) {
+    return (select(trainingRecordExercises)
+          ..where(
+            (table) =>
+                table.trainingRecordId.equals(
+              trainingRecordId,
+            ),
+          ))
+        .get();
+  }
+
+  Future<TrainingRecord?> getTrainingRecord(
+    int id,
+  ) async {
+    final record = await (select(trainingRecords)
+          ..where(
+            (table) => table.id.equals(id),
+          ))
+        .getSingleOrNull();
+
+    if (record == null) {
+      return null;
+    }
+
+    final exerciseRows =
+        await getTrainingRecordExercises(id);
+
+    return TrainingRecord(
+      id: record.id,
+      completedAt: record.completedAt,
+      strengthGained: record.strengthGained,
+      enduranceGained: record.enduranceGained,
+      energyGained: record.energyGained,
+      staminaGained: record.staminaGained,
+      exercises: exerciseRows
+          .map(
+            (exercise) => TrainingRecordExercise(
+              id: exercise.id,
+              trainingRecordId:
+                  exercise.trainingRecordId,
+              exerciseId: exercise.exerciseId,
+              variantIndex: exercise.variantIndex,
+              sets: exercise.sets,
+              amount: exercise.amount,
+              unit: exercise.unit,
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Future<List<TrainingRecord>>
+      getRecentTrainingHistory({
+    int limit = 10,
+  }) async {
+    final records =
+        await getRecentTrainingRecords(
+      limit: limit,
+    );
+
+    final result = <TrainingRecord>[];
+
+    for (final record in records) {
+      final trainingRecord =
+          await getTrainingRecord(record.id);
+
+      if (trainingRecord != null) {
+        result.add(trainingRecord);
+      }
+    }
+
+    return result;
   }
 }

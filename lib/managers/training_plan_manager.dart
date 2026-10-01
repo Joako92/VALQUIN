@@ -71,6 +71,24 @@ class TrainingPlanManager {
         timestamp,
       );
     }
+
+    // --------------------------------------------------
+    // VARIANTS
+    // --------------------------------------------------
+
+    final selectedVariantData =
+        data['selectedVariants'] as Map<String, String>;
+
+    for (final entry in selectedVariantData.entries) {
+      final variantIndex = int.tryParse(entry.value);
+
+      if (variantIndex == null) {
+        continue;
+      }
+
+      trainingPlan.selectedVariants[entry.key] =
+          variantIndex;
+    }
   }
 
   // --------------------------------------------------
@@ -88,6 +106,7 @@ class TrainingPlanManager {
           .toList(),
 
       cooldowns: trainingPlan.cooldowns,
+      selectedVariants: trainingPlan.selectedVariants,
     );
   }
 

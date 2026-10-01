@@ -10,6 +10,7 @@ class PlayerStatsCard extends StatelessWidget {
   final AppSettings settings;
   final VoidCallback onResetPlayer;
   final VoidCallback onSettings;
+  final VoidCallback onTrainingHistory;
 
   const PlayerStatsCard({
     super.key,
@@ -17,6 +18,7 @@ class PlayerStatsCard extends StatelessWidget {
     required this.settings,
     required this.onResetPlayer,
     required this.onSettings,
+    required this.onTrainingHistory,
   });
 
   // --------------------------------------------------
@@ -212,6 +214,24 @@ class PlayerStatsCard extends StatelessWidget {
             ),
             color: AppColors.textSecondary,
             tooltip: settings.strings.settings,
+          ),
+        ),
+
+        // --------------------------------------------------
+        // HISTORY
+        // --------------------------------------------------
+
+        Positioned(
+          top: 25,
+          left: 15,
+          child: IconButton(
+            onPressed: onTrainingHistory,
+            icon: const Icon(
+              Icons.menu_book_outlined,
+              size: 22,
+            ),
+            color: AppColors.textSecondary,
+            tooltip: 'Training History',
           ),
         ),
       ],

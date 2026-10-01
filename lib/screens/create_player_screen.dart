@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import '../config/app_config.dart';
 import '../config/app_settings.dart';
 import '../config/avatar_config.dart';
+
 import '../database/app_database.dart';
+
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../managers/class_manager.dart';
+import '../managers/training_history_manager.dart';
+
 import '../widgets/valquin_icon.dart';
 
 import 'main_screen.dart';
@@ -15,6 +19,7 @@ class CreatePlayerScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
   final ClassManager classManager;
+  final TrainingHistoryManager trainingHistoryManager;
   final AppDatabase database;
   final AppSettings settings;
 
@@ -23,6 +28,7 @@ class CreatePlayerScreen extends StatefulWidget {
     required this.playerManager,
     required this.trainingPlanManager,
     required this.classManager,
+    required this.trainingHistoryManager,
     required this.database,
     required this.settings,
   });
@@ -53,6 +59,9 @@ class _CreatePlayerScreenState
 
   ClassManager get classManager =>
       widget.classManager;
+
+  TrainingHistoryManager get trainingHistoryManager =>
+      widget.trainingHistoryManager;
 
   AppDatabase get database =>
       widget.database;
@@ -113,6 +122,7 @@ class _CreatePlayerScreenState
           playerManager: playerManager,
           trainingPlanManager: trainingPlanManager,
           classManager: classManager,
+          trainingHistoryManager: trainingHistoryManager,
           database: database,
           settings: settings,
         ),

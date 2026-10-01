@@ -8,6 +8,7 @@ import '../database/app_database.dart';
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../managers/class_manager.dart';
+import '../managers/training_history_manager.dart';
 
 import '../widgets/valquin_icon.dart';
 import '../widgets/valquin_background.dart';
@@ -22,6 +23,7 @@ class MainScreen extends StatefulWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
   final ClassManager classManager;
+  final TrainingHistoryManager trainingHistoryManager;
   final AppDatabase database;
   final AppSettings settings;
 
@@ -30,6 +32,7 @@ class MainScreen extends StatefulWidget {
     required this.playerManager,
     required this.trainingPlanManager,
     required this.classManager,
+    required this.trainingHistoryManager,
     required this.database,
     required this.settings,
   });
@@ -48,6 +51,7 @@ class _MainScreenState extends State<MainScreen> {
         playerManager: widget.playerManager,
         trainingPlanManager: widget.trainingPlanManager,
         classManager: widget.classManager,
+        trainingHistoryManager: widget.trainingHistoryManager,
         settings: widget.settings,
       ),
       InventoryScreen(

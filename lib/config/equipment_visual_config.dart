@@ -263,5 +263,13 @@ const Map<String, EquipmentVisualConfig> equipmentVisualConfigs = {
   ),
 
   'alas_angel': EquipmentVisualConfig(),
+  'alas_dragon': EquipmentVisualConfig(
+    offsets: {
+      EquipmentView.front: Offset(7, -59),
+      EquipmentView.threeQuarter: Offset(0, -55),
+      EquipmentView.side: Offset(0, -50),
+      EquipmentView.back: Offset(-8, -50),
+    },
+  ),
 
 };

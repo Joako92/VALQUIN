@@ -35,6 +35,29 @@ class TrainingPlan {
   final List<EquipmentSlot> activeSlots = [];
 
   // --------------------------------------------------
+  // SELECTED VARIANTS
+  // --------------------------------------------------
+
+  /// Selected exercise variant for each equipped item.
+  ///
+  /// The value is zero-based:
+  /// 0 = variant 1
+  /// 1 = variant 2
+  /// 2 = variant 3
+  final Map<String, int> selectedVariants = {};
+
+  int selectedVariantFor(EquipmentItem item) {
+    return selectedVariants[item.id] ?? 0;
+  }
+
+  void selectVariant(
+    EquipmentItem item,
+    int variantIndex,
+  ) {
+    selectedVariants[item.id] = variantIndex;
+  }
+
+  // --------------------------------------------------
   // COOLDOWNS
   // --------------------------------------------------
 
@@ -260,21 +283,31 @@ class TrainingPlan {
   }
 
   // --------------------------------------------------
+  // READY ITEMS
+  // --------------------------------------------------
+
+  List<EquipmentItem> readyItems() {
+    return equipment.where((item) {
+      if (!isSlotActive(item.slot)) {
+        return false;
+      }
+
+      if (isOnCooldown(item)) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+  }
+
+  // --------------------------------------------------
   // EXECUTE
   // --------------------------------------------------
 
   Map<String, int> execute(Player player) {
     final Map<String, int> gainedStats = {};
 
-    for (final item in equipment) {
-      if (!isSlotActive(item.slot)) {
-        continue;
-      }
-
-      if (isOnCooldown(item)) {
-        continue;
-      }
-
+    for (final item in readyItems()) {
       // --------------------------------------------------
       // STATS
       // --------------------------------------------------
@@ -294,5 +327,22 @@ class TrainingPlan {
     }
 
     return gainedStats;
+  }
+
+  // --------------------------------------------------
+  // RESOLVED VARIANT
+  // --------------------------------------------------
+
+  int resolvedVariantFor(
+    EquipmentItem item,
+    int maxVariant,
+  ) {
+    final selectedVariant = selectedVariantFor(item);
+
+    if (selectedVariant > maxVariant) {
+      return maxVariant;
+    }
+
+    return selectedVariant;
   }
 }

@@ -9,6 +9,7 @@ import 'database/app_database.dart';
 import 'managers/player_manager.dart';
 import 'managers/training_plan_manager.dart';
 import 'managers/class_manager.dart';
+import 'managers/training_history_manager.dart';
 
 import 'screens/main_screen.dart';
 import 'screens/welcome_screen.dart';
@@ -17,6 +18,7 @@ class SoloTrainingApp extends StatelessWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
   final ClassManager classManager;
+  final TrainingHistoryManager trainingHistoryManager;
   final AppDatabase database;
   final AppSettings settings;
 
@@ -25,6 +27,7 @@ class SoloTrainingApp extends StatelessWidget {
     required this.playerManager,
     required this.trainingPlanManager,
     required this.classManager,
+    required this.trainingHistoryManager,
     required this.database,
     required this.settings,
   });
@@ -66,6 +69,7 @@ class SoloTrainingApp extends StatelessWidget {
                   playerManager: playerManager,
                   trainingPlanManager: trainingPlanManager,
                   classManager: classManager,
+                  trainingHistoryManager: trainingHistoryManager,
                   database: database,
                   settings: settings,
                 )
@@ -73,6 +77,7 @@ class SoloTrainingApp extends StatelessWidget {
                   playerManager: playerManager,
                   trainingPlanManager: trainingPlanManager,
                   classManager: classManager,
+                  trainingHistoryManager: trainingHistoryManager,
                   database: database,
                   settings: settings,
                 ),

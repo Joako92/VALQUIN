@@ -3,11 +3,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../config/app_colors.dart';
 import '../config/app_settings.dart';
+
 import '../database/app_database.dart';
+
 import '../localization/language.dart';
+
 import '../managers/class_manager.dart';
 import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
+import '../managers/training_history_manager.dart';
 
 import 'create_player_screen.dart';
 
@@ -15,6 +19,7 @@ class WelcomeScreen extends StatelessWidget {
   final PlayerManager playerManager;
   final TrainingPlanManager trainingPlanManager;
   final ClassManager classManager;
+  final TrainingHistoryManager trainingHistoryManager;
   final AppDatabase database;
   final AppSettings settings;
 
@@ -23,6 +28,7 @@ class WelcomeScreen extends StatelessWidget {
     required this.playerManager,
     required this.trainingPlanManager,
     required this.classManager,
+    required this.trainingHistoryManager,
     required this.database,
     required this.settings,
   });
@@ -119,9 +125,9 @@ class WelcomeScreen extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (_) => CreatePlayerScreen(
                                   playerManager: playerManager,
-                                  trainingPlanManager:
-                                      trainingPlanManager,
+                                  trainingPlanManager: trainingPlanManager,
                                   classManager: classManager,
+                                  trainingHistoryManager: trainingHistoryManager,
                                   database: database,
                                   settings: settings,
                                 ),

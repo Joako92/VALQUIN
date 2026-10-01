@@ -3,13 +3,9 @@
 ### Forge Yourself.
 
 <p align="center">
-
   <img src="assets/screenshots/status.png" alt="VALQUIN Status" width="250"/>
-
   <img src="assets/screenshots/inventory.png" alt="VALQUIN Inventory" width="250"/>
-
   <img src="assets/screenshots/equipment.png" alt="VALQUIN Equipment" width="250"/>
-
 </p>
 
 > **Train in real life. Progress in the game. Forge Yourself.**
@@ -26,44 +22,24 @@ The visual direction follows a **dark mythic minimalism** approach:
 
 ## Current Version
 
-**v0.7.8 — Hades & Olympus Theme System**
+**v0.8.0 — Training History**
 
-The current development cycle introduces a persistent visual theme system, allowing the player to switch between the dark world of **Hades** and the light world of **Olympus**.
+This release introduces a persistent training history system, allowing players to review their completed training sessions, the exercises performed, the selected exercise variants and the XP gained from each session.
 
-### v0.7.8 Highlights
+### v0.8.0 Highlights
 
-* Added selectable **Dark / Light themes**.
-
-* Dark theme represents **Hades**, preserving VALQUIN's original dark visual identity.
-
-* Light theme represents **Olympus**, using a muted sky-blue palette instead of a bright white interface.
-
-* Theme selection is persisted through the application settings system.
-
-* Existing users default to the **Dark** theme after database migration.
-
-* Added localized **Theme / Tema**, **Dark / Oscuro**, and **Light / Claro** settings.
-
-* Added database migration for persistent theme storage.
-
-* Updated the application theme configuration to react dynamically to theme changes.
-
-* Added an Olympus-specific background palette.
-
-* Added an Olympus-specific character environment with a light mythological column and vegetation.
-
-* Updated the main screen layout so the visual background extends correctly behind the bottom navigation area.
-
-### Hades & Olympus
-
-The two themes represent different visual environments within the VALQUIN world:
-
-| Theme | World   | Visual Direction                                   |
-| ----- | ------- | -------------------------------------------------- |
-| Dark  | Hades   | Black, dark red and shadow tones                   |
-| Light | Olympus | Muted sky blue, light stone and natural vegetation |
-
-The themes change the atmosphere of the world without changing the underlying gameplay systems, equipment data or progression mechanics.
+* Added persistent training session records.
+* Added a training history system backed by SQLite and Drift.
+* Added a `TrainingHistoryManager` to retrieve recent training records.
+* Added a Training History dialog accessible from the player status card.
+* Added an expandable list of the 10 most recent training sessions.
+* Each session displays its completion date and total XP gained.
+* Expanded sessions display the exercises performed and their recorded sets, repetitions or other measured amounts.
+* Stored exercise IDs, selected variant indices and exercise details in the history.
+* Recorded exercise details as snapshots so historical results remain independent of subsequent exercise definition changes.
+* Recorded Strength, Endurance, Energy and Stamina gains for each completed session.
+* Added a database migration for training history tables.
+* Integrated training history recording into the training execution flow.
 
 ---
 
@@ -93,6 +69,8 @@ The main character screen displays:
 * Current equipment.
 * Avatar.
 * Equipment visual layers.
+* Access to application settings.
+* Access to the training history.
 
 The avatar supports four views:
 
@@ -149,6 +127,30 @@ Special visual behavior includes:
 * Shields using view-specific layering.
 * Accessories using independent animation.
 * Rarity-based visual effects.
+
+### TRAINING HISTORY
+
+The Training History system records completed training sessions and makes them available from the player status card.
+
+The dialog displays the 10 most recent sessions, ordered from newest to oldest.
+
+Each session initially displays:
+
+* Completion date.
+* Total XP gained.
+
+Selecting a session expands its details to display the exercises performed and their recorded sets, repetitions or other measured amounts.
+
+Each training record includes the XP gained in the four progression attributes:
+
+* Strength
+* Endurance
+* Energy
+* Stamina
+
+Exercise details are saved as historical snapshots. This preserves the recorded training results even if exercise definitions or available variants change in the future.
+
+The history is stored locally in the application's SQLite database.
 
 ---
 
@@ -252,6 +254,8 @@ This allows gameplay data to remain independent from visual presentation.
 
 The `MuscleGroup` model follows the same principle by keeping training-domain relationships separate from screen presentation.
 
+### Application Settings
+
 Application settings are persisted through the database and currently include:
 
 * Accent color.
@@ -267,6 +271,22 @@ light
 
 Existing database records are migrated to the Dark theme by default.
 
+### Training History Architecture
+
+Training history is implemented through dedicated models, database tables and a manager:
+
+* `TrainingRecord`
+* `TrainingRecordExercise`
+* `TrainingRecords`
+* `TrainingRecordExercises`
+* `TrainingHistoryManager`
+
+A completed training session is stored as one training record, with its exercises stored as associated detail records.
+
+The session record stores the completion timestamp and the XP gained in each attribute. Exercise records store the exercise ID, selected variant index, sets, amount and unit.
+
+Historical exercise details are stored independently of the current exercise definitions, avoiding changes to previous records when exercise data evolves.
+
 ---
 
 ## Project Structure
@@ -275,7 +295,6 @@ The application is organized around several main areas:
 
 ```text
 lib/
-
 ├── config/
 ├── database/
 ├── managers/
@@ -291,6 +310,22 @@ The architecture is being refined incrementally through vertical slices, keeping
 ---
 
 ## Development Milestones
+
+### v0.8.0
+
+**Training History**
+
+* Persistent training session records.
+* Training history database tables.
+* Database migration for training history.
+* `TrainingHistoryManager`.
+* Training session recording integrated into execution.
+* XP gains recorded for all four attributes.
+* Exercise and variant snapshots.
+* Expandable Training History dialog.
+* Display of the 10 most recent sessions.
+* Exercise details with sets, repetitions and measured amounts.
+* Training History access from the player status card.
 
 ### v0.7.8
 

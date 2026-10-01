@@ -1971,4 +1971,63 @@ final List<EquipmentItem> equipmentItems = [
     ],
   ),
 
+  // ==================================================
+  // Alas Dragon
+  // ==================================================
+
+  EquipmentItem(
+    id: 'alas_dragon',
+    name: 'ALAS DE DRAGÓN',
+    rarity: Rarity.legendary,
+    slot: EquipmentSlot.wings,
+    cooldownHours: 1,
+
+    unlockRequirements: Requirement(
+      stats: {
+        'strength': 1000,
+        'endurance': 1000,
+        'energy': 500,
+        'stamina': 500,
+      },
+      classes: {
+        PlayerClass.athlete,
+      },
+    ),
+
+    equipRequirements: Requirement(
+      stats: {
+        'strength': 1000,
+        'endurance': 1000,
+        'energy': 500,
+        'stamina': 500,
+      },
+    ),
+
+    stats: {
+      'strength': 100,
+      'endurance': 100,
+      'energy': 100,
+      'stamina': 100,
+    },
+
+    exercises: [
+      EquipmentExercise(
+        exerciseId: 'cominadas',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'pullover',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'remo_sentado',
+        maxVariant: 4,
+      ),
+      EquipmentExercise(
+        exerciseId: 'remo_mancuerna',
+        maxVariant: 4,
+      ),
+    ],
+  ),
+
 ];
