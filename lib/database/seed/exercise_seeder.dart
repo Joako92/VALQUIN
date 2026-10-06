@@ -7,7 +7,6 @@ class ExerciseSeeder {
       await database.replaceExercise(
         id: exercise.id,
         name: exercise.name,
-        variants: exercise.variants,
       );
     }
   }

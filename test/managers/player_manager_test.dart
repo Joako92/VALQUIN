@@ -252,11 +252,11 @@ void main() {
           playerManager.player!.stats.strength = 100;
           playerManager.player!.stats.endurance = 100;
           playerManager.player!.stats.energy = 100;
-          playerManager.player!.stats.stamina = 100;
+          playerManager.player!.stats.stamina = 450;
 
           expect(
             playerManager.player!.xp,
-            400,
+            750,
           );
 
           expect(
@@ -287,6 +287,7 @@ void main() {
           );
         },
       );
+
 
       test(
         'persists the reset player',

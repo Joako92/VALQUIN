@@ -13,22 +13,22 @@ class DatabaseAdmin {
     final exercises =
         await database.select(database.exercises).get();
 
-    if (kDebugMode) {
-      print('========================================');
-      print('EXERCISES IN DATABASE');
-      print('TOTAL: ${exercises.length}');
-      print('========================================');
+    if (!kDebugMode) {
+      return;
+    }
+    
+    debugPrint('========================================');
+    debugPrint('EXERCISES IN DATABASE');
+    debugPrint('TOTAL: ${exercises.length}');
+    debugPrint('========================================');
 
-      for (final exercise in exercises) {
-        print(
-          'ID: ${exercise.id} | NAME: ${exercise.name}',
-        );
-      }
+    for (final exercise in exercises) {
+      debugPrint(
+        'ID: ${exercise.id} | NAME: ${exercise.name}',
+      );
     }
 
-    if (kDebugMode) {
-      print('========================================');
-    }
+    debugPrint('========================================');
   }
 
   // --------------------------------------------------
@@ -64,119 +64,87 @@ class DatabaseAdmin {
   static Future<void> debugExerciseDatabase(
     AppDatabase database,
   ) async {
-    if (kDebugMode) {
-      print('========================================');
-      print('DATABASE DEBUG');
-      print('========================================');
+    if (!kDebugMode) {
+      return;
     }
-    
+
+    debugPrint('========================================');
+    debugPrint('DATABASE DEBUG');
+    debugPrint('========================================');
+
     final exercises =
         await database.select(database.exercises).get();
 
-    if (kDebugMode) {
-      print('EXERCISES: ${exercises.length}');
-    }
+    debugPrint('EXERCISES: ${exercises.length}');
 
     for (final exercise in exercises) {
-      if (kDebugMode) {
-        print('');
-        print('Exercise: ${exercise.id}');
-        print('Name: ${exercise.name}');
-      }
-      
-
-      final links =
-          await database.getExerciseVariantLinks(exercise.id);
-
-      if (kDebugMode) {
-        print('Variant links: ${links.length}');
-      }
-
-      for (final link in links) {
-        final variant =
-            await database.getExerciseVariant(link.variantId);
-
-        if (kDebugMode) {
-          print(
-            '  Variant ${link.variantId}: '
-            '${variant?.variantIndex} | '
-            '${variant?.sets} sets | '
-            '${variant?.amount} ${variant?.unit}',
-          );
-        }
-      }
+      debugPrint('');
+      debugPrint('Exercise: ${exercise.id}');
+      debugPrint('Name: ${exercise.name}');
 
       final equipmentRelations =
           await database.getEquipmentItemExercises(
         exercise.id,
       );
 
-      if (kDebugMode) {
-        print(
-          'Equipment relations: '
-          '${equipmentRelations.length}',
-        );
-      }
+      debugPrint(
+        'Equipment relations: '
+        '${equipmentRelations.length}',
+      );
 
       for (final relation in equipmentRelations) {
-        if (kDebugMode) {
-            print(
-            '  Equipment: ${relation.equipmentItemId} '
-            '| maxVariant: ${relation.maxVariant}',
-          );
-        }
+        debugPrint(
+          '  Equipment: ${relation.equipmentItemId} '
+          '| family: ${relation.variantFamilyId} '
+          '| maxVariant: ${relation.maxVariant}',
+        );
       }
     }
 
-    if (kDebugMode) {
-      print('');
-      print('========================================');
-    }
+    debugPrint('');
+    debugPrint('========================================');
   }
+
+  // --------------------------------------------------
+  // DEBUG EQUIPMENT DATABASE
+  // --------------------------------------------------
 
   static Future<void> debugEquipmentDatabase(
     AppDatabase database,
   ) async {
-    if (kDebugMode) {
-      print('========================================');
-      print('EQUIPMENT DATABASE DEBUG');
-      print('========================================');
+    if (!kDebugMode) {
+      return;
     }
+
+    debugPrint('========================================');
+    debugPrint('EQUIPMENT DATABASE DEBUG');
+    debugPrint('========================================');
 
     final items =
         await database.select(database.equipmentItems).get();
 
-    if (kDebugMode) {
-      print('EQUIPMENT ITEMS: ${items.length}');
-    }
+    debugPrint('EQUIPMENT ITEMS: ${items.length}');
 
     for (final item in items) {
-      if (kDebugMode) {
-        print('');
-        print('Equipment: ${item.id}');
-        print('Name: ${item.name}');
-      }
+      debugPrint('');
+      debugPrint('Equipment: ${item.id}');
+      debugPrint('Name: ${item.name}');
 
       final relations =
           await database.getEquipmentItemExercises(item.id);
 
-      if (kDebugMode) {
-        print('Exercises: ${relations.length}');
-      }
+      debugPrint('Exercises: ${relations.length}');
 
       for (final relation in relations) {
-        if (kDebugMode) {
-          print(
-            '  Exercise ID: ${relation.exerciseId} '
-            '| maxVariant: ${relation.maxVariant}',
-          );
-        }
+        debugPrint(
+          '  Exercise ID: ${relation.exerciseId} '
+          '| family: ${relation.variantFamilyId} '
+          '| maxVariant: ${relation.maxVariant}',
+        );
       }
     }
 
-    if (kDebugMode) {
-      print('');
-      print('========================================');
-    }
+    debugPrint('');
+    debugPrint('========================================');
   }
 }

@@ -25,35 +25,13 @@ void main() {
       await ExerciseSeeder.seed(database);
 
       final exercises =
-          await database.getExercisesWithVariants();
+          await database.select(database.exercises).get();
 
       expect(exercises, isNotEmpty);
 
       for (final exercise in exercises) {
         expect(exercise.id, isNotEmpty);
         expect(exercise.name, isNotEmpty);
-      }
-    },
-  );
-
-  test(
-    'seeds exercises with variants',
-    () async {
-      await ExerciseSeeder.seed(database);
-
-      final exercises =
-          await database.getExercisesWithVariants();
-
-      expect(exercises, isNotEmpty);
-
-      for (final exercise in exercises) {
-        expect(exercise.variants, isNotEmpty);
-
-        for (final variant in exercise.variants) {
-          expect(variant.index, greaterThanOrEqualTo(0));
-          expect(variant.amount, greaterThan(0));
-          expect(variant.unit, isNotEmpty);
-        }
       }
     },
   );

@@ -17,19 +17,16 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
-
-    // Starter equipment.
     unlockRequirements: Requirement(),
     equipRequirements: Requirement(),
-
     stats: {
       'stamina': 5,
       'energy': 5,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'caminata',
+        variantFamilyId: 'basic_distance',
         maxVariant: 1,
       ),
     ],
@@ -45,18 +42,16 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.chest,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(),
     equipRequirements: Requirement(),
-
     stats: {
       'strength': 10,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'flexiones_brazos',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -72,18 +67,16 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.shoulders,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(),
     equipRequirements: Requirement(),
-
     stats: {
       'strength': 10,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'press_militar',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -99,18 +92,16 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.weapon,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(),
     equipRequirements: Requirement(),
-
     stats: {
       'strength': 10,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'curl_biceps',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -126,18 +117,16 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.shield,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(),
     equipRequirements: Requirement(),
-
     stats: {
       'strength': 10,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'fondos_banco',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -153,18 +142,16 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.legs,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(),
     equipRequirements: Requirement(),
-
     stats: {
       'strength': 10,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'sentadilla_libre',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -180,18 +167,16 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.belt,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(),
     equipRequirements: Requirement(),
-
     stats: {
       'strength': 10,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'plancha_frontal',
+        variantFamilyId: 'isometric_seconds',
         maxVariant: 1,
       ),
     ],
@@ -211,29 +196,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'stamina': 5,
         'energy': 5,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'stamina': 15,
         'energy': 15,
       },
     ),
-
     stats: {
       'energy': 10,
       'stamina': 20,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'trote',
+        variantFamilyId: 'basic_minutes',
         maxVariant: 1,
       ),
     ],
@@ -249,29 +231,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.shoulders,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 30,
         'endurance': 30,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 60,
         'endurance': 60,
       },
     ),
-
     stats: {
       'strength': 10,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'vuelo_lateral',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -287,31 +266,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.chest,
     cooldownHours: 24,
-
-    // 1 sesión de flexiones = +10 strength +10 endurance
     unlockRequirements: Requirement(
       stats: {
         'strength': 30,
         'endurance': 30,
       },
     ),
-
-    // 3 sesiones de flexiones = +30 strength +30 endurance
     equipRequirements: Requirement(
       stats: {
         'strength': 60,
         'endurance': 60,
       },
     ),
-
     stats: {
       'strength': 20,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'press_banca',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -327,31 +301,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.weapon,
     cooldownHours: 24,
-
-    // 1 curl de bíceps = +10 strength +10 endurance
     unlockRequirements: Requirement(
       stats: {
         'strength': 30,
         'endurance': 30,
       },
     ),
-
-    // 3 curls de bíceps = +30 strength +30 endurance
     equipRequirements: Requirement(
       stats: {
         'strength': 60,
         'endurance': 60,
       },
     ),
-
     stats: {
       'strength': 15,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'curl_alternado',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -367,31 +336,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.legs,
     cooldownHours: 24,
-
-    // 1 sentadilla = +10 strength +10 endurance
     unlockRequirements: Requirement(
       stats: {
         'strength': 30,
         'endurance': 30,
       },
     ),
-
-    // 3 sentadillas = +30 strength +30 endurance
     equipRequirements: Requirement(
       stats: {
         'strength': 60,
         'endurance': 60,
       },
     ),
-
     stats: {
       'strength': 20,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'sentadilla_carga',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -407,31 +371,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.belt,
     cooldownHours: 24,
-
-    // 1 plancha = +10 strength +10 endurance
     unlockRequirements: Requirement(
       stats: {
         'strength': 30,
         'endurance': 30,
       },
     ),
-
-    // 3 planchas = +30 strength +30 endurance
     equipRequirements: Requirement(
       stats: {
         'strength': 60,
         'endurance': 60,
       },
     ),
-
     stats: {
       'strength': 15,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'crunches',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -447,31 +406,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.shield,
     cooldownHours: 24,
-
-    // 1 fondo en banco = +10 strength +10 endurance
     unlockRequirements: Requirement(
       stats: {
         'strength': 30,
         'endurance': 30,
       },
     ),
-
-    // 3 fondos en banco = +30 strength +30 endurance
     equipRequirements: Requirement(
       stats: {
         'strength': 60,
         'endurance': 60,
       },
     ),
-
     stats: {
       'strength': 15,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'triceps_polea',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -487,29 +441,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.wings,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 30,
         'endurance': 30,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 60,
         'endurance': 60,
       },
     ),
-
     stats: {
       'strength': 15,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'polea_pecho',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -525,7 +476,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 10,
@@ -534,7 +484,6 @@ final List<EquipmentItem> equipmentItems = [
         'stamina': 5,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 30,
@@ -543,14 +492,12 @@ final List<EquipmentItem> equipmentItems = [
         'stamina': 30,
       },
     ),
-
     stats: {
       'strength': 10,
       'endurance': 10,
       'energy': 10,
       'stamina': 10,
     },
-
     exercises: [],
   ),
 
@@ -568,29 +515,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.head,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'stamina': 20,
         'energy': 20,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'stamina': 50,
         'energy': 50,
       },
     ),
-
     stats: {
       'stamina': 20,
       'energy': 15,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'saltos_soga',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -606,29 +550,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.chest,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 50,
         'endurance': 50,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 80,
         'endurance': 80,
       },
     ),
-
     stats: {
       'strength': 10,
       'endurance': 15,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'aperturas_mancuernas',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -644,29 +585,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.shoulders,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 50,
         'endurance': 50,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 80,
         'endurance': 80,
       },
     ),
-
     stats: {
       'strength': 10,
       'endurance': 15,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'vuelo_frontal',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -682,29 +620,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.weapon,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 50,
         'endurance': 50,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 80,
         'endurance': 80,
       },
     ),
-
     stats: {
       'strength': 10,
       'endurance': 15,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'curl_martillo',
+        variantFamilyId: 'muscular_endurance_reps',
         maxVariant: 1,
       ),
     ],
@@ -720,29 +655,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.shield,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 50,
         'endurance': 50,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 80,
         'endurance': 80,
       },
     ),
-
     stats: {
       'strength': 10,
       'endurance': 15,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'extension_triceps',
+        variantFamilyId: 'muscular_endurance_reps',
         maxVariant: 1,
       ),
     ],
@@ -758,29 +690,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.legs,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 50,
         'endurance': 50,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 80,
         'endurance': 80,
       },
     ),
-
     stats: {
       'strength': 10,
       'endurance': 15,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'prensa_piernas',
+        variantFamilyId: 'muscular_endurance_reps',
         maxVariant: 1,
       ),
     ],
@@ -796,29 +725,26 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.belt,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 50,
         'endurance': 50,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 80,
         'endurance': 80,
       },
     ),
-
     stats: {
       'strength': 15,
       'endurance': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'elevaciones_piernas',
+        variantFamilyId: 'basic_reps',
         maxVariant: 1,
       ),
     ],
@@ -834,36 +760,33 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.common,
     slot: EquipmentSlot.wings,
     cooldownHours: 24,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 50,
         'endurance': 50,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 80,
         'endurance': 80,
       },
     ),
-
     stats: {
       'strength': 10,
       'endurance': 15,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'remo_sentado',
+        variantFamilyId: 'muscular_endurance_reps',
         maxVariant: 1,
       ),
     ],
   ),
 
   //endregion
-  
+
   //region SET DEL SABIO
 
   // --------------------------------------------------
@@ -876,35 +799,33 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.head,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'stamina': 50,
         'energy': 50,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'stamina': 80,
         'energy': 80,
       },
     ),
-
     stats: {
       'strength': 5,
       'endurance': 10,
       'energy': 20,
       'stamina': 30,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'trote',
+        variantFamilyId: 'basic_minutes',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'saltos_soga',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
     ],
@@ -920,35 +841,33 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.chest,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 100,
         'endurance': 100,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 130,
         'endurance': 130,
       },
     ),
-
     stats: {
       'strength': 30,
       'endurance': 20,
       'energy': 10,
       'stamina': 5,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'flexiones_brazos',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'press_banca',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
     ],
@@ -964,35 +883,33 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.shoulders,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 100,
         'endurance': 100,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 130,
         'endurance': 130,
       },
     ),
-
     stats: {
       'strength': 30,
       'endurance': 20,
       'energy': 10,
       'stamina': 5,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'press_militar',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'vuelo_lateral',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
     ],
@@ -1008,35 +925,33 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.weapon,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 100,
         'endurance': 100,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 130,
         'endurance': 130,
       },
     ),
-
     stats: {
       'strength': 30,
       'endurance': 20,
       'energy': 10,
       'stamina': 5,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'curl_biceps',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'curl_alternado',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
     ],
@@ -1052,35 +967,33 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.shield,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 100,
         'endurance': 100,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 130,
         'endurance': 130,
       },
     ),
-
     stats: {
       'strength': 30,
       'endurance': 20,
       'energy': 10,
       'stamina': 5,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'fondos_banco',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'triceps_polea',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
     ],
@@ -1096,35 +1009,33 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.legs,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 100,
         'endurance': 100,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 130,
         'endurance': 130,
       },
     ),
-
     stats: {
       'strength': 20,
       'endurance': 30,
       'energy': 5,
       'stamina': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'sentadilla_libre',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'sentadilla_carga',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
     ],
@@ -1140,35 +1051,33 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.belt,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 100,
         'endurance': 100,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 130,
         'endurance': 130,
       },
     ),
-
     stats: {
       'strength': 25,
       'endurance': 15,
       'energy': 10,
       'stamina': 5,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'plancha_frontal',
+        variantFamilyId: 'isometric_seconds',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'crunches',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
     ],
@@ -1184,48 +1093,46 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.wings,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 100,
         'endurance': 100,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 130,
         'endurance': 130,
       },
     ),
-
     stats: {
       'strength': 20,
       'endurance': 30,
       'energy': 5,
       'stamina': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'polea_pecho',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'remo_sentado',
+        variantFamilyId: 'basic_reps',
         maxVariant: 2,
       ),
     ],
   ),
 
   //endregion
-  
+
   // ==================================================
-  // ITEMS ESPECIFICOS DE CLASE
+  // ITEMS ESPECÍFICOS DE CLASE
   // ==================================================
 
   // ==================================================
-  // Power Lifter
+  // POWER LIFTER
   // ==================================================
 
   EquipmentItem(
@@ -1234,7 +1141,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.chest,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 100,
@@ -1245,31 +1151,31 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 140,
       },
     ),
-
     stats: {
       'strength': 60,
       'endurance': 15,
       'energy': 5,
       'stamina': 0,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'press_banca',
+        variantFamilyId: 'max_strength_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'flexiones_brazos',
+        variantFamilyId: 'power_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'aperturas_mancuernas',
+        variantFamilyId: 'hypertrophy_reps',
         maxVariant: 2,
       ),
     ],
@@ -1281,7 +1187,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 80,
@@ -1292,26 +1197,23 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 120,
         'endurance': 50,
       },
     ),
-
     stats: {
       'strength': 50,
       'endurance': 25,
       'energy': 10,
       'stamina': 5,
     },
-
     exercises: [],
   ),
 
   // ==================================================
-  // Bodybuilder
+  // BODYBUILDER
   // ==================================================
 
   EquipmentItem(
@@ -1320,7 +1222,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.weapon,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'endurance': 100,
@@ -1331,31 +1232,31 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'endurance': 140,
       },
     ),
-
     stats: {
       'strength': 15,
       'endurance': 60,
       'energy': 5,
       'stamina': 0,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'curl_biceps',
+        variantFamilyId: 'hypertrophy_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'curl_alternado',
+        variantFamilyId: 'hypertrophy_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'curl_barra',
+        variantFamilyId: 'hypertrophy_reps',
         maxVariant: 2,
       ),
     ],
@@ -1367,7 +1268,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
-
     unlockRequirements: Requirement(
       stats: {
         'endurance': 80,
@@ -1378,26 +1278,23 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'endurance': 120,
         'strength': 50,
       },
     ),
-
     stats: {
       'strength': 25,
       'endurance': 50,
       'energy': 10,
       'stamina': 5,
     },
-
     exercises: [],
   ),
 
   // ==================================================
-  // Gymnast
+  // GYMNAST
   // ==================================================
 
   EquipmentItem(
@@ -1406,7 +1303,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.shield,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'energy': 100,
@@ -1418,31 +1314,31 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.gymnast,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'energy': 140,
       },
     ),
-
     stats: {
       'strength': 15,
       'endurance': 60,
       'energy': 5,
       'stamina': 0,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'fondos_banco',
+        variantFamilyId: 'technical_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'triceps_polea',
+        variantFamilyId: 'technical_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'extension_triceps',
+        variantFamilyId: 'technical_reps',
         maxVariant: 2,
       ),
     ],
@@ -1454,7 +1350,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
-
     unlockRequirements: Requirement(
       stats: {
         'energy': 80,
@@ -1465,26 +1360,23 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'energy': 120,
         'stamina': 50,
       },
     ),
-
     stats: {
       'strength': 10,
       'endurance': 10,
       'energy': 50,
       'stamina': 25,
     },
-
     exercises: [],
   ),
 
   // ==================================================
-  // Runner
+  // RUNNER
   // ==================================================
 
   EquipmentItem(
@@ -1493,7 +1385,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.head,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'stamina': 100,
@@ -1504,31 +1395,31 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'stamina': 140,
       },
     ),
-
     stats: {
       'strength': 0,
       'endurance': 10,
       'energy': 20,
       'stamina': 60,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'trote',
+        variantFamilyId: 'endurance_minutes',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'saltos_soga',
+        variantFamilyId: 'muscular_endurance_reps',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'caminata',
+        variantFamilyId: 'long_distance',
         maxVariant: 2,
       ),
     ],
@@ -1540,7 +1431,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
-
     unlockRequirements: Requirement(
       stats: {
         'energy': 30,
@@ -1551,26 +1441,23 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'energy': 50,
         'stamina': 120,
       },
     ),
-
     stats: {
       'strength': 5,
       'endurance': 10,
       'energy': 25,
       'stamina': 50,
     },
-
     exercises: [],
   ),
 
   // ==================================================
-  // Athlete
+  // ATHLETE
   // ==================================================
 
   EquipmentItem(
@@ -1579,7 +1466,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.wings,
     cooldownHours: 36,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 80,
@@ -1593,7 +1479,6 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 140,
@@ -1602,25 +1487,26 @@ final List<EquipmentItem> equipmentItems = [
         'stamina': 80,
       },
     ),
-
     stats: {
       'strength': 40,
       'endurance': 40,
       'energy': 10,
       'stamina': 10,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'remo_sentado',
+        variantFamilyId: 'athletic_strength',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'polea_pecho',
+        variantFamilyId: 'athletic_strength',
         maxVariant: 2,
       ),
       EquipmentExercise(
         exerciseId: 'remo_barra',
+        variantFamilyId: 'athletic_strength',
         maxVariant: 2,
       ),
     ],
@@ -1632,7 +1518,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.rare,
     slot: EquipmentSlot.accessory,
     cooldownHours: 168,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 60,
@@ -1644,7 +1529,6 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 100,
@@ -1653,19 +1537,17 @@ final List<EquipmentItem> equipmentItems = [
         'stamina': 80,
       },
     ),
-
     stats: {
       'strength': 25,
       'endurance': 25,
       'energy': 25,
       'stamina': 25,
     },
-
     exercises: [],
   ),
 
   // ==================================================
-  // Alas Angel
+  // ALAS ANGEL
   // ==================================================
 
   EquipmentItem(
@@ -1674,7 +1556,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.legendary,
     slot: EquipmentSlot.wings,
     cooldownHours: 1,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 1000,
@@ -1686,7 +1567,6 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 1000,
@@ -1695,29 +1575,31 @@ final List<EquipmentItem> equipmentItems = [
         'stamina': 500,
       },
     ),
-
     stats: {
       'strength': 100,
       'endurance': 100,
       'energy': 100,
       'stamina': 100,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'remo_sentado',
+        variantFamilyId: 'athletic_strength',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'polea_pecho',
+        variantFamilyId: 'athletic_strength',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'remo_barra',
+        variantFamilyId: 'athletic_strength',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'dominadas',
+        variantFamilyId: 'technical_reps',
         maxVariant: 4,
       ),
     ],
@@ -1735,35 +1617,33 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.mythic,
     slot: EquipmentSlot.head,
     cooldownHours: 1,
-
     unlockRequirements: Requirement(
       stats: {
         'stamina': 2000,
         'energy': 2000,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'stamina': 2000,
         'energy': 2000,
       },
     ),
-
     stats: {
       'strength': 200,
       'endurance': 200,
       'energy': 100,
       'stamina': 100,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'trote',
+        variantFamilyId: 'long_distance',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'ciclismo',
+        variantFamilyId: 'long_distance',
         maxVariant: 4,
       ),
     ],
@@ -1779,39 +1659,38 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.mythic,
     slot: EquipmentSlot.chest,
     cooldownHours: 1,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 2000,
         'endurance': 2000,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 2000,
         'endurance': 2000,
       },
     ),
-
     stats: {
       'strength': 200,
       'endurance': 200,
       'energy': 100,
       'stamina': 100,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'press_banca',
+        variantFamilyId: 'max_strength_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'press_declinado',
+        variantFamilyId: 'max_strength_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'aperturas_mancuernas',
+        variantFamilyId: 'hypertrophy_reps',
         maxVariant: 4,
       ),
     ],
@@ -1827,43 +1706,43 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.mythic,
     slot: EquipmentSlot.shoulders,
     cooldownHours: 1,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 2000,
         'endurance': 2000,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 2000,
         'endurance': 2000,
       },
     ),
-
     stats: {
       'strength': 200,
       'endurance': 200,
       'energy': 100,
       'stamina': 100,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'press_arnold',
+        variantFamilyId: 'max_strength_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'vuelo_frontal',
+        variantFamilyId: 'hypertrophy_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'vuelo_lateral',
+        variantFamilyId: 'hypertrophy_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'vuelo_posterior',
+        variantFamilyId: 'hypertrophy_reps',
         maxVariant: 4,
       ),
     ],
@@ -1879,43 +1758,43 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.mythic,
     slot: EquipmentSlot.legs,
     cooldownHours: 1,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 2000,
         'endurance': 2000,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 2000,
         'endurance': 2000,
       },
     ),
-
     stats: {
       'strength': 200,
       'endurance': 200,
       'energy': 100,
       'stamina': 100,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'prensa_piernas',
+        variantFamilyId: 'hypertrophy_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'sentadilla_carga',
+        variantFamilyId: 'max_strength_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'sentadilla_bulgara',
+        variantFamilyId: 'technical_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'peso_muerto',
+        variantFamilyId: 'max_strength_reps',
         maxVariant: 4,
       ),
     ],
@@ -1931,39 +1810,38 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.mythic,
     slot: EquipmentSlot.belt,
     cooldownHours: 1,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 2000,
         'endurance': 2000,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 2000,
         'endurance': 2000,
       },
     ),
-
     stats: {
       'strength': 200,
       'endurance': 200,
       'energy': 100,
       'stamina': 100,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'v_ups',
+        variantFamilyId: 'technical_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'crunches',
+        variantFamilyId: 'muscular_endurance_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'crunches_rotacion',
+        variantFamilyId: 'technical_reps',
         maxVariant: 4,
       ),
     ],
@@ -1979,7 +1857,6 @@ final List<EquipmentItem> equipmentItems = [
     rarity: Rarity.legendary,
     slot: EquipmentSlot.wings,
     cooldownHours: 1,
-
     unlockRequirements: Requirement(
       stats: {
         'strength': 1000,
@@ -1991,7 +1868,6 @@ final List<EquipmentItem> equipmentItems = [
         PlayerClass.athlete,
       },
     ),
-
     equipRequirements: Requirement(
       stats: {
         'strength': 1000,
@@ -2000,29 +1876,31 @@ final List<EquipmentItem> equipmentItems = [
         'stamina': 500,
       },
     ),
-
     stats: {
       'strength': 100,
       'endurance': 100,
       'energy': 100,
       'stamina': 100,
     },
-
     exercises: [
       EquipmentExercise(
         exerciseId: 'dominadas',
+        variantFamilyId: 'technical_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'pullover',
+        variantFamilyId: 'hypertrophy_reps',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'remo_sentado',
+        variantFamilyId: 'athletic_strength',
         maxVariant: 4,
       ),
       EquipmentExercise(
         exerciseId: 'remo_mancuerna',
+        variantFamilyId: 'athletic_strength',
         maxVariant: 4,
       ),
     ],

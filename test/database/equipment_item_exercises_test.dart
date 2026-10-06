@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/native.dart';
 
 import 'package:valquin/database/app_database.dart';
-import 'package:valquin/models/rarity.dart';
 import 'package:valquin/models/equipment_slot.dart';
+import 'package:valquin/models/rarity.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +19,50 @@ void main() {
   tearDown(() async {
     await database.close();
   });
+
+  Future<void> createRepsFamily() async {
+    await database.insertVariantFamily(
+      id: 'standard_reps',
+      name: 'Repeticiones estándar',
+      unit: 'reps',
+    );
+
+    await database.insertExerciseVariant(
+      familyId: 'standard_reps',
+      variantIndex: 0,
+      sets: 3,
+      amount: 10,
+    );
+
+    await database.insertExerciseVariant(
+      familyId: 'standard_reps',
+      variantIndex: 1,
+      sets: 4,
+      amount: 12,
+    );
+  }
+
+  Future<void> createTimeFamily() async {
+    await database.insertVariantFamily(
+      id: 'beginner_time',
+      name: 'Tiempo principiante',
+      unit: 'min',
+    );
+
+    await database.insertExerciseVariant(
+      familyId: 'beginner_time',
+      variantIndex: 0,
+      sets: null,
+      amount: 10,
+    );
+
+    await database.insertExerciseVariant(
+      familyId: 'beginner_time',
+      variantIndex: 1,
+      sets: null,
+      amount: 20,
+    );
+  }
 
   test(
     'inserts an equipment item exercise relation',
@@ -36,10 +80,13 @@ void main() {
         name: 'BENCH PRESS',
       );
 
+      await createRepsFamily();
+
       final relationId =
           await database.insertEquipmentItemExercise(
         equipmentItemId: 'pechera_novato',
         exerciseId: 'bench_press',
+        variantFamilyId: 'standard_reps',
         maxVariant: 0,
       );
 
@@ -48,7 +95,7 @@ void main() {
   );
 
   test(
-    'stores maxVariant correctly',
+    'stores variantFamilyId and maxVariant correctly',
     () async {
       await database.insertEquipmentItem(
         id: 'casco_mejorado',
@@ -63,10 +110,13 @@ void main() {
         name: 'TROTE',
       );
 
+      await createTimeFamily();
+
       final relationId =
           await database.insertEquipmentItemExercise(
         equipmentItemId: 'casco_mejorado',
         exerciseId: 'trote',
+        variantFamilyId: 'beginner_time',
         maxVariant: 1,
       );
 
@@ -76,9 +126,22 @@ void main() {
       );
 
       expect(relation, isNotNull);
-      expect(relation!.equipmentItemId, 'casco_mejorado');
-      expect(relation.exerciseId, 'trote');
-      expect(relation.maxVariant, 1);
+      expect(
+        relation!.equipmentItemId,
+        'casco_mejorado',
+      );
+      expect(
+        relation.exerciseId,
+        'trote',
+      );
+      expect(
+        relation.variantFamilyId,
+        'beginner_time',
+      );
+      expect(
+        relation.maxVariant,
+        1,
+      );
     },
   );
 
@@ -98,9 +161,12 @@ void main() {
         name: 'BENCH PRESS',
       );
 
+      await createRepsFamily();
+
       await database.insertEquipmentItemExercise(
         equipmentItemId: 'pechera_novato',
         exerciseId: 'bench_press',
+        variantFamilyId: 'standard_reps',
         maxVariant: 0,
       );
 
@@ -108,6 +174,7 @@ void main() {
         () => database.insertEquipmentItemExercise(
           equipmentItemId: 'pechera_novato',
           exerciseId: 'bench_press',
+          variantFamilyId: 'standard_reps',
           maxVariant: 1,
         ),
         throwsA(isA<Exception>()),
@@ -136,15 +203,20 @@ void main() {
         name: 'Bench Press',
       );
 
+      await createRepsFamily();
+      await createTimeFamily();
+
       await database.insertEquipmentItemExercise(
         equipmentItemId: 'pechera_novato',
         exerciseId: 'push_up',
+        variantFamilyId: 'standard_reps',
         maxVariant: 0,
       );
 
       await database.insertEquipmentItemExercise(
         equipmentItemId: 'pechera_novato',
         exerciseId: 'bench_press',
+        variantFamilyId: 'beginner_time',
         maxVariant: 1,
       );
 
@@ -159,6 +231,7 @@ void main() {
         relations.any(
           (relation) =>
               relation.exerciseId == 'push_up' &&
+              relation.variantFamilyId == 'standard_reps' &&
               relation.maxVariant == 0,
         ),
         isTrue,
@@ -168,6 +241,7 @@ void main() {
         relations.any(
           (relation) =>
               relation.exerciseId == 'bench_press' &&
+              relation.variantFamilyId == 'beginner_time' &&
               relation.maxVariant == 1,
         ),
         isTrue,
@@ -191,10 +265,13 @@ void main() {
         name: 'TROTE',
       );
 
+      await createTimeFamily();
+
       final relationId =
           await database.insertEquipmentItemExercise(
         equipmentItemId: 'casco_mejorado',
         exerciseId: 'trote',
+        variantFamilyId: 'beginner_time',
         maxVariant: 0,
       );
 
@@ -221,6 +298,10 @@ void main() {
         'trote',
       );
       expect(
+        relation.variantFamilyId,
+        'beginner_time',
+      );
+      expect(
         relation.maxVariant,
         1,
       );
@@ -243,10 +324,13 @@ void main() {
         name: 'TROTE',
       );
 
+      await createTimeFamily();
+
       final relationId =
           await database.insertEquipmentItemExercise(
         equipmentItemId: 'casco_novato',
         exerciseId: 'trote',
+        variantFamilyId: 'beginner_time',
         maxVariant: 0,
       );
 
@@ -294,15 +378,20 @@ void main() {
         name: 'BENCH PRESS',
       );
 
+      await createRepsFamily();
+      await createTimeFamily();
+
       await database.insertEquipmentItemExercise(
         equipmentItemId: 'pechera_novato',
         exerciseId: 'push_up',
+        variantFamilyId: 'standard_reps',
         maxVariant: 0,
       );
 
       await database.insertEquipmentItemExercise(
         equipmentItemId: 'pechera_novato',
         exerciseId: 'bench_press',
+        variantFamilyId: 'beginner_time',
         maxVariant: 1,
       );
 
@@ -349,7 +438,15 @@ void main() {
             equipmentExercise.exerciseId == 'push_up',
       );
 
-      expect(pushUp.maxVariant, 0);
+      expect(
+        pushUp.variantFamilyId,
+        'standard_reps',
+      );
+
+      expect(
+        pushUp.maxVariant,
+        0,
+      );
 
       final benchPress =
           equipmentItem.exercises.firstWhere(
@@ -357,7 +454,15 @@ void main() {
             equipmentExercise.exerciseId == 'bench_press',
       );
 
-      expect(benchPress.maxVariant, 1);
+      expect(
+        benchPress.variantFamilyId,
+        'beginner_time',
+      );
+
+      expect(
+        benchPress.maxVariant,
+        1,
+      );
 
       expect(
         equipmentItem.stats,
@@ -415,15 +520,20 @@ void main() {
         name: 'BENCH PRESS',
       );
 
+      await createRepsFamily();
+      await createTimeFamily();
+
       await database.insertEquipmentItemExercise(
         equipmentItemId: 'casco_novato',
         exerciseId: 'push_up',
+        variantFamilyId: 'standard_reps',
         maxVariant: 0,
       );
 
       await database.insertEquipmentItemExercise(
         equipmentItemId: 'pechera_novato',
         exerciseId: 'bench_press',
+        variantFamilyId: 'beginner_time',
         maxVariant: 1,
       );
 
@@ -437,15 +547,41 @@ void main() {
         (item) => item.id == 'casco_novato',
       );
 
-      expect(helmet.name, 'CASCO DEL NOVATO');
-      expect(helmet.rarity, Rarity.common);
-      expect(helmet.slot, EquipmentSlot.head);
-      expect(helmet.cooldownHours, 24);
-      expect(helmet.exercises.length, 1);
+      expect(
+        helmet.name,
+        'CASCO DEL NOVATO',
+      );
+
+      expect(
+        helmet.rarity,
+        Rarity.common,
+      );
+
+      expect(
+        helmet.slot,
+        EquipmentSlot.head,
+      );
+
+      expect(
+        helmet.cooldownHours,
+        24,
+      );
+
+      expect(
+        helmet.exercises.length,
+        1,
+      );
+
       expect(
         helmet.exercises.first.exerciseId,
         'push_up',
       );
+
+      expect(
+        helmet.exercises.first.variantFamilyId,
+        'standard_reps',
+      );
+
       expect(
         helmet.exercises.first.maxVariant,
         0,
@@ -456,15 +592,41 @@ void main() {
         (item) => item.id == 'pechera_novato',
       );
 
-      expect(chest.name, 'PECHERA DEL NOVATO');
-      expect(chest.rarity, Rarity.common);
-      expect(chest.slot, EquipmentSlot.chest);
-      expect(chest.cooldownHours, 24);
-      expect(chest.exercises.length, 1);
+      expect(
+        chest.name,
+        'PECHERA DEL NOVATO',
+      );
+
+      expect(
+        chest.rarity,
+        Rarity.common,
+      );
+
+      expect(
+        chest.slot,
+        EquipmentSlot.chest,
+      );
+
+      expect(
+        chest.cooldownHours,
+        24,
+      );
+
+      expect(
+        chest.exercises.length,
+        1,
+      );
+
       expect(
         chest.exercises.first.exerciseId,
         'bench_press',
       );
+
+      expect(
+        chest.exercises.first.variantFamilyId,
+        'beginner_time',
+      );
+
       expect(
         chest.exercises.first.maxVariant,
         1,

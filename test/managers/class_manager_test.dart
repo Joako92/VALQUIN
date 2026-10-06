@@ -21,8 +21,9 @@ void main() {
     int energy = 0,
     int stamina = 0,
     PlayerClass playerClass = PlayerClass.novice,
+    String xpStat = 'stamina',
   }) {
-    final totalXp = (level - 1) * 100;
+    final totalXp = 25 * level * (level + 1);
 
     final currentStatsTotal =
         strength +
@@ -33,6 +34,24 @@ void main() {
     final remainingXp =
         totalXp - currentStatsTotal;
 
+    switch (xpStat) {
+      case 'strength':
+        strength += remainingXp;
+        break;
+
+      case 'endurance':
+        endurance += remainingXp;
+        break;
+
+      case 'energy':
+        energy += remainingXp;
+        break;
+
+      case 'stamina':
+        stamina += remainingXp;
+        break;
+    }
+
     return Player(
       name: 'Test Player',
       avatarId: 'male_01',
@@ -41,7 +60,7 @@ void main() {
         strength: strength,
         endurance: endurance,
         energy: energy,
-        stamina: stamina + remainingXp,
+        stamina: stamina,
       ),
     );
   }
@@ -280,6 +299,7 @@ void main() {
           endurance: 100,
           energy: 100,
           stamina: 99,
+          xpStat: 'strength',
         );
 
         expect(
@@ -326,6 +346,7 @@ void main() {
           endurance: 100,
           energy: 100,
           stamina: 99,
+          xpStat: 'strength',
         );
 
         expect(

@@ -82,10 +82,10 @@ void main() {
     );
 
     test(
-      'reaches level 5 at 400 XP',
+      'reaches level 5 at 750 XP',
       () {
         final player = createPlayer(
-          strength: 400,
+          strength: 750,
         );
 
         expect(player.level, 5);
@@ -93,10 +93,10 @@ void main() {
     );
 
     test(
-      'reaches level 6 at 500 XP',
+      'reaches level 6 at 1050 XP',
       () {
         final player = createPlayer(
-          strength: 500,
+          strength: 1050,
         );
 
         expect(player.level, 6);
@@ -113,7 +113,7 @@ void main() {
       'returns XP accumulated inside current level',
       () {
         final player = createPlayer(
-          strength: 450,
+          strength: 550,
         );
 
         expect(player.xpForCurrentLevel, 50);

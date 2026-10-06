@@ -264,6 +264,17 @@ class $ExerciseVariantsTable extends ExerciseVariants
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _familyIdMeta = const VerificationMeta(
+    'familyId',
+  );
+  @override
+  late final GeneratedColumn<String> familyId = GeneratedColumn<String>(
+    'family_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _variantIndexMeta = const VerificationMeta(
     'variantIndex',
   );
@@ -293,17 +304,14 @@ class $ExerciseVariantsTable extends ExerciseVariants
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _unitMeta = const VerificationMeta('unit');
   @override
-  late final GeneratedColumn<String> unit = GeneratedColumn<String>(
-    'unit',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, variantIndex, sets, amount, unit];
+  List<GeneratedColumn> get $columns => [
+    id,
+    familyId,
+    variantIndex,
+    sets,
+    amount,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -318,6 +326,14 @@ class $ExerciseVariantsTable extends ExerciseVariants
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('family_id')) {
+      context.handle(
+        _familyIdMeta,
+        familyId.isAcceptableOrUnknown(data['family_id']!, _familyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_familyIdMeta);
     }
     if (data.containsKey('variant_index')) {
       context.handle(
@@ -344,19 +360,15 @@ class $ExerciseVariantsTable extends ExerciseVariants
     } else if (isInserting) {
       context.missing(_amountMeta);
     }
-    if (data.containsKey('unit')) {
-      context.handle(
-        _unitMeta,
-        unit.isAcceptableOrUnknown(data['unit']!, _unitMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_unitMeta);
-    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {familyId, variantIndex},
+  ];
   @override
   ExerciseVariantRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -364,6 +376,10 @@ class $ExerciseVariantsTable extends ExerciseVariants
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
+      )!,
+      familyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}family_id'],
       )!,
       variantIndex: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -377,10 +393,6 @@ class $ExerciseVariantsTable extends ExerciseVariants
         DriftSqlType.double,
         data['${effectivePrefix}amount'],
       )!,
-      unit: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}unit'],
-      )!,
     );
   }
 
@@ -393,37 +405,37 @@ class $ExerciseVariantsTable extends ExerciseVariants
 class ExerciseVariantRow extends DataClass
     implements Insertable<ExerciseVariantRow> {
   final int id;
+  final String familyId;
   final int variantIndex;
   final int? sets;
   final double amount;
-  final String unit;
   const ExerciseVariantRow({
     required this.id,
+    required this.familyId,
     required this.variantIndex,
     this.sets,
     required this.amount,
-    required this.unit,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['family_id'] = Variable<String>(familyId);
     map['variant_index'] = Variable<int>(variantIndex);
     if (!nullToAbsent || sets != null) {
       map['sets'] = Variable<int>(sets);
     }
     map['amount'] = Variable<double>(amount);
-    map['unit'] = Variable<String>(unit);
     return map;
   }
 
   ExerciseVariantsCompanion toCompanion(bool nullToAbsent) {
     return ExerciseVariantsCompanion(
       id: Value(id),
+      familyId: Value(familyId),
       variantIndex: Value(variantIndex),
       sets: sets == null && nullToAbsent ? const Value.absent() : Value(sets),
       amount: Value(amount),
-      unit: Value(unit),
     );
   }
 
@@ -434,10 +446,10 @@ class ExerciseVariantRow extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ExerciseVariantRow(
       id: serializer.fromJson<int>(json['id']),
+      familyId: serializer.fromJson<String>(json['familyId']),
       variantIndex: serializer.fromJson<int>(json['variantIndex']),
       sets: serializer.fromJson<int?>(json['sets']),
       amount: serializer.fromJson<double>(json['amount']),
-      unit: serializer.fromJson<String>(json['unit']),
     );
   }
   @override
@@ -445,35 +457,35 @@ class ExerciseVariantRow extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'familyId': serializer.toJson<String>(familyId),
       'variantIndex': serializer.toJson<int>(variantIndex),
       'sets': serializer.toJson<int?>(sets),
       'amount': serializer.toJson<double>(amount),
-      'unit': serializer.toJson<String>(unit),
     };
   }
 
   ExerciseVariantRow copyWith({
     int? id,
+    String? familyId,
     int? variantIndex,
     Value<int?> sets = const Value.absent(),
     double? amount,
-    String? unit,
   }) => ExerciseVariantRow(
     id: id ?? this.id,
+    familyId: familyId ?? this.familyId,
     variantIndex: variantIndex ?? this.variantIndex,
     sets: sets.present ? sets.value : this.sets,
     amount: amount ?? this.amount,
-    unit: unit ?? this.unit,
   );
   ExerciseVariantRow copyWithCompanion(ExerciseVariantsCompanion data) {
     return ExerciseVariantRow(
       id: data.id.present ? data.id.value : this.id,
+      familyId: data.familyId.present ? data.familyId.value : this.familyId,
       variantIndex: data.variantIndex.present
           ? data.variantIndex.value
           : this.variantIndex,
       sets: data.sets.present ? data.sets.value : this.sets,
       amount: data.amount.present ? data.amount.value : this.amount,
-      unit: data.unit.present ? data.unit.value : this.unit,
     );
   }
 
@@ -481,78 +493,78 @@ class ExerciseVariantRow extends DataClass
   String toString() {
     return (StringBuffer('ExerciseVariantRow(')
           ..write('id: $id, ')
+          ..write('familyId: $familyId, ')
           ..write('variantIndex: $variantIndex, ')
           ..write('sets: $sets, ')
-          ..write('amount: $amount, ')
-          ..write('unit: $unit')
+          ..write('amount: $amount')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, variantIndex, sets, amount, unit);
+  int get hashCode => Object.hash(id, familyId, variantIndex, sets, amount);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ExerciseVariantRow &&
           other.id == this.id &&
+          other.familyId == this.familyId &&
           other.variantIndex == this.variantIndex &&
           other.sets == this.sets &&
-          other.amount == this.amount &&
-          other.unit == this.unit);
+          other.amount == this.amount);
 }
 
 class ExerciseVariantsCompanion extends UpdateCompanion<ExerciseVariantRow> {
   final Value<int> id;
+  final Value<String> familyId;
   final Value<int> variantIndex;
   final Value<int?> sets;
   final Value<double> amount;
-  final Value<String> unit;
   const ExerciseVariantsCompanion({
     this.id = const Value.absent(),
+    this.familyId = const Value.absent(),
     this.variantIndex = const Value.absent(),
     this.sets = const Value.absent(),
     this.amount = const Value.absent(),
-    this.unit = const Value.absent(),
   });
   ExerciseVariantsCompanion.insert({
     this.id = const Value.absent(),
+    required String familyId,
     required int variantIndex,
     this.sets = const Value.absent(),
     required double amount,
-    required String unit,
-  }) : variantIndex = Value(variantIndex),
-       amount = Value(amount),
-       unit = Value(unit);
+  }) : familyId = Value(familyId),
+       variantIndex = Value(variantIndex),
+       amount = Value(amount);
   static Insertable<ExerciseVariantRow> custom({
     Expression<int>? id,
+    Expression<String>? familyId,
     Expression<int>? variantIndex,
     Expression<int>? sets,
     Expression<double>? amount,
-    Expression<String>? unit,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (familyId != null) 'family_id': familyId,
       if (variantIndex != null) 'variant_index': variantIndex,
       if (sets != null) 'sets': sets,
       if (amount != null) 'amount': amount,
-      if (unit != null) 'unit': unit,
     });
   }
 
   ExerciseVariantsCompanion copyWith({
     Value<int>? id,
+    Value<String>? familyId,
     Value<int>? variantIndex,
     Value<int?>? sets,
     Value<double>? amount,
-    Value<String>? unit,
   }) {
     return ExerciseVariantsCompanion(
       id: id ?? this.id,
+      familyId: familyId ?? this.familyId,
       variantIndex: variantIndex ?? this.variantIndex,
       sets: sets ?? this.sets,
       amount: amount ?? this.amount,
-      unit: unit ?? this.unit,
     );
   }
 
@@ -561,6 +573,9 @@ class ExerciseVariantsCompanion extends UpdateCompanion<ExerciseVariantRow> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (familyId.present) {
+      map['family_id'] = Variable<String>(familyId.value);
     }
     if (variantIndex.present) {
       map['variant_index'] = Variable<int>(variantIndex.value);
@@ -571,9 +586,6 @@ class ExerciseVariantsCompanion extends UpdateCompanion<ExerciseVariantRow> {
     if (amount.present) {
       map['amount'] = Variable<double>(amount.value);
     }
-    if (unit.present) {
-      map['unit'] = Variable<String>(unit.value);
-    }
     return map;
   }
 
@@ -581,10 +593,10 @@ class ExerciseVariantsCompanion extends UpdateCompanion<ExerciseVariantRow> {
   String toString() {
     return (StringBuffer('ExerciseVariantsCompanion(')
           ..write('id: $id, ')
+          ..write('familyId: $familyId, ')
           ..write('variantIndex: $variantIndex, ')
           ..write('sets: $sets, ')
-          ..write('amount: $amount, ')
-          ..write('unit: $unit')
+          ..write('amount: $amount')
           ..write(')'))
         .toString();
   }
@@ -793,79 +805,73 @@ class ExercisesCompanion extends UpdateCompanion<ExerciseRow> {
   }
 }
 
-class $ExerciseVariantLinksTable extends ExerciseVariantLinks
-    with TableInfo<$ExerciseVariantLinksTable, ExerciseVariantLink> {
+class $VariantFamiliesTable extends VariantFamilies
+    with TableInfo<$VariantFamiliesTable, VariantFamilyRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ExerciseVariantLinksTable(this.attachedDatabase, [this._alias]);
+  $VariantFamiliesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
     'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _exerciseIdMeta = const VerificationMeta(
-    'exerciseId',
-  );
-  @override
-  late final GeneratedColumn<String> exerciseId = GeneratedColumn<String>(
-    'exercise_id',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _variantIdMeta = const VerificationMeta(
-    'variantId',
-  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
-  late final GeneratedColumn<int> variantId = GeneratedColumn<int>(
-    'variant_id',
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
     aliasedName,
     false,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _unitMeta = const VerificationMeta('unit');
+  @override
+  late final GeneratedColumn<String> unit = GeneratedColumn<String>(
+    'unit',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, exerciseId, variantId];
+  List<GeneratedColumn> get $columns => [id, name, unit];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'exercise_variant_links';
+  static const String $name = 'variant_families';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ExerciseVariantLink> instance, {
+    Insertable<VariantFamilyRow> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
-    if (data.containsKey('exercise_id')) {
+    if (data.containsKey('name')) {
       context.handle(
-        _exerciseIdMeta,
-        exerciseId.isAcceptableOrUnknown(data['exercise_id']!, _exerciseIdMeta),
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
       );
     } else if (isInserting) {
-      context.missing(_exerciseIdMeta);
+      context.missing(_nameMeta);
     }
-    if (data.containsKey('variant_id')) {
+    if (data.containsKey('unit')) {
       context.handle(
-        _variantIdMeta,
-        variantId.isAcceptableOrUnknown(data['variant_id']!, _variantIdMeta),
+        _unitMeta,
+        unit.isAcceptableOrUnknown(data['unit']!, _unitMeta),
       );
     } else if (isInserting) {
-      context.missing(_variantIdMeta);
+      context.missing(_unitMeta);
     }
     return context;
   }
@@ -873,156 +879,157 @@ class $ExerciseVariantLinksTable extends ExerciseVariantLinks
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {exerciseId, variantId},
-  ];
-  @override
-  ExerciseVariantLink map(Map<String, dynamic> data, {String? tablePrefix}) {
+  VariantFamilyRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ExerciseVariantLink(
+    return VariantFamilyRow(
       id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
-      exerciseId: attachedDatabase.typeMapping.read(
+      name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}exercise_id'],
+        data['${effectivePrefix}name'],
       )!,
-      variantId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}variant_id'],
+      unit: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}unit'],
       )!,
     );
   }
 
   @override
-  $ExerciseVariantLinksTable createAlias(String alias) {
-    return $ExerciseVariantLinksTable(attachedDatabase, alias);
+  $VariantFamiliesTable createAlias(String alias) {
+    return $VariantFamiliesTable(attachedDatabase, alias);
   }
 }
 
-class ExerciseVariantLink extends DataClass
-    implements Insertable<ExerciseVariantLink> {
-  final int id;
-  final String exerciseId;
-  final int variantId;
-  const ExerciseVariantLink({
+class VariantFamilyRow extends DataClass
+    implements Insertable<VariantFamilyRow> {
+  final String id;
+  final String name;
+  final String unit;
+  const VariantFamilyRow({
     required this.id,
-    required this.exerciseId,
-    required this.variantId,
+    required this.name,
+    required this.unit,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['exercise_id'] = Variable<String>(exerciseId);
-    map['variant_id'] = Variable<int>(variantId);
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['unit'] = Variable<String>(unit);
     return map;
   }
 
-  ExerciseVariantLinksCompanion toCompanion(bool nullToAbsent) {
-    return ExerciseVariantLinksCompanion(
+  VariantFamiliesCompanion toCompanion(bool nullToAbsent) {
+    return VariantFamiliesCompanion(
       id: Value(id),
-      exerciseId: Value(exerciseId),
-      variantId: Value(variantId),
+      name: Value(name),
+      unit: Value(unit),
     );
   }
 
-  factory ExerciseVariantLink.fromJson(
+  factory VariantFamilyRow.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ExerciseVariantLink(
-      id: serializer.fromJson<int>(json['id']),
-      exerciseId: serializer.fromJson<String>(json['exerciseId']),
-      variantId: serializer.fromJson<int>(json['variantId']),
+    return VariantFamilyRow(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      unit: serializer.fromJson<String>(json['unit']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'exerciseId': serializer.toJson<String>(exerciseId),
-      'variantId': serializer.toJson<int>(variantId),
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'unit': serializer.toJson<String>(unit),
     };
   }
 
-  ExerciseVariantLink copyWith({int? id, String? exerciseId, int? variantId}) =>
-      ExerciseVariantLink(
+  VariantFamilyRow copyWith({String? id, String? name, String? unit}) =>
+      VariantFamilyRow(
         id: id ?? this.id,
-        exerciseId: exerciseId ?? this.exerciseId,
-        variantId: variantId ?? this.variantId,
+        name: name ?? this.name,
+        unit: unit ?? this.unit,
       );
-  ExerciseVariantLink copyWithCompanion(ExerciseVariantLinksCompanion data) {
-    return ExerciseVariantLink(
+  VariantFamilyRow copyWithCompanion(VariantFamiliesCompanion data) {
+    return VariantFamilyRow(
       id: data.id.present ? data.id.value : this.id,
-      exerciseId: data.exerciseId.present
-          ? data.exerciseId.value
-          : this.exerciseId,
-      variantId: data.variantId.present ? data.variantId.value : this.variantId,
+      name: data.name.present ? data.name.value : this.name,
+      unit: data.unit.present ? data.unit.value : this.unit,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('ExerciseVariantLink(')
+    return (StringBuffer('VariantFamilyRow(')
           ..write('id: $id, ')
-          ..write('exerciseId: $exerciseId, ')
-          ..write('variantId: $variantId')
+          ..write('name: $name, ')
+          ..write('unit: $unit')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, exerciseId, variantId);
+  int get hashCode => Object.hash(id, name, unit);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ExerciseVariantLink &&
+      (other is VariantFamilyRow &&
           other.id == this.id &&
-          other.exerciseId == this.exerciseId &&
-          other.variantId == this.variantId);
+          other.name == this.name &&
+          other.unit == this.unit);
 }
 
-class ExerciseVariantLinksCompanion
-    extends UpdateCompanion<ExerciseVariantLink> {
-  final Value<int> id;
-  final Value<String> exerciseId;
-  final Value<int> variantId;
-  const ExerciseVariantLinksCompanion({
+class VariantFamiliesCompanion extends UpdateCompanion<VariantFamilyRow> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String> unit;
+  final Value<int> rowid;
+  const VariantFamiliesCompanion({
     this.id = const Value.absent(),
-    this.exerciseId = const Value.absent(),
-    this.variantId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.unit = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
-  ExerciseVariantLinksCompanion.insert({
-    this.id = const Value.absent(),
-    required String exerciseId,
-    required int variantId,
-  }) : exerciseId = Value(exerciseId),
-       variantId = Value(variantId);
-  static Insertable<ExerciseVariantLink> custom({
-    Expression<int>? id,
-    Expression<String>? exerciseId,
-    Expression<int>? variantId,
+  VariantFamiliesCompanion.insert({
+    required String id,
+    required String name,
+    required String unit,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       unit = Value(unit);
+  static Insertable<VariantFamilyRow> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? unit,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (exerciseId != null) 'exercise_id': exerciseId,
-      if (variantId != null) 'variant_id': variantId,
+      if (name != null) 'name': name,
+      if (unit != null) 'unit': unit,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  ExerciseVariantLinksCompanion copyWith({
-    Value<int>? id,
-    Value<String>? exerciseId,
-    Value<int>? variantId,
+  VariantFamiliesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String>? unit,
+    Value<int>? rowid,
   }) {
-    return ExerciseVariantLinksCompanion(
+    return VariantFamiliesCompanion(
       id: id ?? this.id,
-      exerciseId: exerciseId ?? this.exerciseId,
-      variantId: variantId ?? this.variantId,
+      name: name ?? this.name,
+      unit: unit ?? this.unit,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -1030,23 +1037,27 @@ class ExerciseVariantLinksCompanion
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
-    if (exerciseId.present) {
-      map['exercise_id'] = Variable<String>(exerciseId.value);
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
     }
-    if (variantId.present) {
-      map['variant_id'] = Variable<int>(variantId.value);
+    if (unit.present) {
+      map['unit'] = Variable<String>(unit.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('ExerciseVariantLinksCompanion(')
+    return (StringBuffer('VariantFamiliesCompanion(')
           ..write('id: $id, ')
-          ..write('exerciseId: $exerciseId, ')
-          ..write('variantId: $variantId')
+          ..write('name: $name, ')
+          ..write('unit: $unit, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -1449,6 +1460,17 @@ class $EquipmentItemExercisesTable extends EquipmentItemExercises
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _variantFamilyIdMeta = const VerificationMeta(
+    'variantFamilyId',
+  );
+  @override
+  late final GeneratedColumn<String> variantFamilyId = GeneratedColumn<String>(
+    'variant_family_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _maxVariantMeta = const VerificationMeta(
     'maxVariant',
   );
@@ -1466,6 +1488,7 @@ class $EquipmentItemExercisesTable extends EquipmentItemExercises
     id,
     equipmentItemId,
     exerciseId,
+    variantFamilyId,
     maxVariant,
   ];
   @override
@@ -1502,6 +1525,17 @@ class $EquipmentItemExercisesTable extends EquipmentItemExercises
     } else if (isInserting) {
       context.missing(_exerciseIdMeta);
     }
+    if (data.containsKey('variant_family_id')) {
+      context.handle(
+        _variantFamilyIdMeta,
+        variantFamilyId.isAcceptableOrUnknown(
+          data['variant_family_id']!,
+          _variantFamilyIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_variantFamilyIdMeta);
+    }
     if (data.containsKey('max_variant')) {
       context.handle(
         _maxVariantMeta,
@@ -1536,6 +1570,10 @@ class $EquipmentItemExercisesTable extends EquipmentItemExercises
         DriftSqlType.string,
         data['${effectivePrefix}exercise_id'],
       )!,
+      variantFamilyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}variant_family_id'],
+      )!,
       maxVariant: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}max_variant'],
@@ -1554,11 +1592,13 @@ class EquipmentItemExerciseRow extends DataClass
   final int id;
   final String equipmentItemId;
   final String exerciseId;
+  final String variantFamilyId;
   final int maxVariant;
   const EquipmentItemExerciseRow({
     required this.id,
     required this.equipmentItemId,
     required this.exerciseId,
+    required this.variantFamilyId,
     required this.maxVariant,
   });
   @override
@@ -1567,6 +1607,7 @@ class EquipmentItemExerciseRow extends DataClass
     map['id'] = Variable<int>(id);
     map['equipment_item_id'] = Variable<String>(equipmentItemId);
     map['exercise_id'] = Variable<String>(exerciseId);
+    map['variant_family_id'] = Variable<String>(variantFamilyId);
     map['max_variant'] = Variable<int>(maxVariant);
     return map;
   }
@@ -1576,6 +1617,7 @@ class EquipmentItemExerciseRow extends DataClass
       id: Value(id),
       equipmentItemId: Value(equipmentItemId),
       exerciseId: Value(exerciseId),
+      variantFamilyId: Value(variantFamilyId),
       maxVariant: Value(maxVariant),
     );
   }
@@ -1589,6 +1631,7 @@ class EquipmentItemExerciseRow extends DataClass
       id: serializer.fromJson<int>(json['id']),
       equipmentItemId: serializer.fromJson<String>(json['equipmentItemId']),
       exerciseId: serializer.fromJson<String>(json['exerciseId']),
+      variantFamilyId: serializer.fromJson<String>(json['variantFamilyId']),
       maxVariant: serializer.fromJson<int>(json['maxVariant']),
     );
   }
@@ -1599,6 +1642,7 @@ class EquipmentItemExerciseRow extends DataClass
       'id': serializer.toJson<int>(id),
       'equipmentItemId': serializer.toJson<String>(equipmentItemId),
       'exerciseId': serializer.toJson<String>(exerciseId),
+      'variantFamilyId': serializer.toJson<String>(variantFamilyId),
       'maxVariant': serializer.toJson<int>(maxVariant),
     };
   }
@@ -1607,11 +1651,13 @@ class EquipmentItemExerciseRow extends DataClass
     int? id,
     String? equipmentItemId,
     String? exerciseId,
+    String? variantFamilyId,
     int? maxVariant,
   }) => EquipmentItemExerciseRow(
     id: id ?? this.id,
     equipmentItemId: equipmentItemId ?? this.equipmentItemId,
     exerciseId: exerciseId ?? this.exerciseId,
+    variantFamilyId: variantFamilyId ?? this.variantFamilyId,
     maxVariant: maxVariant ?? this.maxVariant,
   );
   EquipmentItemExerciseRow copyWithCompanion(
@@ -1625,6 +1671,9 @@ class EquipmentItemExerciseRow extends DataClass
       exerciseId: data.exerciseId.present
           ? data.exerciseId.value
           : this.exerciseId,
+      variantFamilyId: data.variantFamilyId.present
+          ? data.variantFamilyId.value
+          : this.variantFamilyId,
       maxVariant: data.maxVariant.present
           ? data.maxVariant.value
           : this.maxVariant,
@@ -1637,13 +1686,15 @@ class EquipmentItemExerciseRow extends DataClass
           ..write('id: $id, ')
           ..write('equipmentItemId: $equipmentItemId, ')
           ..write('exerciseId: $exerciseId, ')
+          ..write('variantFamilyId: $variantFamilyId, ')
           ..write('maxVariant: $maxVariant')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, equipmentItemId, exerciseId, maxVariant);
+  int get hashCode =>
+      Object.hash(id, equipmentItemId, exerciseId, variantFamilyId, maxVariant);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1651,6 +1702,7 @@ class EquipmentItemExerciseRow extends DataClass
           other.id == this.id &&
           other.equipmentItemId == this.equipmentItemId &&
           other.exerciseId == this.exerciseId &&
+          other.variantFamilyId == this.variantFamilyId &&
           other.maxVariant == this.maxVariant);
 }
 
@@ -1659,30 +1711,36 @@ class EquipmentItemExercisesCompanion
   final Value<int> id;
   final Value<String> equipmentItemId;
   final Value<String> exerciseId;
+  final Value<String> variantFamilyId;
   final Value<int> maxVariant;
   const EquipmentItemExercisesCompanion({
     this.id = const Value.absent(),
     this.equipmentItemId = const Value.absent(),
     this.exerciseId = const Value.absent(),
+    this.variantFamilyId = const Value.absent(),
     this.maxVariant = const Value.absent(),
   });
   EquipmentItemExercisesCompanion.insert({
     this.id = const Value.absent(),
     required String equipmentItemId,
     required String exerciseId,
+    required String variantFamilyId,
     this.maxVariant = const Value.absent(),
   }) : equipmentItemId = Value(equipmentItemId),
-       exerciseId = Value(exerciseId);
+       exerciseId = Value(exerciseId),
+       variantFamilyId = Value(variantFamilyId);
   static Insertable<EquipmentItemExerciseRow> custom({
     Expression<int>? id,
     Expression<String>? equipmentItemId,
     Expression<String>? exerciseId,
+    Expression<String>? variantFamilyId,
     Expression<int>? maxVariant,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (equipmentItemId != null) 'equipment_item_id': equipmentItemId,
       if (exerciseId != null) 'exercise_id': exerciseId,
+      if (variantFamilyId != null) 'variant_family_id': variantFamilyId,
       if (maxVariant != null) 'max_variant': maxVariant,
     });
   }
@@ -1691,12 +1749,14 @@ class EquipmentItemExercisesCompanion
     Value<int>? id,
     Value<String>? equipmentItemId,
     Value<String>? exerciseId,
+    Value<String>? variantFamilyId,
     Value<int>? maxVariant,
   }) {
     return EquipmentItemExercisesCompanion(
       id: id ?? this.id,
       equipmentItemId: equipmentItemId ?? this.equipmentItemId,
       exerciseId: exerciseId ?? this.exerciseId,
+      variantFamilyId: variantFamilyId ?? this.variantFamilyId,
       maxVariant: maxVariant ?? this.maxVariant,
     );
   }
@@ -1713,6 +1773,9 @@ class EquipmentItemExercisesCompanion
     if (exerciseId.present) {
       map['exercise_id'] = Variable<String>(exerciseId.value);
     }
+    if (variantFamilyId.present) {
+      map['variant_family_id'] = Variable<String>(variantFamilyId.value);
+    }
     if (maxVariant.present) {
       map['max_variant'] = Variable<int>(maxVariant.value);
     }
@@ -1725,6 +1788,7 @@ class EquipmentItemExercisesCompanion
           ..write('id: $id, ')
           ..write('equipmentItemId: $equipmentItemId, ')
           ..write('exerciseId: $exerciseId, ')
+          ..write('variantFamilyId: $variantFamilyId, ')
           ..write('maxVariant: $maxVariant')
           ..write(')'))
         .toString();
@@ -3865,8 +3929,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $ExercisesTable exercises = $ExercisesTable(this);
-  late final $ExerciseVariantLinksTable exerciseVariantLinks =
-      $ExerciseVariantLinksTable(this);
+  late final $VariantFamiliesTable variantFamilies = $VariantFamiliesTable(
+    this,
+  );
   late final $EquipmentItemsTable equipmentItems = $EquipmentItemsTable(this);
   late final $EquipmentItemExercisesTable equipmentItemExercises =
       $EquipmentItemExercisesTable(this);
@@ -3890,7 +3955,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     testEntries,
     exerciseVariants,
     exercises,
-    exerciseVariantLinks,
+    variantFamilies,
     equipmentItems,
     equipmentItemExercises,
     equipmentItemStats,
@@ -4051,18 +4116,18 @@ typedef $$TestEntriesTableProcessedTableManager =
 typedef $$ExerciseVariantsTableCreateCompanionBuilder =
     ExerciseVariantsCompanion Function({
       Value<int> id,
+      required String familyId,
       required int variantIndex,
       Value<int?> sets,
       required double amount,
-      required String unit,
     });
 typedef $$ExerciseVariantsTableUpdateCompanionBuilder =
     ExerciseVariantsCompanion Function({
       Value<int> id,
+      Value<String> familyId,
       Value<int> variantIndex,
       Value<int?> sets,
       Value<double> amount,
-      Value<String> unit,
     });
 
 class $$ExerciseVariantsTableFilterComposer
@@ -4079,6 +4144,11 @@ class $$ExerciseVariantsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get familyId => $composableBuilder(
+    column: $table.familyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get variantIndex => $composableBuilder(
     column: $table.variantIndex,
     builder: (column) => ColumnFilters(column),
@@ -4091,11 +4161,6 @@ class $$ExerciseVariantsTableFilterComposer
 
   ColumnFilters<double> get amount => $composableBuilder(
     column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get unit => $composableBuilder(
-    column: $table.unit,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -4114,6 +4179,11 @@ class $$ExerciseVariantsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get familyId => $composableBuilder(
+    column: $table.familyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get variantIndex => $composableBuilder(
     column: $table.variantIndex,
     builder: (column) => ColumnOrderings(column),
@@ -4126,11 +4196,6 @@ class $$ExerciseVariantsTableOrderingComposer
 
   ColumnOrderings<double> get amount => $composableBuilder(
     column: $table.amount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get unit => $composableBuilder(
-    column: $table.unit,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -4147,6 +4212,9 @@ class $$ExerciseVariantsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+  GeneratedColumn<String> get familyId =>
+      $composableBuilder(column: $table.familyId, builder: (column) => column);
+
   GeneratedColumn<int> get variantIndex => $composableBuilder(
     column: $table.variantIndex,
     builder: (column) => column,
@@ -4157,9 +4225,6 @@ class $$ExerciseVariantsTableAnnotationComposer
 
   GeneratedColumn<double> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
-
-  GeneratedColumn<String> get unit =>
-      $composableBuilder(column: $table.unit, builder: (column) => column);
 }
 
 class $$ExerciseVariantsTableTableManager
@@ -4200,30 +4265,30 @@ class $$ExerciseVariantsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<String> familyId = const Value.absent(),
                 Value<int> variantIndex = const Value.absent(),
                 Value<int?> sets = const Value.absent(),
                 Value<double> amount = const Value.absent(),
-                Value<String> unit = const Value.absent(),
               }) => ExerciseVariantsCompanion(
                 id: id,
+                familyId: familyId,
                 variantIndex: variantIndex,
                 sets: sets,
                 amount: amount,
-                unit: unit,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                required String familyId,
                 required int variantIndex,
                 Value<int?> sets = const Value.absent(),
                 required double amount,
-                required String unit,
               }) => ExerciseVariantsCompanion.insert(
                 id: id,
+                familyId: familyId,
                 variantIndex: variantIndex,
                 sets: sets,
                 amount: amount,
-                unit: unit,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -4389,150 +4454,148 @@ typedef $$ExercisesTableProcessedTableManager =
       ExerciseRow,
       PrefetchHooks Function()
     >;
-typedef $$ExerciseVariantLinksTableCreateCompanionBuilder =
-    ExerciseVariantLinksCompanion Function({
-      Value<int> id,
-      required String exerciseId,
-      required int variantId,
+typedef $$VariantFamiliesTableCreateCompanionBuilder =
+    VariantFamiliesCompanion Function({
+      required String id,
+      required String name,
+      required String unit,
+      Value<int> rowid,
     });
-typedef $$ExerciseVariantLinksTableUpdateCompanionBuilder =
-    ExerciseVariantLinksCompanion Function({
-      Value<int> id,
-      Value<String> exerciseId,
-      Value<int> variantId,
+typedef $$VariantFamiliesTableUpdateCompanionBuilder =
+    VariantFamiliesCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<String> unit,
+      Value<int> rowid,
     });
 
-class $$ExerciseVariantLinksTableFilterComposer
-    extends Composer<_$AppDatabase, $ExerciseVariantLinksTable> {
-  $$ExerciseVariantLinksTableFilterComposer({
+class $$VariantFamiliesTableFilterComposer
+    extends Composer<_$AppDatabase, $VariantFamiliesTable> {
+  $$VariantFamiliesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get exerciseId => $composableBuilder(
-    column: $table.exerciseId,
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get variantId => $composableBuilder(
-    column: $table.variantId,
+  ColumnFilters<String> get unit => $composableBuilder(
+    column: $table.unit,
     builder: (column) => ColumnFilters(column),
   );
 }
 
-class $$ExerciseVariantLinksTableOrderingComposer
-    extends Composer<_$AppDatabase, $ExerciseVariantLinksTable> {
-  $$ExerciseVariantLinksTableOrderingComposer({
+class $$VariantFamiliesTableOrderingComposer
+    extends Composer<_$AppDatabase, $VariantFamiliesTable> {
+  $$VariantFamiliesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get exerciseId => $composableBuilder(
-    column: $table.exerciseId,
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get variantId => $composableBuilder(
-    column: $table.variantId,
+  ColumnOrderings<String> get unit => $composableBuilder(
+    column: $table.unit,
     builder: (column) => ColumnOrderings(column),
   );
 }
 
-class $$ExerciseVariantLinksTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ExerciseVariantLinksTable> {
-  $$ExerciseVariantLinksTableAnnotationComposer({
+class $$VariantFamiliesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $VariantFamiliesTable> {
+  $$VariantFamiliesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get exerciseId => $composableBuilder(
-    column: $table.exerciseId,
-    builder: (column) => column,
-  );
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<int> get variantId =>
-      $composableBuilder(column: $table.variantId, builder: (column) => column);
+  GeneratedColumn<String> get unit =>
+      $composableBuilder(column: $table.unit, builder: (column) => column);
 }
 
-class $$ExerciseVariantLinksTableTableManager
+class $$VariantFamiliesTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $ExerciseVariantLinksTable,
-          ExerciseVariantLink,
-          $$ExerciseVariantLinksTableFilterComposer,
-          $$ExerciseVariantLinksTableOrderingComposer,
-          $$ExerciseVariantLinksTableAnnotationComposer,
-          $$ExerciseVariantLinksTableCreateCompanionBuilder,
-          $$ExerciseVariantLinksTableUpdateCompanionBuilder,
+          $VariantFamiliesTable,
+          VariantFamilyRow,
+          $$VariantFamiliesTableFilterComposer,
+          $$VariantFamiliesTableOrderingComposer,
+          $$VariantFamiliesTableAnnotationComposer,
+          $$VariantFamiliesTableCreateCompanionBuilder,
+          $$VariantFamiliesTableUpdateCompanionBuilder,
           (
-            ExerciseVariantLink,
+            VariantFamilyRow,
             BaseReferences<
               _$AppDatabase,
-              $ExerciseVariantLinksTable,
-              ExerciseVariantLink
+              $VariantFamiliesTable,
+              VariantFamilyRow
             >,
           ),
-          ExerciseVariantLink,
+          VariantFamilyRow,
           PrefetchHooks Function()
         > {
-  $$ExerciseVariantLinksTableTableManager(
+  $$VariantFamiliesTableTableManager(
     _$AppDatabase db,
-    $ExerciseVariantLinksTable table,
+    $VariantFamiliesTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ExerciseVariantLinksTableFilterComposer($db: db, $table: table),
+              $$VariantFamiliesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ExerciseVariantLinksTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
+              $$VariantFamiliesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ExerciseVariantLinksTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
+              $$VariantFamiliesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
-                Value<String> exerciseId = const Value.absent(),
-                Value<int> variantId = const Value.absent(),
-              }) => ExerciseVariantLinksCompanion(
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> unit = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => VariantFamiliesCompanion(
                 id: id,
-                exerciseId: exerciseId,
-                variantId: variantId,
+                name: name,
+                unit: unit,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
-                required String exerciseId,
-                required int variantId,
-              }) => ExerciseVariantLinksCompanion.insert(
+                required String id,
+                required String name,
+                required String unit,
+                Value<int> rowid = const Value.absent(),
+              }) => VariantFamiliesCompanion.insert(
                 id: id,
-                exerciseId: exerciseId,
-                variantId: variantId,
+                name: name,
+                unit: unit,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -4542,25 +4605,21 @@ class $$ExerciseVariantLinksTableTableManager
       );
 }
 
-typedef $$ExerciseVariantLinksTableProcessedTableManager =
+typedef $$VariantFamiliesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $ExerciseVariantLinksTable,
-      ExerciseVariantLink,
-      $$ExerciseVariantLinksTableFilterComposer,
-      $$ExerciseVariantLinksTableOrderingComposer,
-      $$ExerciseVariantLinksTableAnnotationComposer,
-      $$ExerciseVariantLinksTableCreateCompanionBuilder,
-      $$ExerciseVariantLinksTableUpdateCompanionBuilder,
+      $VariantFamiliesTable,
+      VariantFamilyRow,
+      $$VariantFamiliesTableFilterComposer,
+      $$VariantFamiliesTableOrderingComposer,
+      $$VariantFamiliesTableAnnotationComposer,
+      $$VariantFamiliesTableCreateCompanionBuilder,
+      $$VariantFamiliesTableUpdateCompanionBuilder,
       (
-        ExerciseVariantLink,
-        BaseReferences<
-          _$AppDatabase,
-          $ExerciseVariantLinksTable,
-          ExerciseVariantLink
-        >,
+        VariantFamilyRow,
+        BaseReferences<_$AppDatabase, $VariantFamiliesTable, VariantFamilyRow>,
       ),
-      ExerciseVariantLink,
+      VariantFamilyRow,
       PrefetchHooks Function()
     >;
 typedef $$EquipmentItemsTableCreateCompanionBuilder =
@@ -5024,6 +5083,7 @@ typedef $$EquipmentItemExercisesTableCreateCompanionBuilder =
       Value<int> id,
       required String equipmentItemId,
       required String exerciseId,
+      required String variantFamilyId,
       Value<int> maxVariant,
     });
 typedef $$EquipmentItemExercisesTableUpdateCompanionBuilder =
@@ -5031,6 +5091,7 @@ typedef $$EquipmentItemExercisesTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> equipmentItemId,
       Value<String> exerciseId,
+      Value<String> variantFamilyId,
       Value<int> maxVariant,
     });
 
@@ -5055,6 +5116,11 @@ class $$EquipmentItemExercisesTableFilterComposer
 
   ColumnFilters<String> get exerciseId => $composableBuilder(
     column: $table.exerciseId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get variantFamilyId => $composableBuilder(
+    column: $table.variantFamilyId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5088,6 +5154,11 @@ class $$EquipmentItemExercisesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get variantFamilyId => $composableBuilder(
+    column: $table.variantFamilyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get maxVariant => $composableBuilder(
     column: $table.maxVariant,
     builder: (column) => ColumnOrderings(column),
@@ -5113,6 +5184,11 @@ class $$EquipmentItemExercisesTableAnnotationComposer
 
   GeneratedColumn<String> get exerciseId => $composableBuilder(
     column: $table.exerciseId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get variantFamilyId => $composableBuilder(
+    column: $table.variantFamilyId,
     builder: (column) => column,
   );
 
@@ -5171,11 +5247,13 @@ class $$EquipmentItemExercisesTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> equipmentItemId = const Value.absent(),
                 Value<String> exerciseId = const Value.absent(),
+                Value<String> variantFamilyId = const Value.absent(),
                 Value<int> maxVariant = const Value.absent(),
               }) => EquipmentItemExercisesCompanion(
                 id: id,
                 equipmentItemId: equipmentItemId,
                 exerciseId: exerciseId,
+                variantFamilyId: variantFamilyId,
                 maxVariant: maxVariant,
               ),
           createCompanionCallback:
@@ -5183,11 +5261,13 @@ class $$EquipmentItemExercisesTableTableManager
                 Value<int> id = const Value.absent(),
                 required String equipmentItemId,
                 required String exerciseId,
+                required String variantFamilyId,
                 Value<int> maxVariant = const Value.absent(),
               }) => EquipmentItemExercisesCompanion.insert(
                 id: id,
                 equipmentItemId: equipmentItemId,
                 exerciseId: exerciseId,
+                variantFamilyId: variantFamilyId,
                 maxVariant: maxVariant,
               ),
           withReferenceMapper: (p0) => p0
@@ -6732,8 +6812,8 @@ class $AppDatabaseManager {
       $$ExerciseVariantsTableTableManager(_db, _db.exerciseVariants);
   $$ExercisesTableTableManager get exercises =>
       $$ExercisesTableTableManager(_db, _db.exercises);
-  $$ExerciseVariantLinksTableTableManager get exerciseVariantLinks =>
-      $$ExerciseVariantLinksTableTableManager(_db, _db.exerciseVariantLinks);
+  $$VariantFamiliesTableTableManager get variantFamilies =>
+      $$VariantFamiliesTableTableManager(_db, _db.variantFamilies);
   $$EquipmentItemsTableTableManager get equipmentItems =>
       $$EquipmentItemsTableTableManager(_db, _db.equipmentItems);
   $$EquipmentItemExercisesTableTableManager get equipmentItemExercises =>

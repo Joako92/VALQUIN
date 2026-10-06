@@ -9,7 +9,8 @@ import '../managers/player_manager.dart';
 import '../managers/training_plan_manager.dart';
 import '../models/equipment_item.dart';
 import '../models/equipment_slot.dart' as model;
-import '../models/exercise.dart';
+import '../models/exercise_variant.dart';
+import '../models/variant_family.dart';
 import '../models/muscle_group.dart';
 import '../models/training_record_exercise.dart';
 
@@ -51,7 +52,7 @@ class _EquipScreenState extends State<EquipScreen> {
   // --------------------------------------------------
   // INIT
   // --------------------------------------------------
-  
+
   @override
   void initState() {
     super.initState();
@@ -196,14 +197,17 @@ class _EquipScreenState extends State<EquipScreen> {
     return amount.toString();
   }
 
-  String formatVariant(ExerciseVariant variant) {
+  String formatVariant(
+    ExerciseVariant variant,
+    VariantFamily family,
+  ) {
     final amount = formatAmount(variant.amount);
 
     if (variant.sets != null) {
-      return '${variant.sets} x $amount ${variant.unit}';
+      return '${variant.sets} x $amount ${family.unit}';
     }
 
-    return '$amount ${variant.unit}';
+    return '$amount ${family.unit}';
   }
 
   // ---------------------------------------------------------------------------
@@ -211,7 +215,12 @@ class _EquipScreenState extends State<EquipScreen> {
   // ---------------------------------------------------------------------------
 
   Future<Map<MuscleGroup, List<String>>> getDailyExercises() async {
-    final exercises = await database.getExercisesWithVariants();
+    final exercises =
+        await database.select(database.exercises).get();
+
+    final variantFamilies =
+        await database.getVariantFamiliesWithVariants();
+
     final trainingPlan = trainingPlanManager.trainingPlan;
 
     final activeSlots = model.EquipmentSlot.values.where(
@@ -249,13 +258,23 @@ class _EquipScreenState extends State<EquipScreen> {
               exercise.id == equipmentExercise.exerciseId,
         );
 
+        final family = variantFamilies.firstWhere(
+          (family) =>
+              family.id == equipmentExercise.variantFamilyId,
+        );
+
+        if (family.variants.isEmpty) {
+          continue;
+        }
+
         final variantIndex = selectedVariant <=
                 equipmentExercise.maxVariant
             ? selectedVariant
             : equipmentExercise.maxVariant;
 
-        final variant = exercise.getVariant(
-          variantIndex,
+        final variant = family.variants.firstWhere(
+          (variant) => variant.index == variantIndex,
+          orElse: () => family.variants.last,
         );
 
         dailyExercises.putIfAbsent(
@@ -264,14 +283,13 @@ class _EquipScreenState extends State<EquipScreen> {
         );
 
         dailyExercises[muscleGroup]!.add(
-          '${exercise.name} — ${formatVariant(variant)}',
+          '${exercise.name} — ${formatVariant(variant, family)}',
         );
       }
     }
 
     return dailyExercises;
   }
-
 
   // ---------------------------------------------------------------------------
   // COLORS / ICONS
@@ -412,7 +430,6 @@ class _EquipScreenState extends State<EquipScreen> {
         return settings.strings.muscleGroupCore;
     }
   }
-
 
   // ---------------------------------------------------------------------------
   // EQUIPMENT CARD
@@ -593,107 +610,105 @@ class _EquipScreenState extends State<EquipScreen> {
       builder: (context, snapshot) {
         final exerciseGroups = snapshot.data ?? {};
 
-          return Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(
-                color: AppColors.border,
-              ),
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(
+              color: AppColors.border,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                settings.strings.dailyMission,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              if (exerciseGroups.isEmpty)
                 Text(
-                  settings.strings.dailyMission,
+                  settings.strings.noTrainingSelected,
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                    color: AppColors.textSecondary,
+                    color: AppColors.textDisabled,
+                  ),
+                )
+              else
+                ...exerciseGroups.entries.map(
+                  (group) => Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 12,
+                    ),
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${muscleGroupLabel(group.key)}:',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+
+                        const SizedBox(height: 5),
+
+                        ...group.value.map(
+                          (exercise) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 4,
+                            ),
+                            child: Row(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  '•',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color:
+                                        AppColors.textSecondary,
+                                  ),
+                                ),
+
+                                const SizedBox(width: 8),
+
+                                Expanded(
+                                  child: Text(
+                                    exercise,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color:
+                                          AppColors.textPrimary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-
-                const SizedBox(height: 12),
-
-                if (exerciseGroups.isEmpty)
-                  Text(
-                    settings.strings.noTrainingSelected,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: AppColors.textDisabled,
-                    ),
-                  )
-                else
-                  ...exerciseGroups.entries.map(
-                    (group) => Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 12,
-                      ),
-                      child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${muscleGroupLabel(group.key)}:',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-
-                          const SizedBox(height: 5),
-
-                          ...group.value.map(
-                            (exercise) => Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 4,
-                              ),
-                              child: Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    '•',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color:
-                                          AppColors.textSecondary,
-                                    ),
-                                  ),
-
-                                  const SizedBox(width: 8),
-
-                                  Expanded(
-                                    child: Text(
-                                      exercise,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        color:
-                                            AppColors.textPrimary,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          );
-        },
-      );
-
-    }
-
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   // ---------------------------------------------------------------------------
   // EXECUTE
@@ -719,7 +734,10 @@ class _EquipScreenState extends State<EquipScreen> {
     }
 
     final exercises =
-        await database.getExercisesWithVariants();
+        await database.select(database.exercises).get();
+
+    final variantFamilies =
+        await database.getVariantFamiliesWithVariants();
 
     final recordExercises = <TrainingRecordExercise>[];
 
@@ -730,14 +748,24 @@ class _EquipScreenState extends State<EquipScreen> {
               exercise.id == equipmentExercise.exerciseId,
         );
 
+        final family = variantFamilies.firstWhere(
+          (family) =>
+              family.id == equipmentExercise.variantFamilyId,
+        );
+
+        if (family.variants.isEmpty) {
+          continue;
+        }
+
         final variantIndex =
             trainingPlan.resolvedVariantFor(
           item,
           equipmentExercise.maxVariant,
         );
 
-        final variant = exercise.getVariant(
-          variantIndex,
+        final variant = family.variants.firstWhere(
+          (variant) => variant.index == variantIndex,
+          orElse: () => family.variants.last,
         );
 
         recordExercises.add(
@@ -747,7 +775,7 @@ class _EquipScreenState extends State<EquipScreen> {
             variantIndex: variant.index,
             sets: variant.sets,
             amount: variant.amount,
-            unit: variant.unit,
+            unit: family.unit,
           ),
         );
       }

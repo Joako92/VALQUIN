@@ -1,195 +1,243 @@
-import '../models/exercise.dart';
+import '../models/exercise_variant.dart';
+import '../models/variant_family.dart';
 
-/// Common strength training variants.
-const List<ExerciseVariant> standardStrengthVariants = [
-  ExerciseVariant(
-    index: 0,
-    sets: 3,
-    amount: 10,
-    unit: 'reps',
-  ),
-  ExerciseVariant(
-    index: 1,
-    sets: 4,
-    amount: 10,
-    unit: 'reps',
-  ),
-  ExerciseVariant(
-    index: 2,
-    sets: 4,
-    amount: 12,
-    unit: 'reps',
-  ),
-  ExerciseVariant(
-    index: 3,
-    sets: 4,
-    amount: 20,
-    unit: 'reps',
-  ),
-  ExerciseVariant(
-    index: 4,
-    sets: 4,
-    amount: 25,
-    unit: 'reps',
-  ),
-];
+// -----------------------------------------------------------------------------
+// REPS
+// -----------------------------------------------------------------------------
 
-/// Common running training variants.
-const List<ExerciseVariant> runningVariants = [
-  ExerciseVariant(
-    index: 0,
-    amount: 30,
-    unit: 'min',
-  ),
-  ExerciseVariant(
-    index: 1,
-    amount: 60,
-    unit: 'min',
-  ),
-  ExerciseVariant(
-    index: 2,
-    amount: 3,
-    unit: 'km',
-  ),
-  ExerciseVariant(
-    index: 3,
-    amount: 5,
-    unit: 'km',
-  ),
-  ExerciseVariant(
-    index: 4,
-    amount: 10,
-    unit: 'km',
-  ),
-];
+/// Basic strength and muscular endurance progression for beginners.
+const VariantFamily basicRepsFamily = VariantFamily(
+  id: 'basic_reps',
+  name: 'Repeticiones básicas',
+  unit: 'reps',
+  variants: [
+    ExerciseVariant(index: 0, sets: 3, amount: 10),
+    ExerciseVariant(index: 1, sets: 3, amount: 12),
+    ExerciseVariant(index: 2, sets: 3, amount: 15),
+    ExerciseVariant(index: 3, sets: 4, amount: 15),
+    ExerciseVariant(index: 4, sets: 4, amount: 20),
+  ],
+);
 
-/// Common cardio training variants.
-const List<ExerciseVariant> cardioVariants = [
-  ExerciseVariant(
-    index: 0,
-    sets: 3,
-    amount: 30,
-    unit: 'reps',
-  ),
-  ExerciseVariant(
-    index: 1,
-    sets: 4,
-    amount: 40,
-    unit: 'reps',
-  ),
-  ExerciseVariant(
-    index: 2,
-    sets: 4,
-    amount: 50,
-    unit: 'reps',
-  ),
-  ExerciseVariant(
-    index: 3,
-    sets: 4,
-    amount: 100,
-    unit: 'reps',
-  ),
-  ExerciseVariant(
-    index: 4,
-    sets: 4,
-    amount: 200,
-    unit: 'reps',
-  ),
-];
+/// Maximum strength progression with low repetitions and high intensity.
+const VariantFamily maxStrengthRepsFamily = VariantFamily(
+  id: 'max_strength_reps',
+  name: 'Fuerza máxima',
+  unit: 'reps',
+  variants: [
+    ExerciseVariant(index: 0, sets: 3, amount: 5),
+    ExerciseVariant(index: 1, sets: 3, amount: 3),
+    ExerciseVariant(index: 2, sets: 4, amount: 3),
+    ExerciseVariant(index: 3, sets: 4, amount: 2),
+    ExerciseVariant(index: 4, sets: 5, amount: 1),
+  ],
+);
 
-/// Common timed training variants.
-const List<ExerciseVariant> timedVariants = [
-  ExerciseVariant(
-    index: 0,
-    sets: 3,
-    amount: 0.5,
-    unit: 'min',
-  ),
-  ExerciseVariant(
-    index: 1,
-    sets: 4,
-    amount: 1,
-    unit: 'min',
-  ),
-  ExerciseVariant(
-    index: 2,
-    sets: 4,
-    amount: 2,
-    unit: 'min',
-  ),
-  ExerciseVariant(
-    index: 3,
-    sets: 4,
-    amount: 3,
-    unit: 'min',
-  ),
-  ExerciseVariant(
-    index: 4,
-    sets: 4,
-    amount: 5,
-    unit: 'min',
-  ),
-];
+/// Explosive strength and power progression.
+const VariantFamily powerRepsFamily = VariantFamily(
+  id: 'power_reps',
+  name: 'Potencia',
+  unit: 'reps',
+  variants: [
+    ExerciseVariant(index: 0, sets: 3, amount: 5),
+    ExerciseVariant(index: 1, sets: 4, amount: 5),
+    ExerciseVariant(index: 2, sets: 5, amount: 4),
+    ExerciseVariant(index: 3, sets: 5, amount: 3),
+    ExerciseVariant(index: 4, sets: 6, amount: 2),
+  ],
+);
 
-/// Common cycling training variants.
-const List<ExerciseVariant> bikeVariants = [
-  ExerciseVariant(
-    index: 0,
-    amount: 30,
-    unit: 'min',
-  ),
-  ExerciseVariant(
-    index: 1,
-    amount: 60,
-    unit: 'min',
-  ),
-  ExerciseVariant(
-    index: 2,
-    amount: 10,
-    unit: 'km',
-  ),
-  ExerciseVariant(
-    index: 3,
-    amount: 20,
-    unit: 'km',
-  ),
-  ExerciseVariant(
-    index: 4,
-    amount: 30,
-    unit: 'km',
-  ),
-];
+/// Hypertrophy-oriented progression with moderate volume.
+const VariantFamily hypertrophyRepsFamily = VariantFamily(
+  id: 'hypertrophy_reps',
+  name: 'Hipertrofia',
+  unit: 'reps',
+  variants: [
+    ExerciseVariant(index: 0, sets: 3, amount: 8),
+    ExerciseVariant(index: 1, sets: 3, amount: 10),
+    ExerciseVariant(index: 2, sets: 4, amount: 10),
+    ExerciseVariant(index: 3, sets: 4, amount: 12),
+    ExerciseVariant(index: 4, sets: 5, amount: 15),
+  ],
+);
 
-/// sprint training variants.
-const List<ExerciseVariant> sprintVariants = [
-  ExerciseVariant(
-    index: 0,
-    sets: 3,
-    amount: 100,
-    unit: 'm',
-  ),
-  ExerciseVariant(
-    index: 1,
-    sets: 4,
-    amount: 100,
-    unit: 'm',
-  ),
-  ExerciseVariant(
-    index: 2,
-    sets: 5,
-    amount: 100,
-    unit: 'm',
-  ),
-  ExerciseVariant(
-    index: 3,
-    sets: 4,
-    amount: 200,
-    unit: 'm',
-  ),
-  ExerciseVariant(
-    index: 4,
-    sets: 6,
-    amount: 200,
-    unit: 'm',
-  ),
+/// High-volume muscular endurance progression.
+const VariantFamily muscularEnduranceRepsFamily = VariantFamily(
+  id: 'muscular_endurance_reps',
+  name: 'Resistencia muscular',
+  unit: 'reps',
+  variants: [
+    ExerciseVariant(index: 0, sets: 3, amount: 15),
+    ExerciseVariant(index: 1, sets: 3, amount: 20),
+    ExerciseVariant(index: 2, sets: 4, amount: 20),
+    ExerciseVariant(index: 3, sets: 4, amount: 25),
+    ExerciseVariant(index: 4, sets: 5, amount: 30),
+  ],
+);
+
+/// Technical strength and body-control progression.
+const VariantFamily technicalRepsFamily = VariantFamily(
+  id: 'technical_reps',
+  name: 'Fuerza técnica',
+  unit: 'reps',
+  variants: [
+    ExerciseVariant(index: 0, sets: 3, amount: 5),
+    ExerciseVariant(index: 1, sets: 3, amount: 8),
+    ExerciseVariant(index: 2, sets: 4, amount: 8),
+    ExerciseVariant(index: 3, sets: 4, amount: 10),
+    ExerciseVariant(index: 4, sets: 5, amount: 10),
+  ],
+);
+
+/// Balanced strength progression for all-around athletes.
+const VariantFamily athleticStrengthFamily = VariantFamily(
+  id: 'athletic_strength',
+  name: 'Fuerza atlética',
+  unit: 'reps',
+  variants: [
+    ExerciseVariant(index: 0, sets: 3, amount: 8),
+    ExerciseVariant(index: 1, sets: 4, amount: 8),
+    ExerciseVariant(index: 2, sets: 4, amount: 10),
+    ExerciseVariant(index: 3, sets: 5, amount: 8),
+    ExerciseVariant(index: 4, sets: 5, amount: 10),
+  ],
+);
+
+// -----------------------------------------------------------------------------
+// SECONDS
+// -----------------------------------------------------------------------------
+
+/// Short-duration maximum power progression.
+const VariantFamily powerSecondsFamily = VariantFamily(
+  id: 'power_seconds',
+  name: 'Potencia explosiva',
+  unit: 'sec',
+  variants: [
+    ExerciseVariant(index: 0, amount: 10),
+    ExerciseVariant(index: 1, amount: 15),
+    ExerciseVariant(index: 2, amount: 20),
+    ExerciseVariant(index: 3, amount: 30),
+    ExerciseVariant(index: 4, amount: 45),
+  ],
+);
+
+/// Isometric strength and body-control progression.
+const VariantFamily isometricSecondsFamily = VariantFamily(
+  id: 'isometric_seconds',
+  name: 'Isometría',
+  unit: 'sec',
+  variants: [
+    ExerciseVariant(index: 0, amount: 15),
+    ExerciseVariant(index: 1, amount: 20),
+    ExerciseVariant(index: 2, amount: 30),
+    ExerciseVariant(index: 3, amount: 45),
+    ExerciseVariant(index: 4, amount: 60),
+  ],
+);
+
+// -----------------------------------------------------------------------------
+// MINUTES
+// -----------------------------------------------------------------------------
+
+/// Basic aerobic progression for beginners.
+const VariantFamily basicMinutesFamily = VariantFamily(
+  id: 'basic_minutes',
+  name: 'Cardio básico',
+  unit: 'min',
+  variants: [
+    ExerciseVariant(index: 0, amount: 10),
+    ExerciseVariant(index: 1, amount: 15),
+    ExerciseVariant(index: 2, amount: 20),
+    ExerciseVariant(index: 3, amount: 30),
+    ExerciseVariant(index: 4, amount: 45),
+  ],
+);
+
+/// Cardio used as complementary conditioning.
+const VariantFamily conditioningMinutesFamily = VariantFamily(
+  id: 'conditioning_minutes',
+  name: 'Acondicionamiento',
+  unit: 'min',
+  variants: [
+    ExerciseVariant(index: 0, amount: 15),
+    ExerciseVariant(index: 1, amount: 20),
+    ExerciseVariant(index: 2, amount: 30),
+    ExerciseVariant(index: 3, amount: 40),
+    ExerciseVariant(index: 4, amount: 60),
+  ],
+);
+
+/// Long-duration endurance progression for endurance athletes.
+const VariantFamily enduranceMinutesFamily = VariantFamily(
+  id: 'endurance_minutes',
+  name: 'Resistencia aeróbica',
+  unit: 'min',
+  variants: [
+    ExerciseVariant(index: 0, amount: 30),
+    ExerciseVariant(index: 1, amount: 45),
+    ExerciseVariant(index: 2, amount: 60),
+    ExerciseVariant(index: 3, amount: 90),
+    ExerciseVariant(index: 4, amount: 120),
+  ],
+);
+
+// -----------------------------------------------------------------------------
+// KILOMETERS
+// -----------------------------------------------------------------------------
+
+/// Basic distance progression for beginners.
+const VariantFamily basicDistanceFamily = VariantFamily(
+  id: 'basic_distance',
+  name: 'Distancia básica',
+  unit: 'km',
+  variants: [
+    ExerciseVariant(index: 0, amount: 1),
+    ExerciseVariant(index: 1, amount: 2),
+    ExerciseVariant(index: 2, amount: 3),
+    ExerciseVariant(index: 3, amount: 5),
+    ExerciseVariant(index: 4, amount: 10),
+  ],
+);
+
+/// Long-distance running progression.
+const VariantFamily longDistanceFamily = VariantFamily(
+  id: 'long_distance',
+  name: 'Fondo',
+  unit: 'km',
+  variants: [
+    ExerciseVariant(index: 0, amount: 5),
+    ExerciseVariant(index: 1, amount: 10),
+    ExerciseVariant(index: 2, amount: 15),
+    ExerciseVariant(index: 3, amount: 21),
+    ExerciseVariant(index: 4, amount: 42),
+  ],
+);
+
+// -----------------------------------------------------------------------------
+// ALL VARIANT FAMILIES
+// -----------------------------------------------------------------------------
+
+/// All variant families available in the catalog.
+const List<VariantFamily> variantFamilies = [
+  // Reps
+  basicRepsFamily,
+  maxStrengthRepsFamily,
+  powerRepsFamily,
+  hypertrophyRepsFamily,
+  muscularEnduranceRepsFamily,
+  technicalRepsFamily,
+  athleticStrengthFamily,
+
+  // Seconds
+  powerSecondsFamily,
+  isometricSecondsFamily,
+
+  // Minutes
+  basicMinutesFamily,
+  conditioningMinutesFamily,
+  enduranceMinutesFamily,
+
+  // Kilometers
+  basicDistanceFamily,
+  longDistanceFamily,
 ];

@@ -24,9 +24,13 @@ const Map<String, int> wgerExerciseIds = {
   'flexiones_brazos': 1551,
   'flexiones_declinadas': 1112,
   'press_banca': 73,
+  'press_banca_mancuernas': 75,
+  'aperturas_maquina': 135,
   'press_declinado': 185,
   'press_declinado_mancuernas': 186,
   'aperturas_mancuernas': 238,
+  'cruce_polea': 237,
+  'flexion_palmada': 1554,
 
   // --------------------------------------------------
   // SHOULDERS
@@ -38,6 +42,10 @@ const Map<String, int> wgerExerciseIds = {
   'vuelo_frontal': 256,
   'vuelo_posterior': 487,
   'encogimientos_hombros': 570,
+  'flexion_vertical': 282,
+  'press_hombro_maquina': 543,
+  'remo_menton': 693,
+  'flexiones_hindu': 1080,
 
   // --------------------------------------------------
   // WEAPON / BICEPS
@@ -76,6 +84,9 @@ const Map<String, int> wgerExerciseIds = {
   'puente_gluteos': 265,
   'curl_femoral': 364,
   'silla_cuadriceps': 369,
+  'sentadilla_pistol': 456,
+  'gluteos_polea': 1131,
+  'sentadilla_isometrica': 1733,
 
   // --------------------------------------------------
   // BELT / CORE
@@ -89,6 +100,9 @@ const Map<String, int> wgerExerciseIds = {
   'elevaciones_piernas': 377,
   'v_ups': 976,
   'escaladores': 996,
+  'hollow_hold': 297,
+  'elevaciones_piernas_colgado': 978,
+  'abdominales_rusas': 1193,
 
   // --------------------------------------------------
   // WINGS / BACK

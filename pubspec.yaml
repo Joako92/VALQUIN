@@ -4,7 +4,7 @@ description: "A mobile fitness RPG that turns real-world training into character
 
 publish_to: 'none'
 
-version: 0.8.0+1
+version: 0.9.1+1
 
 environment:
   sdk: ^3.12.2

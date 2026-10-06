@@ -8,7 +8,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'tables/test_entries.dart';
 import 'tables/exercise_variants.dart';
 import 'tables/exercises.dart';
-import 'tables/exercise_variant_links.dart';
+import 'tables/variant_families.dart';
 import 'tables/equipment_items.dart';
 import 'tables/equipment_item_exercises.dart';
 import 'tables/equipment_item_stats.dart';
@@ -22,7 +22,8 @@ import 'tables/training_record_exercises.dart';
 // DOMAIN MODELS
 // --------------------------------------------------
 
-import '../models/exercise.dart' as exercise_domain;
+import '../models/exercise_variant.dart' as exercise_variant_domain;
+import '../models/variant_family.dart' as variant_family_domain;
 import '../models/equipment_item.dart' as equipment_domain;
 import '../models/equipment_slot.dart';
 import '../models/rarity.dart';
@@ -38,7 +39,7 @@ part 'app_database.g.dart';
     TestEntries,
     ExerciseVariants,
     Exercises,
-    ExerciseVariantLinks,
+    VariantFamilies,
     EquipmentItems,
     EquipmentItemExercises,
     EquipmentItemStats,
@@ -59,35 +60,87 @@ class AppDatabase extends _$AppDatabase {
         );
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (Migrator m) async {
-      await m.createAll();
-    },
-    onUpgrade: (Migrator m, int from, int to) async {
-      if (from < 2) {
-        await m.createTable(appSettings);
-      }
+        onCreate: (Migrator m) async {
+          await m.createAll();
+        },
+        onUpgrade: (Migrator m, int from, int to) async {
+          if (from < 2) {
+            await m.createTable(appSettings);
+          }
 
-      if (from < 3) {
-        await m.addColumn(
-          appSettings,
-          appSettings.theme,
-        );
+          if (from < 3) {
+            await m.addColumn(
+              appSettings,
+              appSettings.theme,
+            );
 
-        await customStatement(
-          "UPDATE app_settings SET theme = 'dark' WHERE theme IS NULL",
-        );
-      }
+            await customStatement(
+              "UPDATE app_settings SET theme = 'dark' WHERE theme IS NULL",
+            );
+          }
 
-      if (from < 4) {
-        await m.createTable(trainingRecords);
-        await m.createTable(trainingRecordExercises);
-      }
-    },
-  );
+          if (from < 4) {
+            await m.createTable(trainingRecords);
+            await m.createTable(trainingRecordExercises);
+          }
+
+          if (from < 5) {
+            // Catalog data is disposable during development.
+            // Rebuild the catalog tables using the new schema.
+            //
+            // Training history and app settings are intentionally preserved.
+
+            await customStatement(
+              'DROP TABLE IF EXISTS equipment_item_exercises',
+            );
+
+            await customStatement(
+              'DROP TABLE IF EXISTS equipment_item_stats',
+            );
+
+            await customStatement(
+              'DROP TABLE IF EXISTS equipment_item_unlock_requirements',
+            );
+
+            await customStatement(
+              'DROP TABLE IF EXISTS equipment_item_equip_requirements',
+            );
+
+            await customStatement(
+              'DROP TABLE IF EXISTS equipment_items',
+            );
+
+            await customStatement(
+              'DROP TABLE IF EXISTS exercise_variants',
+            );
+
+            await customStatement(
+              'DROP TABLE IF EXISTS variant_families',
+            );
+
+            await customStatement(
+              'DROP TABLE IF EXISTS exercises',
+            );
+
+            await m.createTable(exercises);
+            await m.createTable(variantFamilies);
+            await m.createTable(exerciseVariants);
+            await m.createTable(equipmentItems);
+            await m.createTable(equipmentItemExercises);
+            await m.createTable(equipmentItemStats);
+            await m.createTable(
+              equipmentItemUnlockRequirements,
+            );
+            await m.createTable(
+              equipmentItemEquipRequirements,
+            );
+          }
+        },
+      );
 
   // ==================================================
   // TEST METHODS
@@ -141,19 +194,35 @@ class AppDatabase extends _$AppDatabase {
   // ==================================================
 
   Future<int> insertExerciseVariant({
+    required String familyId,
     required int variantIndex,
     int? sets,
     required double amount,
-    required String unit,
   }) {
     return into(exerciseVariants).insert(
       ExerciseVariantsCompanion.insert(
+        familyId: familyId,
         variantIndex: variantIndex,
         sets: Value(sets),
         amount: amount,
-        unit: unit,
       ),
     );
+  }
+
+  Future<List<ExerciseVariantRow>> getVariantFamilyVariants(
+    String familyId,
+  ) {
+    return (select(exerciseVariants)
+          ..where(
+            (table) => table.familyId.equals(familyId),
+          )
+          ..orderBy([
+            (table) => OrderingTerm(
+                  expression: table.variantIndex,
+                  mode: OrderingMode.asc,
+                ),
+          ]))
+        .get();
   }
 
   Future<ExerciseVariantRow?> getExerciseVariant(int id) {
@@ -164,21 +233,22 @@ class AppDatabase extends _$AppDatabase {
 
   Future<bool> updateExerciseVariant({
     required int id,
+    required String familyId,
     required int variantIndex,
     int? sets,
     required double amount,
-    required String unit,
   }) {
     return (update(exerciseVariants)
           ..where((table) => table.id.equals(id)))
         .write(
       ExerciseVariantsCompanion(
+        familyId: Value(familyId),
         variantIndex: Value(variantIndex),
         sets: Value(sets),
         amount: Value(amount),
-        unit: Value(unit),
       ),
-    ).then((rows) => rows > 0);
+    )
+        .then((rows) => rows > 0);
   }
 
   Future<bool> deleteExerciseVariant(int id) {
@@ -220,7 +290,8 @@ class AppDatabase extends _$AppDatabase {
       ExercisesCompanion(
         name: Value(name),
       ),
-    ).then((rows) => rows > 0);
+    )
+        .then((rows) => rows > 0);
   }
 
   Future<bool> deleteExercise(String id) {
@@ -233,176 +304,192 @@ class AppDatabase extends _$AppDatabase {
   Future<void> replaceExercise({
     required String id,
     required String name,
-    required List<exercise_domain.ExerciseVariant> variants,
+  }) async {
+    final existing = await getExercise(id);
+
+    if (existing != null) {
+      await updateExercise(
+        id: id,
+        name: name,
+      );
+    } else {
+      await insertExercise(
+        id: id,
+        name: name,
+      );
+    }
+  }
+
+  // ==================================================
+  // VARIANT FAMILY CRUD
+  // ==================================================
+
+  Future<int> insertVariantFamily({
+    required String id,
+    required String name,
+    required String unit,
+  }) {
+    return into(variantFamilies).insert(
+      VariantFamiliesCompanion.insert(
+        id: id,
+        name: name,
+        unit: unit,
+      ),
+    );
+  }
+
+  Future<VariantFamilyRow?> getVariantFamily(String id) {
+    return (select(variantFamilies)
+          ..where((table) => table.id.equals(id)))
+        .getSingleOrNull();
+  }
+
+  Future<List<VariantFamilyRow>> getVariantFamilies() {
+    return select(variantFamilies).get();
+  }
+
+  Future<bool> updateVariantFamily({
+    required String id,
+    required String name,
+    required String unit,
+  }) {
+    return (update(variantFamilies)
+          ..where((table) => table.id.equals(id)))
+        .write(
+      VariantFamiliesCompanion(
+        name: Value(name),
+        unit: Value(unit),
+      ),
+    )
+        .then((rows) => rows > 0);
+  }
+
+  Future<void> replaceVariantFamily({
+    required variant_family_domain.VariantFamily family,
   }) async {
     await transaction(() async {
-      // --------------------------------------------------
-      // DELETE EXISTING DATA
-      // --------------------------------------------------
+      final existing = await getVariantFamily(family.id);
 
-      final links =
-          await getExerciseVariantLinks(id);
+      if (existing != null) {
+        await updateVariantFamily(
+          id: family.id,
+          name: family.name,
+          unit: family.unit,
+        );
+      } else {
+        await insertVariantFamily(
+          id: family.id,
+          name: family.name,
+          unit: family.unit,
+        );
+      }
 
-      await (delete(exerciseVariantLinks)
+      // The variant list is catalog data.
+      // Replacing the family means replacing its variants.
+      await (delete(exerciseVariants)
             ..where(
-              (table) => table.exerciseId.equals(id),
+              (table) => table.familyId.equals(family.id),
             ))
           .go();
 
-      for (final link in links) {
-        await (delete(exerciseVariants)
-              ..where(
-                (table) => table.id.equals(link.variantId),
-              ))
-            .go();
-      }
-
-      // --------------------------------------------------
-      // INSERT / UPDATE EXERCISE
-      // --------------------------------------------------
-
-      final existing =
-          await getExercise(id);
-
-      if (existing != null) {
-        await updateExercise(
-          id: id,
-          name: name,
-        );
-      } else {
-        await insertExercise(
-          id: id,
-          name: name,
-        );
-      }
-
-      // --------------------------------------------------
-      // INSERT NEW VARIANTS
-      // --------------------------------------------------
-
-      for (final variant in variants) {
-        final variantId =
-            await insertExerciseVariant(
+      for (final variant in family.variants) {
+        await insertExerciseVariant(
+          familyId: family.id,
           variantIndex: variant.index,
           sets: variant.sets,
           amount: variant.amount,
-          unit: variant.unit,
-        );
-
-        await insertExerciseVariantLink(
-          exerciseId: id,
-          variantId: variantId,
         );
       }
     });
   }
 
-  // ==================================================
-  // EXERCISE VARIANT LINKS
-  // ==================================================
-
-  Future<int> insertExerciseVariantLink({
-    required String exerciseId,
-    required int variantId,
-  }) {
-    return into(exerciseVariantLinks).insert(
-      ExerciseVariantLinksCompanion.insert(
-        exerciseId: exerciseId,
-        variantId: variantId,
-      ),
-    );
-  }
-
-  Future<ExerciseVariantLink?> getExerciseVariantLink(
-    int id,
-  ) {
-    return (select(exerciseVariantLinks)
-          ..where((table) => table.id.equals(id)))
-        .getSingleOrNull();
-  }
-
-  Future<List<ExerciseVariantLink>> getExerciseVariantLinks(
-    String exerciseId,
-  ) {
-    return (select(exerciseVariantLinks)
-          ..where(
-            (table) => table.exerciseId.equals(exerciseId),
-          ))
-        .get();
-  }
-
-  Future<List<ExerciseVariantRow>> getExerciseVariants(
-    String exerciseId,
-  ) {
-    final query = select(exerciseVariants).join([
-      innerJoin(
-        exerciseVariantLinks,
-        exerciseVariantLinks.variantId.equalsExp(
-          exerciseVariants.id,
-        ),
-      ),
-    ])
-      ..where(
-        exerciseVariantLinks.exerciseId.equals(exerciseId),
-      );
-
-    return query.map((row) {
-      return row.readTable(exerciseVariants);
-    }).get();
-  }
-
-  // ==================================================
-  // DOMAIN EXERCISE
-  // ==================================================
-
-  Future<exercise_domain.Exercise?> getExerciseWithVariants(
-    String exerciseId,
+  Future<variant_family_domain.VariantFamily?>
+      getVariantFamilyWithVariants(
+    String id,
   ) async {
-    final exercise = await getExercise(exerciseId);
+    final family = await getVariantFamily(id);
 
-    if (exercise == null) {
+    if (family == null) {
       return null;
     }
 
-    final variants =
-        await getExerciseVariants(exerciseId);
+    final variantRows = await getVariantFamilyVariants(id);
 
-    return exercise_domain.Exercise(
-      id: exercise.id,
-      name: exercise.name,
-      variants: variants
+    return variant_family_domain.VariantFamily(
+      id: family.id,
+      name: family.name,
+      unit: family.unit,
+      variants: variantRows
           .map(
-            (variant) => exercise_domain.ExerciseVariant(
+            (variant) =>
+                exercise_variant_domain.ExerciseVariant(
               index: variant.variantIndex,
               sets: variant.sets,
               amount: variant.amount,
-              unit: variant.unit,
             ),
           )
           .toList(),
     );
   }
 
-  Future<List<exercise_domain.Exercise>>
-      getExercisesWithVariants() async {
-    final exerciseRows =
-        await select(exercises).get();
+  Future<List<variant_family_domain.VariantFamily>>
+      getVariantFamiliesWithVariants() async {
+    final families = await getVariantFamilies();
 
-    final result =
-        <exercise_domain.Exercise>[];
+    final result = <variant_family_domain.VariantFamily>[];
 
-    for (final exercise in exerciseRows) {
-      final domainExercise =
-          await getExerciseWithVariants(
-        exercise.id,
+    for (final family in families) {
+      final variantRows =
+          await getVariantFamilyVariants(family.id);
+
+      result.add(
+        variant_family_domain.VariantFamily(
+          id: family.id,
+          name: family.name,
+          unit: family.unit,
+          variants: variantRows
+              .map(
+                (variant) =>
+                    exercise_variant_domain.ExerciseVariant(
+                  index: variant.variantIndex,
+                  sets: variant.sets,
+                  amount: variant.amount,
+                ),
+              )
+              .toList(),
+        ),
       );
-
-      if (domainExercise != null) {
-        result.add(domainExercise);
-      }
     }
 
     return result;
+  }
+
+  Future<bool> deleteVariantFamily(String id) {
+    return transaction(() async {
+      // Remove equipment references first.
+      await (delete(equipmentItemExercises)
+            ..where(
+              (table) => table.variantFamilyId.equals(id),
+            ))
+          .go();
+
+      // Remove all variants belonging to the family.
+      await (delete(exerciseVariants)
+            ..where(
+              (table) => table.familyId.equals(id),
+            ))
+          .go();
+
+      // Finally remove the family itself.
+      final deletedRows =
+          await (delete(variantFamilies)
+                ..where(
+                  (table) => table.id.equals(id),
+                ))
+              .go();
+
+      return deletedRows > 0;
+    });
   }
 
   // ==================================================
@@ -451,7 +538,8 @@ class AppDatabase extends _$AppDatabase {
         slot: Value(slot),
         cooldownHours: Value(cooldownHours),
       ),
-    ).then((rows) => rows > 0);
+    )
+        .then((rows) => rows > 0);
   }
 
   Future<bool> deleteEquipmentItem(
@@ -511,8 +599,7 @@ class AppDatabase extends _$AppDatabase {
       // INSERT / UPDATE BASE ITEM
       // --------------------------------------------------
 
-      final existing =
-          await getEquipmentItem(id);
+      final existing = await getEquipmentItem(id);
 
       if (existing != null) {
         await updateEquipmentItem(
@@ -540,6 +627,8 @@ class AppDatabase extends _$AppDatabase {
         await insertEquipmentItemExercise(
           equipmentItemId: id,
           exerciseId: equipmentExercise.exerciseId,
+          variantFamilyId:
+              equipmentExercise.variantFamilyId,
           maxVariant: equipmentExercise.maxVariant,
         );
       }
@@ -568,8 +657,7 @@ class AppDatabase extends _$AppDatabase {
         );
       }
 
-      for (final entry
-          in unlockRequirements.stats.entries) {
+      for (final entry in unlockRequirements.stats.entries) {
         await insertEquipmentItemUnlockRequirement(
           equipmentItemId: id,
           condition: entry.key,
@@ -577,7 +665,8 @@ class AppDatabase extends _$AppDatabase {
         );
       }
 
-      for (final playerClass in unlockRequirements.classes) {
+      for (final playerClass
+          in unlockRequirements.classes) {
         await insertEquipmentItemUnlockRequirement(
           equipmentItemId: id,
           condition: 'class',
@@ -597,8 +686,7 @@ class AppDatabase extends _$AppDatabase {
         );
       }
 
-      for (final entry
-          in equipRequirements.stats.entries) {
+      for (final entry in equipRequirements.stats.entries) {
         await insertEquipmentItemEquipRequirement(
           equipmentItemId: id,
           condition: entry.key,
@@ -606,7 +694,8 @@ class AppDatabase extends _$AppDatabase {
         );
       }
 
-      for (final playerClass in equipRequirements.classes) {
+      for (final playerClass
+          in equipRequirements.classes) {
         await insertEquipmentItemEquipRequirement(
           equipmentItemId: id,
           condition: 'class',
@@ -623,12 +712,14 @@ class AppDatabase extends _$AppDatabase {
   Future<int> insertEquipmentItemExercise({
     required String equipmentItemId,
     required String exerciseId,
+    required String variantFamilyId,
     required int maxVariant,
   }) {
     return into(equipmentItemExercises).insert(
       EquipmentItemExercisesCompanion.insert(
         equipmentItemId: equipmentItemId,
         exerciseId: exerciseId,
+        variantFamilyId: variantFamilyId,
         maxVariant: Value(maxVariant),
       ),
     );
@@ -667,7 +758,8 @@ class AppDatabase extends _$AppDatabase {
       EquipmentItemExercisesCompanion(
         maxVariant: Value(maxVariant),
       ),
-    ).then((rows) => rows > 0);
+    )
+        .then((rows) => rows > 0);
   }
 
   Future<bool> deleteEquipmentItemExercise(
@@ -732,7 +824,8 @@ class AppDatabase extends _$AppDatabase {
         stat: Value(stat),
         value: Value(value),
       ),
-    ).then((rows) => rows > 0);
+    )
+        .then((rows) => rows > 0);
   }
 
   Future<bool> deleteEquipmentItemStat(
@@ -748,9 +841,7 @@ class AppDatabase extends _$AppDatabase {
     String equipmentItemId,
   ) async {
     final rows =
-        await getEquipmentItemStatRows(
-      equipmentItemId,
-    );
+        await getEquipmentItemStatRows(equipmentItemId);
 
     return {
       for (final row in rows)
@@ -762,8 +853,7 @@ class AppDatabase extends _$AppDatabase {
   // EQUIPMENT ITEM UNLOCK REQUIREMENTS CRUD
   // ==================================================
 
-  Future<int>
-      insertEquipmentItemUnlockRequirement({
+  Future<int> insertEquipmentItemUnlockRequirement({
     required String equipmentItemId,
     required String condition,
     required int value,
@@ -825,7 +915,8 @@ class AppDatabase extends _$AppDatabase {
         condition: Value(condition),
         value: Value(value),
       ),
-    ).then((rows) => rows > 0);
+    )
+        .then((rows) => rows > 0);
   }
 
   Future<bool>
@@ -846,8 +937,7 @@ class AppDatabase extends _$AppDatabase {
   // EQUIPMENT ITEM EQUIP REQUIREMENTS CRUD
   // ==================================================
 
-  Future<int>
-      insertEquipmentItemEquipRequirement({
+  Future<int> insertEquipmentItemEquipRequirement({
     required String equipmentItemId,
     required String condition,
     required int value,
@@ -909,7 +999,8 @@ class AppDatabase extends _$AppDatabase {
         condition: Value(condition),
         value: Value(value),
       ),
-    ).then((rows) => rows > 0);
+    )
+        .then((rows) => rows > 0);
   }
 
   Future<bool>
@@ -969,9 +1060,7 @@ class AppDatabase extends _$AppDatabase {
     // --------------------------------------------------
 
     final equipmentItem =
-        await getEquipmentItem(
-      equipmentItemId,
-    );
+        await getEquipmentItem(equipmentItemId);
 
     if (equipmentItem == null) {
       return null;
@@ -986,25 +1075,24 @@ class AppDatabase extends _$AppDatabase {
       equipmentItemId,
     );
 
-    final equipmentExercises =
-        exerciseRelations
-            .map(
-              (relation) =>
-                  equipment_domain.EquipmentExercise(
-                exerciseId: relation.exerciseId,
-                maxVariant: relation.maxVariant,
-              ),
-            )
-            .toList();
+    final equipmentExercises = exerciseRelations
+        .map(
+          (relation) =>
+              equipment_domain.EquipmentExercise(
+            exerciseId: relation.exerciseId,
+            variantFamilyId:
+                relation.variantFamilyId,
+            maxVariant: relation.maxVariant,
+          ),
+        )
+        .toList();
 
     // --------------------------------------------------
     // STATS
     // --------------------------------------------------
 
     final stats =
-        await getEquipmentItemStats(
-      equipmentItemId,
-    );
+        await getEquipmentItemStats(equipmentItemId);
 
     // --------------------------------------------------
     // UNLOCK REQUIREMENTS
@@ -1016,9 +1104,7 @@ class AppDatabase extends _$AppDatabase {
     );
 
     final unlockRequirements =
-        _buildEquipmentRequirement(
-      unlockRows,
-    );
+        _buildEquipmentRequirement(unlockRows);
 
     // --------------------------------------------------
     // EQUIP REQUIREMENTS
@@ -1030,9 +1116,7 @@ class AppDatabase extends _$AppDatabase {
     );
 
     final equipRequirements =
-        _buildEquipmentRequirement(
-      equipRows,
-    );
+        _buildEquipmentRequirement(equipRows);
 
     // --------------------------------------------------
     // DOMAIN MODEL
@@ -1042,25 +1126,19 @@ class AppDatabase extends _$AppDatabase {
       id: equipmentItem.id,
       name: equipmentItem.name,
       exercises: equipmentExercises,
-
       rarity: Rarity.values.firstWhere(
         (rarity) =>
             rarity.name == equipmentItem.rarity,
       ),
-
       slot: EquipmentSlot.values.firstWhere(
         (slot) =>
             slot.name == equipmentItem.slot,
       ),
-
       cooldownHours:
           equipmentItem.cooldownHours,
-
       stats: stats,
-
       unlockRequirements:
           unlockRequirements,
-
       equipRequirements:
           equipRequirements,
     );
@@ -1102,9 +1180,9 @@ class AppDatabase extends _$AppDatabase {
     return getEquipmentItemsWithAllData();
   }
 
-  // --------------------------------------------------
+  // ==================================================
   // ADMIN METHODS
-  // --------------------------------------------------
+  // ==================================================
 
   Future<bool> hasEquipmentItems() async {
     final items = await select(equipmentItems).get();
@@ -1116,33 +1194,13 @@ class AppDatabase extends _$AppDatabase {
     String exerciseId,
   ) async {
     return transaction(() async {
-      // 1. Obtener las variantes asociadas al ejercicio
-      final links = await getExerciseVariantLinks(exerciseId);
-
-      // 2. Eliminar las relaciones EquipmentItem -> Exercise
       await (delete(equipmentItemExercises)
             ..where(
-              (table) => table.exerciseId.equals(exerciseId),
+              (table) =>
+                  table.exerciseId.equals(exerciseId),
             ))
           .go();
 
-      // 3. Eliminar los links Exercise -> Variant
-      await (delete(exerciseVariantLinks)
-            ..where(
-              (table) => table.exerciseId.equals(exerciseId),
-            ))
-          .go();
-
-      // 4. Eliminar las variantes que pertenecían al ejercicio
-      for (final link in links) {
-        await (delete(exerciseVariants)
-              ..where(
-                (table) => table.id.equals(link.variantId),
-              ))
-            .go();
-      }
-
-      // 5. Finalmente eliminar el ejercicio
       final deletedRows =
           await (delete(exercises)
                 ..where(
@@ -1158,7 +1216,9 @@ class AppDatabase extends _$AppDatabase {
     String equipmentItemId,
   ) async {
     return transaction(() async {
-      return _deleteEquipmentItemCompletelyInternal(equipmentItemId);
+      return _deleteEquipmentItemCompletelyInternal(
+        equipmentItemId,
+      );
     });
   }
 
@@ -1168,8 +1228,10 @@ class AppDatabase extends _$AppDatabase {
     return transaction(() async {
       var allDeleted = true;
 
-      for (final equipmentItemId in equipmentItemIds) {
-        final deleted = await _deleteEquipmentItemCompletelyInternal(
+      for (final equipmentItemId
+          in equipmentItemIds) {
+        final deleted =
+            await _deleteEquipmentItemCompletelyInternal(
           equipmentItemId,
         );
 
@@ -1182,14 +1244,17 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
-  Future<bool> _deleteEquipmentItemCompletelyInternal(
+  Future<bool>
+      _deleteEquipmentItemCompletelyInternal(
     String equipmentItemId,
   ) async {
     // 1. Delete EquipmentItem -> Exercise relationships
     await (delete(equipmentItemExercises)
           ..where(
             (table) =>
-                table.equipmentItemId.equals(equipmentItemId),
+                table.equipmentItemId.equals(
+              equipmentItemId,
+            ),
           ))
         .go();
 
@@ -1197,7 +1262,9 @@ class AppDatabase extends _$AppDatabase {
     await (delete(equipmentItemStats)
           ..where(
             (table) =>
-                table.equipmentItemId.equals(equipmentItemId),
+                table.equipmentItemId.equals(
+              equipmentItemId,
+            ),
           ))
         .go();
 
@@ -1205,7 +1272,9 @@ class AppDatabase extends _$AppDatabase {
     await (delete(equipmentItemUnlockRequirements)
           ..where(
             (table) =>
-                table.equipmentItemId.equals(equipmentItemId),
+                table.equipmentItemId.equals(
+              equipmentItemId,
+            ),
           ))
         .go();
 
@@ -1213,7 +1282,9 @@ class AppDatabase extends _$AppDatabase {
     await (delete(equipmentItemEquipRequirements)
           ..where(
             (table) =>
-                table.equipmentItemId.equals(equipmentItemId),
+                table.equipmentItemId.equals(
+              equipmentItemId,
+            ),
           ))
         .go();
 
@@ -1222,7 +1293,9 @@ class AppDatabase extends _$AppDatabase {
         await (delete(equipmentItems)
               ..where(
                 (table) =>
-                    table.id.equals(equipmentItemId),
+                    table.id.equals(
+                  equipmentItemId,
+                ),
               ))
             .go();
 
@@ -1246,13 +1319,18 @@ class AppDatabase extends _$AppDatabase {
       // TRAINING RECORD
       // --------------------------------------------------
 
-      final recordId = await into(trainingRecords).insert(
+      final recordId =
+          await into(trainingRecords).insert(
         TrainingRecordsCompanion.insert(
           completedAt: completedAt,
-          strengthGained: Value(strengthGained),
-          enduranceGained: Value(enduranceGained),
-          energyGained: Value(energyGained),
-          staminaGained: Value(staminaGained),
+          strengthGained:
+              Value(strengthGained),
+          enduranceGained:
+              Value(enduranceGained),
+          energyGained:
+              Value(energyGained),
+          staminaGained:
+              Value(staminaGained),
         ),
       );
 
@@ -1277,7 +1355,8 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
-  Future<List<TrainingRecordRow>> getRecentTrainingRecords({
+  Future<List<TrainingRecordRow>>
+      getRecentTrainingRecords({
     int limit = 10,
   }) {
     return (select(trainingRecords)
@@ -1308,11 +1387,12 @@ class AppDatabase extends _$AppDatabase {
   Future<TrainingRecord?> getTrainingRecord(
     int id,
   ) async {
-    final record = await (select(trainingRecords)
-          ..where(
-            (table) => table.id.equals(id),
-          ))
-        .getSingleOrNull();
+    final record =
+        await (select(trainingRecords)
+              ..where(
+                (table) => table.id.equals(id),
+              ))
+            .getSingleOrNull();
 
     if (record == null) {
       return null;

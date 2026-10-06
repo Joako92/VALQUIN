@@ -3,9 +3,13 @@
 ### Forge Yourself.
 
 <p align="center">
+
   <img src="assets/screenshots/status.png" alt="VALQUIN Status" width="250"/>
+
   <img src="assets/screenshots/inventory.png" alt="VALQUIN Inventory" width="250"/>
+
   <img src="assets/screenshots/equipment.png" alt="VALQUIN Equipment" width="250"/>
+
 </p>
 
 > **Train in real life. Progress in the game. Forge Yourself.**
@@ -22,30 +26,26 @@ The visual direction follows a **dark mythic minimalism** approach:
 
 ## Current Version
 
-**v0.9.0 — Exercise Guide**
+**v0.9.1 — Exercise & Progression Architecture**
 
-This release introduces an exercise visualization and guidance system, allowing players to access exercise instructions directly from equipment in the Inventory.
+This release refines the internal exercise and progression architecture, separating exercise identity from training prescriptions and introducing reusable variant families.
 
-Exercise guidance is provided through the WGER API while VALQUIN remains the source of truth for its own exercise definitions, names, variants and gameplay data.
+It also updates player XP progression and the systems that connect exercises, equipment and training variants.
 
-### v0.9.0 Highlights
+### v0.9.1 Highlights
 
-* Added an Exercise Guide accessible from Inventory equipment.
-* Added exercise selection for equipment containing multiple exercises.
-* Added localized exercise guidance in English and Spanish.
-* Added localized exercise names from WGER inside the guide.
-* Added exercise descriptions from WGER.
-* Added exercise images when available.
-* Added a loading state while exercise information is retrieved.
-* Added an unavailable state when guide information cannot be retrieved.
-* Added WGER exercise ID mapping for all 58 VALQUIN exercises.
-* Added an `ExerciseGuideService` responsible for WGER communication.
-* Added language-aware guide retrieval.
-* Added in-memory caching for repeated exercise guide requests.
-* Added tests covering all 58 mapped exercises.
-* Added representative English guide tests.
-* Added service caching tests.
-* Kept WGER data isolated from VALQUIN's exercise and database models.
+* Refactored the exercise data architecture.
+* Separated exercise identity from training prescriptions.
+* Introduced reusable Variant Families.
+* Moved variant units to the family level.
+* Updated equipment exercise relationships to use Variant Families.
+* Redesigned player XP level progression.
+* Updated database migrations and seeders.
+* Updated exercise and equipment database tests.
+* Expanded automated test coverage.
+* Maintained WGER exercise guidance independently from VALQUIN gameplay data.
+* All automated tests pass.
+* Static analysis passes with no issues.
 
 ---
 
@@ -61,6 +61,16 @@ VALQUIN connects four progression dimensions:
 | Aerobic capacity     | Stamina               |
 
 Training determines progression, while equipment and character development provide the RPG layer.
+
+### Player Progression
+
+Player XP is derived from the total of the four character attributes:
+
+**Strength + Endurance + Energy + Stamina**
+
+Player levels use an increasing XP progression curve, while each level tracks its own progression range.
+
+The progression system is intentionally simple and will continue to be balanced through gameplay testing.
 
 ---
 
@@ -178,6 +188,54 @@ Each training record includes the XP gained in the four progression attributes:
 Exercise details are saved as historical snapshots. This preserves the recorded training results even if exercise definitions or available variants change in the future.
 
 The history is stored locally in the application's SQLite database.
+
+---
+
+## Exercise Architecture
+
+VALQUIN separates **exercise identity** from **training prescription**.
+
+An exercise represents the movement itself:
+
+```text
+Exercise
+├── ID
+└── Name
+```
+
+A Variant Family represents a reusable training progression:
+
+```text
+VariantFamily
+├── ID
+├── Name
+├── Unit
+└── ExerciseVariants
+```
+
+An Exercise Variant represents a concrete training prescription:
+
+```text
+ExerciseVariant
+├── Variant Index
+├── Sets
+└── Amount
+```
+
+Equipment determines which exercise and variant progression are available:
+
+```text
+EquipmentExercise
+├── Exercise ID
+├── Variant Family ID
+└── Maximum Variant
+```
+
+This separation allows the same training progression to be reused by different exercises without duplicating the definition of the progression itself.
+
+Exercise units are defined by the Variant Family rather than by individual variants.
+
+Exercise classes are not encoded directly into exercises or variants. Training identity emerges from the combination of exercises, variant families, equipment and progression.
 
 ---
 
@@ -338,6 +396,7 @@ The theme system uses the `AppTheme` domain enum:
 
 ```text
 dark
+
 light
 ```
 
@@ -394,6 +453,26 @@ ExerciseHelpDialog
 
 The guide service also caches previously retrieved exercise/language combinations during the application session.
 
+### Testing
+
+VALQUIN uses automated tests to validate its domain logic, persistence layer, managers and external service integration.
+
+The current test suite covers:
+
+* Player progression.
+* XP and level calculations.
+* Class progression.
+* Equipment relationships.
+* Exercise data.
+* Variant Families.
+* Database migrations.
+* Database seeders.
+* Training history.
+* Exercise Guide integration.
+* WGER mappings and service caching.
+
+The current project state passes the complete automated test suite and static analysis.
+
 ---
 
 ## Project Structure
@@ -421,6 +500,22 @@ The architecture is being refined incrementally through vertical slices, keeping
 ---
 
 ## Development Milestones
+
+### v0.9.1
+
+**Exercise & Progression Architecture**
+
+* Refactored exercise data architecture.
+* Separated exercise identity from training prescriptions.
+* Introduced reusable Variant Families.
+* Moved variant units to the family level.
+* Updated equipment exercise relationships.
+* Redesigned player XP level progression.
+* Updated database migrations and seeders.
+* Updated exercise and equipment database tests.
+* Expanded automated test coverage.
+* Full automated test suite passing.
+* Static analysis passing with no issues.
 
 ### v0.9.0
 

@@ -11,6 +11,7 @@ import '../managers/training_plan_manager.dart';
 import '../models/equipment_item.dart';
 import '../models/equipment_slot.dart';
 import '../models/exercise.dart';
+import '../models/variant_family.dart';
 import '../models/training_plan.dart';
 
 import '../widgets/valquin_info_dialog.dart';
@@ -64,6 +65,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
   List<EquipmentItem> equipmentItems = [];
 
   Map<String, Exercise> exercisesById = {};
+
+  Map<String, VariantFamily> variantFamiliesById = {};
 
   bool isLoading = true;
 
@@ -129,7 +132,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
   Future<void> loadEquipmentItems() async {
     final items = await database.getEquipmentItemsWithAllData();
 
-    final exercises = await database.getExercisesWithVariants();
+    final exercises =
+        await database.select(database.exercises).get();
+
+    final variantFamilies =
+        await database.getVariantFamiliesWithVariants();
 
     if (!mounted) {
       return;
@@ -138,8 +145,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
     setState(() {
       equipmentItems = items;
 
-      exercisesById = {
-        for (final exercise in exercises) exercise.id: exercise,
+      exercisesById = { for (final row in exercises) row.id: Exercise( id: row.id, name: row.name, ), };
+
+      variantFamiliesById = {
+        for (final family in variantFamilies) family.id: family,
       };
 
       isLoading = false;
@@ -315,6 +324,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
       return settings.strings.unknownExercise;
     }
 
+    final family =
+        variantFamiliesById[equipmentExercise.variantFamilyId];
+
+    if (family == null || family.variants.isEmpty) {
+      return settings.strings.unknownExercise;
+    }
+
     final selectedVariant = selectedVariantFor(item);
 
     final variantIndex = selectedVariant <=
@@ -322,17 +338,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
         ? selectedVariant
         : equipmentExercise.maxVariant;
 
-    final variant = exercise.getVariant(
-      variantIndex,
+    final variant = family.variants.firstWhere(
+      (variant) => variant.index == variantIndex,
+      orElse: () => family.variants.last,
     );
 
     final amount = formatAmount(variant.amount);
 
     return variant.sets != null
         ? '${exercise.name} → '
-            '${variant.sets} x $amount ${variant.unit}'
+            '${variant.sets} x $amount ${family.unit}'
         : '${exercise.name} → '
-            '$amount ${variant.unit}';
+            '$amount ${family.unit}';
   }
 
   // --------------------------------------------------
