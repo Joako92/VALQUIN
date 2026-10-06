@@ -57,6 +57,36 @@ class SpanishStrings {
     'su nivel y sus atributos. Cada entrenamiento que completes te ayudará a crecer '
     'y desbloquear nuevas posibilidades. Entrená, progresá y forjá tu propio camino.';
 
+  // Training History
+
+  static const trainingHistory = 'HISTORIAL DE ENTRENAMIENTO';
+
+  static const noTrainingHistory = 'SIN HISTORIAL DE ENTRENAMIENTO';
+
+  static const january = 'ENE';
+
+  static const february = 'FEB';
+
+  static const march = 'MAR';
+
+  static const april = 'ABR';
+
+  static const may = 'MAY';
+
+  static const june = 'JUN';
+
+  static const july = 'JUL';
+
+  static const august = 'AGO';
+
+  static const september = 'SEP';
+
+  static const october = 'OCT';
+
+  static const november = 'NOV';
+
+  static const december = 'DIC';
+  
   // Inventory Screen
 
   static const all = 'TODOS';

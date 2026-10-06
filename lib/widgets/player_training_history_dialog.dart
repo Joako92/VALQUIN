@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
+import '../config/app_settings.dart';
 import '../models/training_record.dart';
 
 class PlayerTrainingHistoryDialog extends StatelessWidget {
   final List<TrainingRecord> trainingHistory;
+  final AppSettings settings;
 
   const PlayerTrainingHistoryDialog({
     super.key,
     required this.trainingHistory,
+    required this.settings,
   });
 
   String _formatDate(DateTime date) {
-    const months = [
-      'JAN',
-      'FEB',
-      'MAR',
-      'APR',
-      'MAY',
-      'JUN',
-      'JUL',
-      'AUG',
-      'SEP',
-      'OCT',
-      'NOV',
-      'DEC',
+    final months = [
+      settings.strings.january,
+      settings.strings.february,
+      settings.strings.march,
+      settings.strings.april,
+      settings.strings.may,
+      settings.strings.june,
+      settings.strings.july,
+      settings.strings.august,
+      settings.strings.september,
+      settings.strings.october,
+      settings.strings.november,
+      settings.strings.december,
     ];
 
     return '${date.day.toString().padLeft(2, '0')} '
@@ -53,7 +56,7 @@ class PlayerTrainingHistoryDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'TRAINING HISTORY',
+                    settings.strings.trainingHistory,
                     style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 18,
@@ -81,14 +84,14 @@ class PlayerTrainingHistoryDialog extends StatelessWidget {
             // --------------------------------------------------
 
             if (trainingHistory.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(
+              Padding(
+                padding: const EdgeInsets.symmetric(
                   vertical: 30,
                 ),
                 child: Center(
                   child: Text(
-                    'NO TRAINING HISTORY',
-                    style: TextStyle(
+                    settings.strings.noTrainingHistory,
+                    style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontWeight: FontWeight.bold,
                     ),

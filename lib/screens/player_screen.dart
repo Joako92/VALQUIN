@@ -284,6 +284,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
       builder: (_) {
         return PlayerTrainingHistoryDialog(
           trainingHistory: trainingHistory,
+          settings: settings,
         );
       },
     );

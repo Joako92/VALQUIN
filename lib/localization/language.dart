@@ -269,6 +269,134 @@ class LanguageStrings {
     }
   }
 
+  // Training History
+
+  String get trainingHistory {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.trainingHistory;
+      case AppLanguage.spanish:
+        return SpanishStrings.trainingHistory;
+    }
+  }
+
+  String get noTrainingHistory {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.noTrainingHistory;
+      case AppLanguage.spanish:
+        return SpanishStrings.noTrainingHistory;
+    }
+  }
+
+  String get january {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.january;
+      case AppLanguage.spanish:
+        return SpanishStrings.january;
+    }
+  }
+
+  String get february {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.february;
+      case AppLanguage.spanish:
+        return SpanishStrings.february;
+    }
+  }
+
+  String get march {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.march;
+      case AppLanguage.spanish:
+        return SpanishStrings.march;
+    }
+  }
+
+  String get april {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.april;
+      case AppLanguage.spanish:
+        return SpanishStrings.april;
+    }
+  }
+
+  String get may {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.may;
+      case AppLanguage.spanish:
+        return SpanishStrings.may;
+    }
+  }
+
+  String get june {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.june;
+      case AppLanguage.spanish:
+        return SpanishStrings.june;
+    }
+  }
+
+  String get july {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.july;
+      case AppLanguage.spanish:
+        return SpanishStrings.july;
+    }
+  }
+
+  String get august {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.august;
+      case AppLanguage.spanish:
+        return SpanishStrings.august;
+    }
+  }
+
+  String get september {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.september;
+      case AppLanguage.spanish:
+        return SpanishStrings.september;
+    }
+  }
+
+  String get october {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.october;
+      case AppLanguage.spanish:
+        return SpanishStrings.october;
+    }
+  }
+
+  String get november {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.november;
+      case AppLanguage.spanish:
+        return SpanishStrings.november;
+    }
+  }
+
+  String get december {
+    switch (language) {
+      case AppLanguage.english:
+        return EnglishStrings.december;
+      case AppLanguage.spanish:
+        return SpanishStrings.december;
+    }
+  }
+
   // Status dialog
 
   String get inventoryInfoTitle {

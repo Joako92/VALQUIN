@@ -5,9 +5,7 @@ import '../models/requirement.dart';
 import '../models/rarity.dart';
 
 final List<EquipmentItem> equipmentItems = [
-  // ==================================================
-  // SET DE CUERO
-  // ==================================================
+  //region SET DE CUERO
 
   // --------------------------------------------------
   // HEAD
@@ -199,9 +197,9 @@ final List<EquipmentItem> equipmentItems = [
     ],
   ),
 
-  // ==================================================
-  // SET DE HIERRO
-  // ==================================================
+  //endregion
+
+  //region SET DE HIERRO
 
   // --------------------------------------------------
   // HEAD
@@ -556,9 +554,9 @@ final List<EquipmentItem> equipmentItems = [
     exercises: [],
   ),
 
-  // ==================================================
-  // SET DE BRONCE
-  // ==================================================
+  //endregion
+
+  //region SET DE BRONCE
 
   // --------------------------------------------------
   // HEAD
@@ -864,9 +862,9 @@ final List<EquipmentItem> equipmentItems = [
     ],
   ),
 
-  // ==================================================
-  // SET DEL SABIO
-  // ==================================================
+  //endregion
+  
+  //region SET DEL SABIO
 
   // --------------------------------------------------
   // HEAD
@@ -1220,6 +1218,8 @@ final List<EquipmentItem> equipmentItems = [
     ],
   ),
 
+  //endregion
+  
   // ==================================================
   // ITEMS ESPECIFICOS DE CLASE
   // ==================================================
@@ -1723,9 +1723,7 @@ final List<EquipmentItem> equipmentItems = [
     ],
   ),
 
-  // ==================================================
-  // DRAGON SET
-  // ==================================================
+  //region DRAGON SET
 
   // --------------------------------------------------
   // HEAD
@@ -1972,7 +1970,7 @@ final List<EquipmentItem> equipmentItems = [
   ),
 
   // ==================================================
-  // Alas Dragon
+  // WINGS
   // ==================================================
 
   EquipmentItem(
@@ -2030,4 +2028,5 @@ final List<EquipmentItem> equipmentItems = [
     ],
   ),
 
+  //endregion
 ];

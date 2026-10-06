@@ -57,6 +57,36 @@ class EnglishStrings {
     'level, and attributes. Every training session you complete will help you grow '
     'and unlock new possibilities. Train, progress, and forge your own path.';
 
+  // Training History
+
+  static const trainingHistory = 'TRAINING HISTORY';
+
+  static const noTrainingHistory = 'NO TRAINING HISTORY';
+
+  static const january = 'JAN';
+
+  static const february = 'FEB';
+
+  static const march = 'MAR';
+
+  static const april = 'APR';
+
+  static const may = 'MAY';
+
+  static const june = 'JUN';
+
+  static const july = 'JUL';
+
+  static const august = 'AUG';
+
+  static const september = 'SEP';
+
+  static const october = 'OCT';
+
+  static const november = 'NOV';
+
+  static const december = 'DEC';
+
   // Inventory Screen
 
   static const all = 'ALL';
