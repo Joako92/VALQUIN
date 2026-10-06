@@ -252,11 +252,11 @@ void main() {
           playerManager.player!.stats.strength = 100;
           playerManager.player!.stats.endurance = 100;
           playerManager.player!.stats.energy = 100;
-          playerManager.player!.stats.stamina = 450;
+          playerManager.player!.stats.stamina = 200;
 
           expect(
             playerManager.player!.xp,
-            750,
+            500,
           );
 
           expect(
@@ -283,7 +283,7 @@ void main() {
 
           expect(
             playerManager.player!.xpRequiredForLevel,
-            100,
+            50,
           );
         },
       );

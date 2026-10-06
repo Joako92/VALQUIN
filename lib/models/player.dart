@@ -80,7 +80,9 @@ class Player {
     return level;
   }
 
-  int get xpForCurrentLevel { if (level == 1) { return xp; } return xp - _xpRequiredForLevel(level); }
+  int get xpForCurrentLevel {
+    return xp - _xpRequiredForLevel(level);
+  }
 
   int get xpRequiredForLevel {
     return _xpRequiredForLevel(level + 1) -
@@ -88,7 +90,7 @@ class Player {
   }
 
   int _xpRequiredForLevel(int level) {
-    return 25 * level * (level + 1);
+    return 25 * (level - 1) * level;
   }
 
   // --------------------------------------------------

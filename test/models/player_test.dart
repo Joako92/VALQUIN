@@ -82,10 +82,10 @@ void main() {
     );
 
     test(
-      'reaches level 5 at 750 XP',
+      'reaches level 5 at 500 XP',
       () {
         final player = createPlayer(
-          strength: 750,
+          strength: 500,
         );
 
         expect(player.level, 5);
@@ -93,10 +93,10 @@ void main() {
     );
 
     test(
-      'reaches level 6 at 1050 XP',
+      'reaches level 6 at 750 XP',
       () {
         final player = createPlayer(
-          strength: 1050,
+          strength: 750,
         );
 
         expect(player.level, 6);
